@@ -11,7 +11,7 @@ metadata:
 components:
   - name: aws-runtime
     container:
-      image: public.ecr.aws/aws-mde/universal-image:latest
+      image: public.ecr.aws/lambda/python:3.8
       mountSources: true
       volumeMounts:
         - name: docker-store
