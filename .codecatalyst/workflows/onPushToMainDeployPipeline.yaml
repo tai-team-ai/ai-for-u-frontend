@@ -1,0 +1,66 @@
+
+Name: onPushToMainDeployPipeline
+SchemaVersion: "1.0"
+Triggers:
+  - Type: PUSH
+    Branches:
+      - main
+Actions:
+  BuildAndTest:
+    Compute:
+      Type: Lambda
+    Identifier: aws/build@v1
+    Inputs:
+      Sources:
+        - WorkflowSource
+    Outputs:
+      Artifacts:
+        - Name: build
+          Files:
+            - cdk/**/*
+      AutoDiscoverReports:
+        ReportNamePrefix: Test
+        IncludePaths:
+          - coverage/**
+          - reports/**
+    Configuration:
+      Steps:
+        - Run: npm install
+        - Run: npm test -- --coverage --watchAll=false --testResultsProcessor="jest-junit"
+        - Run: npm run build
+        - Run: mkdir -p cdk/frontend/build
+        - Run: mv build/* cdk/frontend/build/
+  CDKBootstrapAction:
+    Compute:
+      Type: Lambda
+    Identifier: aws/cdk-bootstrap@v1
+    Configuration:
+      Region: us-west-2
+    Environment:
+      Name: development
+      Connections:
+        - Name: "645860363137"
+          Role: CodeCatalystPreviewDevelopmentAdministrator-52wgjy
+    Inputs:
+      Sources:
+        - WorkflowSource
+  CDKDeploy:
+    Compute:
+      Type: Lambda
+    Identifier: aws/cdk-deploy@v1
+    DependsOn:
+      - CDKBootstrapAction
+      - BuildAndTest
+    Inputs:
+      Artifacts:
+        - build
+    Configuration:
+      StackName: OpenAIFrontendStack
+      Region: us-west-2
+      Context: '{"stack_name": "OpenAIFrontendStack"}'
+      CdkRootPath: cdk
+    Environment:
+      Name: development
+      Connections:
+        - Name: "645860363137"
+          Role: CodeCatalystPreviewDevelopmentAdministrator-52wgjy
