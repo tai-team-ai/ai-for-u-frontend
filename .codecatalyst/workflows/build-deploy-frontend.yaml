@@ -44,7 +44,7 @@ Actions:
       Connections:
         - Role: CodeCatalystPreviewDevelopmentAdministrator-52wgjy
           Name: "645860363137"
-      Name: development
+      Name: deploy-environment
     DependsOn:
       - deploy-stack
     Inputs:
