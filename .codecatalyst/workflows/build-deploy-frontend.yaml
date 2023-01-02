@@ -18,14 +18,11 @@ Actions:
       AutoDiscoverReports:
         Enabled: true
         ReportNamePrefix: rpt
-      Artifacts:
-        - Name: frontend
-          Files:
-            - build
     Configuration:
       Steps:
         - Run: npm install
         - Run: npm run build
+        - Run: cp -r build cdk/frontend
     Compute:
       Type: Lambda
       Fleet: Linux.x86-64.Large
