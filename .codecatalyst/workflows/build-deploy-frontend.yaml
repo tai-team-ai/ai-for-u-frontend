@@ -24,6 +24,7 @@ Actions:
             - build
     Configuration:
       Steps:
+        - Run: npm install
         - Run: npm run build
     Compute:
       Type: Lambda
