@@ -51,6 +51,4 @@ Actions:
     DependsOn:
       - deploy-stack
     Inputs:
-      Artifacts:
-        - frontend
       Sources: []
