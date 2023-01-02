@@ -1,3 +1,7 @@
+
+dev: venv-cdk
+	npm install
+
 venv-cdk:   
 	cd cdk && \
 	python3 -m venv venv && \
