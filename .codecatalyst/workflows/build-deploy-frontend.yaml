@@ -51,4 +51,5 @@ Actions:
     DependsOn:
       - deploy-stack
     Inputs:
-      Sources: []
+      Sources:
+        - WorkflowSource
