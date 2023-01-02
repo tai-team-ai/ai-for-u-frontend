@@ -8,7 +8,7 @@ from frontend.frontend_stack import FrontendStack
 
 app = cdk.App()
 
-stack_name=f"{str(app.node.try_get_context('stack_name') or 'FrontendStack')}"
+stack_name = f"{str(app.node.try_get_context('stack_name') or 'FrontendStack')}"
 
 FrontendStack(app, stack_name,
     # If you don't specify 'env', this stack will be environment-agnostic.
@@ -29,3 +29,7 @@ FrontendStack(app, stack_name,
     )
 
 app.synth()
+
+
+def method(new: str) -> str:
+    return new
