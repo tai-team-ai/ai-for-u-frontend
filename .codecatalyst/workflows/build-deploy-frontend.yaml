@@ -5,7 +5,7 @@ SchemaVersion: "1.0"
 Triggers:
   - Type: Push
     Branches:
-      - origin/main
+      - main
 
 # Required - Define action configurations.
 Actions:
