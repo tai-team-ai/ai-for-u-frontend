@@ -7,9 +7,18 @@ export a landing page with React-Bootstrap component library that has a title an
 
 */
 
+import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { makeRequest } from "../requests/requests";
+
 
 export default function LandingPage() {
+    const [formData, setFormData] = useState("");
+	const [response, setResponse] = useState("Hi");
+    let combineResponseSend = function () {
+        
+    }
+
     return (
         <Form>
             <Form.Label>AI writer type.</Form.Label>
@@ -26,11 +35,12 @@ export default function LandingPage() {
             <p></p>
             <Form.Group className="mb-3" controlId="formBasicPassword">
                 <Form.Label>Information that you would like to be used as reference material.</Form.Label>
-                <Form.Control as="textarea" placeholder="Add data..." rows={5}/>
+                <Form.Control as="textarea" placeholder="Add data..." rows={5} onChange={e => setFormData(e.target.value)}/>
             </Form.Group>
-            <Button variant="primary" type="submit">
+            <Button variant="primary" type="submit" onClick={() => makeRequest(formData)}>
                 Submit
             </Button>
+            <div>{response}</div>
         </Form>
     );
 }
