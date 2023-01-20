@@ -7,17 +7,33 @@ export a landing page with React-Bootstrap component library that has a title an
 
 */
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { makeRequest } from "../requests/requests";
+import React from "react";
+import axios from "axios";
 
 
 export default function LandingPage() {
+    const [response, setResponse] = useState("");
     const [formData, setFormData] = useState("");
-	const [response, setResponse] = useState("Hi");
-    let combineResponseSend = function () {
-        
-    }
+
+
+    const submitData = (event: React.MouseEvent<HTMLElement>) => {
+        event.preventDefault();
+        console.log(`Submitted prompt: ${formData}`);
+        axios.post("https://fayka0tfb4.execute-api.us-west-2.amazonaws.com/prod/openai/completion", {
+            text_to_complete: formData
+        })
+            .then(function (response) {
+                console.log(response.data);
+                console.log(response.status);
+                console.log(response.statusText);
+                console.log(response.headers);
+                console.log(response.config);
+                setResponse(response.data["text_to_complete"]);
+            })
+    };
 
     return (
         <Form>
@@ -37,10 +53,12 @@ export default function LandingPage() {
                 <Form.Label>Information that you would like to be used as reference material.</Form.Label>
                 <Form.Control as="textarea" placeholder="Add data..." rows={5} onChange={e => setFormData(e.target.value)}/>
             </Form.Group>
-            <Button variant="primary" type="submit" onClick={() => makeRequest(formData)}>
+            <Button variant="primary" type="submit" onClick={submitData}>
                 Submit
             </Button>
-            <div>{response}</div>
+            <div style={{whiteSpace: "pre-line"}}>{response}</div>
         </Form>
     );
 }
+
+

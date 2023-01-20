@@ -2,20 +2,22 @@
 // definition will be provided in the backend documentation.
 // include error handling
 
+import axios from "axios";
+
+
 
 
 export const makeRequest = async function (payload: string) {
-
-    const apiAddress = "https://fiqqq7p01k.execute-api.us-west-2.amazonaws.com/prod/completions";
-
-    const init: RequestInit = {
-        method: 'POST',
-        body: payload,
-    };
-
-    const response = await fetch(apiAddress, init);
-    const data = await response.json();
-    // log the data
-    console.log(data);
-    return data;
+    // make a GET request to google.com with axios
+    axios.get('https://fayka0tfb4.execute-api.us-west-2.amazonaws.com/prod/openai/status')
+        .then(function (response) {
+            console.log(response.data);
+            console.log(response.status);
+            console.log(response.statusText);
+            console.log(response.headers);
+            console.log(response.config);
+            return response.data["status"];
+        });
+    console.log("hello");
+    return "hello";
 }
