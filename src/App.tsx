@@ -1,14 +1,13 @@
-import LandingPage from './components/LandingPage';
+import RequestForm from './components/RequestForm';
 import { Container } from 'react-bootstrap';
 import Header from './components/Header';
-import { useState } from 'react';
 
 function App() {
 
 	return (
 		<Container fluid="sm">
 			<Header />
-			<LandingPage />
+			<RequestForm />
 		</Container>
 	);
 }

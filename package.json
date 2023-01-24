@@ -56,9 +56,13 @@
     ],
     "coverageReporters": [
       "lcov"
-    ]
+    ],
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    }
   },
   "jest-junit": {
     "outputName": "coverage/junit.xml"
-  }
+  },
+  "type": "module"
 }
