@@ -64,7 +64,7 @@ export default function AITextRevisorForm(props: { setGeneratedText: React.Dispa
     };
 
     const handledRevisionTypesChange = (selectedOptions: readonly ToneOptionsType[]) => {
-        setRevisionTypes(selectedOptions);
+        setRevisionTypes(selectedOptions.values);
     };
 
     const handleToneChange = (option: ToneOptionsType | null) => {
