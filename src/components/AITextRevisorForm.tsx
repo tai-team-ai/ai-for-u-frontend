@@ -23,11 +23,13 @@ const revisionTypesOptions: ToneOptionsType[] = [
     { value: "grammar", label: "Grammar" },
     { value: "spelling", label: "Spelling" },
     { value: "vocabulary", label: "Vocabulary" },
-    { value: "sentenceStructure", label: "Sentence Structure" },
-    { value: "wordChoice", label: "Word Choice" },
+    { value: "sentence structure", label: "Sentence Structure" },
+    { value: "word choice", label: "Word Choice" },
     { value: "tone", label: "Tone" },
     { value: "terminology", label: "Terminology" },
     { value: "consistency", label: "Consistency" },
+    { value: "punctuation", label: "Punctuation" },
+    { value: "style", label: "Style" }
 ];
 
 const toneOptions: ToneOptionsType[] = [
@@ -80,16 +82,16 @@ export default function AITextRevisorForm(props: { setGeneratedText: React.Dispa
     const handleSubmit = (event: any) => {
         event.preventDefault();
         axios.post(`${constants.API_URL}${constants.OPEN_TEXT_REVISOR_API_PREFIX}`, {
-            numOfRevisions: numRevisions,
             textToRevise: text,
             revisionTypes: revisionTypes,
+            numRevisions: numRevisions,
             tone: tone
         })
         .then((response) => {
             console.log(response)
             let revisions = ""
-            for (const [i, revision] of response.data['revised_text_list'].entries()) {
-                revisions += `Revision ${i}:\n${revision}\n\n`;
+            for (const [i, revision] of response.data['revisedTextList'].entries()) {
+                revisions += `Revision ${i + 1}:\n${revision}\n\n`;
             }
             props.setGeneratedText(revisions);
         })
@@ -124,7 +126,7 @@ export default function AITextRevisorForm(props: { setGeneratedText: React.Dispa
             </Form.Group>
             <Form.Group as={Row} className="mb-3" controlId="formPlaintextRevisionTypes">
                 <Form.Label column sm="2">
-                    Revision
+                    Revise For
                 </Form.Label>
                 <Col sm="10">
                     <Select
