@@ -84,7 +84,7 @@ export default function AITextRevisorForm(props: { setGeneratedText: React.Dispa
         axios.post(`${constants.API_URL}${constants.OPEN_TEXT_REVISOR_API_PREFIX}`, {
             textToRevise: text,
             revisionTypes: revisionTypes,
-            numOfRevisions: numRevisions,
+            numberOfRevisions: numRevisions,
             tone: tone
         })
         .then((response) => {
