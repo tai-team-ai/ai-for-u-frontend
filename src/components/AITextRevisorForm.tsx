@@ -85,7 +85,7 @@ export default function AITextRevisorForm(props: { setGeneratedText: React.Dispa
             console.log(response)
             let revisions = ""
             for (const [i, revision] of response.data['revised_text_list'].entries()) {
-                revisions += `Revision ${i}` + revision + "\n";
+                revisions += `Revision ${i}:\n${revision}\n\n`;
             }
             props.setGeneratedText(revisions);
         })
