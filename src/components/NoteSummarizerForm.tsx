@@ -65,6 +65,7 @@ export default function NoteSummarizerForm(props: { setGeneratedText: React.Disp
                     onChange={handleNoteSummarizerChange}
                 />
             </Form.Group>
+            <br/>
             <Button variant="primary" type="submit">
                 Submit
             </Button>

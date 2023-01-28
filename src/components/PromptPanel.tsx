@@ -9,32 +9,16 @@ and dynamically generated based on the value in the select drop down.
 
 import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
-import React from "react";
-import PromptForm from "./PromptForm";
+import NoteSummarizerForm from "./NoteSummarizerForm";
+import AITextRevisorForm from "./AITextRevisorForm";
 
 export default function PromptPanel() {
-    const [promptType, setPromptType] = useState("none");
-
-    const promptForm = () => {
-        switch (promptType) {
-            case "note_summarizer":
-                return <PromptForm promptType={promptType} />;
-            case "resignation_email":
-                return <PromptForm promptType={promptType} />;
-            case "cold_email":
-                return <PromptForm promptType={promptType} />;
-            case "cover_letter":
-                return <PromptForm promptType={promptType} />;
-            case "negotiation_email":
-                return <PromptForm promptType={promptType} />;
-            case "introduction":
-                return <PromptForm promptType={promptType} />;
-            case "conclusion":
-                return <PromptForm promptType={promptType} />;
-            default:
-                return <div></div>;
-        }
-    };
+    const [promptFormType, setPromptFormType] = useState("none");
+    const [generatedText, setGeneratedText] = useState("");
+    const supportedPromptForms = {
+        noteSummarizer: <NoteSummarizerForm setGeneratedText={setGeneratedText}/>,
+        aiTextRevisor: <AITextRevisorForm setGeneratedText={setGeneratedText}/>,
+    }
 
     return (
         <div>
@@ -45,43 +29,52 @@ export default function PromptPanel() {
 
                 <Dropdown.Menu>
                     <Dropdown.Item
-                        onClick={() => setPromptType("note_summarizer")}
+                        onClick={() => setPromptFormType("noteSummarizer")}
                     >
                         Note Summarizer
                     </Dropdown.Item>
                     <Dropdown.Item
-                        onClick={() => setPromptType("resignation_email")}
+                        onClick={() => setPromptFormType("aiTextRevisor")}
+                    >
+                        AI Text Revisor
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                        onClick={() => setPromptFormType("resignation_email")}
                     >
                         Resignation Email
                     </Dropdown.Item>
                     <Dropdown.Item
-                        onClick={() => setPromptType("cold_email")}
+                        onClick={() => setPromptFormType("cold_email")}
                     >
                         Cold Email
                     </Dropdown.Item>
                     <Dropdown.Item
-                        onClick={() => setPromptType("cover_letter")}
+                        onClick={() => setPromptFormType("cover_letter")}
                     >
                         Cover Letter
                     </Dropdown.Item>
                     <Dropdown.Item
-                        onClick={() => setPromptType("negotiation_email")}
+                        onClick={() => setPromptFormType("negotiation_email")}
                     >
                         Negotiation Email
                     </Dropdown.Item>
                     <Dropdown.Item
-                        onClick={() => setPromptType("introduction")}
+                        onClick={() => setPromptFormType("introduction")}
                     >
                         Introduction
                     </Dropdown.Item>
                     <Dropdown.Item
-                        onClick={() => setPromptType("conclusion")}
+                        onClick={() => setPromptFormType("conclusion")}
                     >
                         Conclusion
                     </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
-            {promptForm()}
+            <br />
+            <div>
+                {supportedPromptForms[promptFormType as keyof typeof supportedPromptForms]}
+                <div style={{whiteSpace: "pre-line"}}>{generatedText}</div>
+            </div>
         </div>
     );
 }

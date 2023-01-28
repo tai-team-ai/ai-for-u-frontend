@@ -19,7 +19,7 @@ import { useState } from "react";
 
 import { Button, Form } from "react-bootstrap";
 import axios from "axios";
-import NoteSummarizerForm from "./NoteSummarizer";
+import NoteSummarizerForm from "./NoteSummarizerForm";
 
 
 export default function PromptForm(props: { promptType: string }) {
