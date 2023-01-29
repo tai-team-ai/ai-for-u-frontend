@@ -142,7 +142,7 @@ export default function ResignationEmailForm(props: { setGeneratedText: React.Di
                                 aria-label="Temperature"
                                 defaultValue={30}
                                 valueLabelDisplay="auto"
-                                step={10}
+                                step={5}
                                 marks
                                 min={0}
                                 max={100}
