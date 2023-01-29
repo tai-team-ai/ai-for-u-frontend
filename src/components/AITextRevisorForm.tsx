@@ -81,7 +81,7 @@ export default function AITextRevisorForm(props: { setGeneratedText: React.Dispa
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        axios.post(`${constants.API_URL}${constants.OPEN_TEXT_REVISOR_API_PREFIX}`, {
+        axios.post(`${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`, {
             textToRevise: text,
             revisionTypes: revisionTypes,
             numberOfRevisions: numRevisions,

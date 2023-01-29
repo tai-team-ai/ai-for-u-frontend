@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
 import NoteSummarizerForm from "./NoteSummarizerForm";
 import AITextRevisorForm from "./AITextRevisorForm";
+import ResignationEmailForm from "./ResignationEmailForm";
 
 export default function PromptPanel() {
     const [promptFormType, setPromptFormType] = useState("none");
@@ -18,6 +19,7 @@ export default function PromptPanel() {
     const supportedPromptForms = {
         noteSummarizer: <NoteSummarizerForm setGeneratedText={setGeneratedText}/>,
         aiTextRevisor: <AITextRevisorForm setGeneratedText={setGeneratedText}/>,
+        resignationEmail: <ResignationEmailForm setGeneratedText={setGeneratedText}/>
     }
 
     return (
@@ -39,7 +41,7 @@ export default function PromptPanel() {
                         AI Text Revisor
                     </Dropdown.Item>
                     <Dropdown.Item
-                        onClick={() => setPromptFormType("resignation_email")}
+                        onClick={() => setPromptFormType("resignationEmail")}
                     >
                         Resignation Email
                     </Dropdown.Item>
