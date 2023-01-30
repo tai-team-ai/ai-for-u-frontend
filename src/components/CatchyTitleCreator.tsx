@@ -41,7 +41,6 @@ export default function CatchyTitleCreator(props: { setGeneratedText: React.Disp
             console.log(response);
             let titles = "Catchy Title Generator Results: \n";
             for (const [i, title] of response.data.titles.entries()) {
-                console.log(title);
                 titles += `${title}\n\n`;
             }
             props.setGeneratedText(titles);
