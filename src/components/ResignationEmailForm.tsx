@@ -40,6 +40,7 @@ export default function ResignationEmailForm(props: { setGeneratedText: React.Di
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        props.setGeneratedText("Generating Email...");
         const request = {
             reason: reason,
             resignationDate: resignationDate,
@@ -53,15 +54,20 @@ export default function ResignationEmailForm(props: { setGeneratedText: React.Di
             request.resignationDate = new Date();
             request.resignationDate.setDate(request.resignationDate.getDate() + 14);
         }
-        console.log(`Sending request: ${JSON.stringify(request)}`)
+        console.log(`Sending request: ${JSON.stringify(request)} to ${constants.API_URL + constants.OPEN_AI_RESIGNATION_EMAIL_API_PREFIX}`);
 
         axios.post(constants.API_URL + constants.OPEN_AI_RESIGNATION_EMAIL_API_PREFIX, request)
-        .then(res => {
-            console.log(res.data)
-            props.setGeneratedText(res.data);
+        .then(response => {
+            console.log(response);
+            let titles = "Generated Catchy Titles:\n";
+            for (const [i, title] of response.data['titles'].entries()) {
+                titles += `Title ${i + 1}:\n${title}\n\n`;
+            }
+            props.setGeneratedText(titles);
         })
         .catch((error) => {
             console.log(error);
+            props.setGeneratedText("Error generating email. Please try again.");
         });
     }
 
@@ -126,6 +132,7 @@ export default function ResignationEmailForm(props: { setGeneratedText: React.Di
                         <FormControl fullWidth>
                             <TextField
                                 id="notes"
+                                multiline
                                 label="Additional Notes to Include in Email"
                                 variant="outlined"
                                 value={notes}
@@ -152,7 +159,7 @@ export default function ResignationEmailForm(props: { setGeneratedText: React.Di
                     </Grid>
                     <Grid item>
                         <FormControl fullWidth>
-                            <Grid container spacing={.5}>
+                            <Grid container spacing={2} justifyContent="flex-end">
                                 <Grid item>
                                     <Button type="reset" variant="contained" color="secondary" onClick={resetForm}>
                                         Reset

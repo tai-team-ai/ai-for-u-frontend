@@ -12,6 +12,7 @@ import { Dropdown } from "react-bootstrap";
 import NoteSummarizerForm from "./NoteSummarizerForm";
 import AITextRevisorForm from "./AITextRevisorForm";
 import ResignationEmailForm from "./ResignationEmailForm";
+import CatchyTitleCreator from "./CatchyTitleCreator";
 
 export default function PromptPanel() {
     const [promptFormType, setPromptFormType] = useState("none");
@@ -19,7 +20,8 @@ export default function PromptPanel() {
     const supportedPromptForms = {
         noteSummarizer: <NoteSummarizerForm setGeneratedText={setGeneratedText}/>,
         aiTextRevisor: <AITextRevisorForm setGeneratedText={setGeneratedText}/>,
-        resignationEmail: <ResignationEmailForm setGeneratedText={setGeneratedText}/>
+        resignationEmail: <ResignationEmailForm setGeneratedText={setGeneratedText}/>,
+        catchyTitleCreator: <CatchyTitleCreator setGeneratedText={setGeneratedText}/>
     }
 
     return (
@@ -44,6 +46,11 @@ export default function PromptPanel() {
                         onClick={() => setPromptFormType("resignationEmail")}
                     >
                         Resignation Email
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                        onClick={() => setPromptFormType("catchyTitleCreator")}
+                    >
+                        Catchy Title Creator
                     </Dropdown.Item>
                     <Dropdown.Item
                         onClick={() => setPromptFormType("cold_email")}
