@@ -39,9 +39,9 @@ export default function CatchyTitleCreator(props: { setGeneratedText: React.Disp
         axios.post(constants.API_URL + constants.OPEN_AI_CATCHY_TITLE_API_PREFIX, request)
         .then(response => {
             console.log(response);
-            let titles = "Catchy Title Generator Results: \n\n";
+            let titles = "Catchy Title Generator Results: \n";
             for (const [i, title] of response.data.titles.entries()) {
-                titles += `Title ${i + 1}. ${title}\n\n`;
+                titles += `${title}\n\n`;
             }
             props.setGeneratedText(titles);
         })
