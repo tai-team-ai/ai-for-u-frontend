@@ -53,7 +53,7 @@ export default function SalesInquiryEmailForm(props: { setGeneratedText: React.D
         axios.post(constants.API_URL + constants.OPEN_AI_SALES_INQUIRY_EMAIL_API_PREFIX, request)
         .then(response => {
             console.log(response);
-            props.setGeneratedText(response.data["sales_inquiry_email"]);
+            props.setGeneratedText(response.data["salesInquiryEmail"]);
         })
         .catch(error => {
             console.log(error);
