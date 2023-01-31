@@ -17,7 +17,7 @@ export default function NoteSummarizerForm(props: { setGeneratedText: React.Disp
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
-        console.log("Generating summary...")
+        props.setGeneratedText("Generating summary...");
         console.log(`Sending request ${JSON.stringify(noteSummarizer)} to ${constants.API_URL}${constants.OPEN_AI_NOTES_API_PREFIX}`)
         axios.post(`${constants.API_URL}${constants.OPEN_AI_NOTES_API_PREFIX}`, {
             notesToSummarize: noteSummarizer.notesToSummarize,
