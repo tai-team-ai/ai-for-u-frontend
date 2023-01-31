@@ -81,6 +81,8 @@ export default function AITextRevisorForm(props: { setGeneratedText: React.Dispa
 
     const handleSubmit = (event: any) => {
         event.preventDefault();
+        console.log("Generating revisions...")
+        console.log(`Sending request ${JSON.stringify(text)} to ${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`)
         axios.post(`${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`, {
             textToRevise: text,
             revisionTypes: revisionTypes,
