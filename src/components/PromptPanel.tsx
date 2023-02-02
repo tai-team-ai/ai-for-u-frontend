@@ -14,6 +14,7 @@ import AITextRevisorForm from "./AITextRevisorForm";
 import ResignationEmailForm from "./ResignationEmailForm";
 import CatchyTitleCreator from "./CatchyTitleCreator";
 import SalesInquiryEmailForm from "./SalesInquiryEmailForm";
+import NegotiationEmailForm from "./NegotiationEmailForm";
 
 export default function PromptPanel() {
     const [promptFormType, setPromptFormType] = useState("none");
@@ -24,6 +25,7 @@ export default function PromptPanel() {
         resignationEmail: <ResignationEmailForm setGeneratedText={setGeneratedText}/>,
         catchyTitleCreator: <CatchyTitleCreator setGeneratedText={setGeneratedText}/>,
         salesInquiryEmailForm: <SalesInquiryEmailForm setGeneratedText={setGeneratedText}/>,
+        negotiationEmail: <NegotiationEmailForm setGeneratedText={setGeneratedText}/>,
     }
 
     return (
@@ -58,6 +60,16 @@ export default function PromptPanel() {
                         onClick={() => setPromptFormType("salesInquiryEmailForm")}
                     >
                         Sales Inquiry Email
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                        onClick={() => setPromptFormType("negotiationEmail")}
+                    >
+                        Negotiation Email
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                        onClick={() => setPromptFormType("thank_you_email")}
+                    >
+                        Thank You Email
                     </Dropdown.Item>
                     <Dropdown.Item
                         onClick={() => setPromptFormType("cover_letter")}

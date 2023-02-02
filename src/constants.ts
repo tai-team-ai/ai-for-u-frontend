@@ -5,4 +5,5 @@ export const constants = {
     OPEN_AI_RESIGNATION_EMAIL_API_PREFIX: 'prod/openai/resignation_email_generator',
     OPEN_AI_CATCHY_TITLE_API_PREFIX: 'prod/openai/catchy-title-creator',
     OPEN_AI_SALES_INQUIRY_EMAIL_API_PREFIX: 'prod/openai/sales-inquiry-email-generator',
+    OPEN_AI_NEGOTIATION_EMAIL_API_PREFIX: 'prod/openai/negotiation-email-generator'
 };
