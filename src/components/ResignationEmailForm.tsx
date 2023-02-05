@@ -21,7 +21,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 
 
-export default function ResignationEmailForm(props: { setGeneratedText: React.Dispatch<React.SetStateAction<string>>}) {
+export default function ResignationEmailForm(props: {
+    setGeneratedText: React.Dispatch<React.SetStateAction<string>>,
+    setLoadingState: React.Dispatch<React.SetStateAction<boolean>>
+}) {
     const [reason, setReason] = useState("");
     const [resignationDate, setResignationDate] = useState<Date | null>(null);
     const [companyName, setCompanyName] = useState("");

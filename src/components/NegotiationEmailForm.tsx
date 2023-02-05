@@ -1,7 +1,7 @@
 /*
 Module defines a NegotiationEmailForm component that allows the user to generate a negotiation email 
 from a template. The component uses material ui components and hooks to manage state. The template provides 
-fields including, text field to enter the email they are responding to, a text field to enter the amount of money 
+fields including, a text field for the email the user is responding to, a text field to enter the amount of money 
 they want to ask for, a text field for the name of the company they are negotiating with, and a text field for 
 the name of the person they are negotiating with. The request is sent to the backend OpenAI Wrapper API. The request
 is sent using the axios library. The response is then displayed useing th callback setGeneratedText.

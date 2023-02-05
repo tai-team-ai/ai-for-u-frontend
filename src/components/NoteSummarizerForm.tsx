@@ -4,7 +4,10 @@ import { constants } from "../util/constants";
 import { Button, Form } from "react-bootstrap";
 
 
-export default function NoteSummarizerForm(props: { setGeneratedText: React.Dispatch<React.SetStateAction<string>>}) {
+export default function NoteSummarizerForm(props: {
+    setGeneratedText: React.Dispatch<React.SetStateAction<string>>,
+    setLoadingState: React.Dispatch<React.SetStateAction<boolean>>
+}) {
     const [noteSummarizer, setNoteSummarizer] = useState({
         notesToSummarize: "",
         numberOfBullets: "",
@@ -18,6 +21,7 @@ export default function NoteSummarizerForm(props: { setGeneratedText: React.Disp
     const handleSubmit = (event: any) => {
         event.preventDefault();
         props.setGeneratedText("Generating summary...");
+        props.setLoadingState(true);
         console.log(`Sending request ${JSON.stringify(noteSummarizer)} to ${constants.API_URL}${constants.OPEN_AI_NOTES_API_PREFIX}`)
         axios.post(`${constants.API_URL}${constants.OPEN_AI_NOTES_API_PREFIX}`, {
             notesToSummarize: noteSummarizer.notesToSummarize,
@@ -34,6 +38,10 @@ export default function NoteSummarizerForm(props: { setGeneratedText: React.Disp
         })
         .catch((error) => {
             console.log(error);
+            props.setGeneratedText("Error generating summary. Please try again.");
+        })
+        .finally(() => {
+            props.setLoadingState(false);
         });
     };
 

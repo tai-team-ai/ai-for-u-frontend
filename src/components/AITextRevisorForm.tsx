@@ -45,13 +45,15 @@ type numberOfRevisionOptionsType = {
 
 const numberOfRevisionOptions: numberOfRevisionOptionsType[] = [
     { value: 1, label: "1" },
-    { value: 2, label: "2" },
-    { value: 3, label: "3" }
+    { value: 2, label: "2" }
 ];
 
 
 
-export default function AITextRevisorForm(props: { setGeneratedText: React.Dispatch<React.SetStateAction<string>>}) {
+export default function AITextRevisorForm(props: {
+    setGeneratedText: React.Dispatch<React.SetStateAction<string>>,
+    setLoadingState: React.Dispatch<React.SetStateAction<boolean>>
+}) {
     const [text, setText] = useState("");
     const [numRevisions, setNumRevisions] = useState(1);
     const [revisionTypes, setRevisionTypes] = useState({});
@@ -82,6 +84,7 @@ export default function AITextRevisorForm(props: { setGeneratedText: React.Dispa
     const handleSubmit = (event: any) => {
         event.preventDefault();
         props.setGeneratedText("Generating revisions...");
+        props.setLoadingState(true);
         console.log(`Sending request ${JSON.stringify(text)} to ${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`)
         axios.post(`${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`, {
             textToRevise: text,
@@ -99,6 +102,10 @@ export default function AITextRevisorForm(props: { setGeneratedText: React.Dispa
         })
         .catch((error) => {
             console.log(error);
+            props.setGeneratedText("Error revising text. Please try again.");
+        })
+        .finally(() => {
+            props.setLoadingState(false);
         });
     };
 

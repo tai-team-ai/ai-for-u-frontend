@@ -17,7 +17,10 @@ import { Button, TextField, Typography, FormControl, Grid } from "@mui/material"
 import axios from "axios";
 import { constants } from "../util/constants";
 
-export default function SalesInquiryEmailForm(props: { setGeneratedText: React.Dispatch<React.SetStateAction<string>>}) {
+export default function SalesInquiryEmailForm(props: {
+    setGeneratedText: React.Dispatch<React.SetStateAction<string>>,
+    setLoadingState: React.Dispatch<React.SetStateAction<boolean>>
+}) {
     const [companyName, setCompanyName] = useState("");
     const [pointOfContact, setPointOfContact] = useState("");
     const [name, setName] = useState("");
@@ -84,7 +87,7 @@ export default function SalesInquiryEmailForm(props: { setGeneratedText: React.D
                             <TextField
                                 required
                                 id="pointOfContact"
-                                label="Point of Contact"
+                                label="Point of Contact at Company"
                                 value={pointOfContact}
                                 onChange={(event) => setPointOfContact(event.target.value)}
                             />
@@ -118,7 +121,7 @@ export default function SalesInquiryEmailForm(props: { setGeneratedText: React.D
                             <TextField
                                 required
                                 id="productName"
-                                label="Product Name"
+                                label="Name of Product you are Selling"
                                 value={productName}
                                 onChange={(event) => setProductName(event.target.value)}
                             />

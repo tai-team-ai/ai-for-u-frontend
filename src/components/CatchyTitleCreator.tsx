@@ -15,7 +15,10 @@ import { Button, TextField, Typography, FormControl, Grid, MenuItem, Select, Inp
 import axios from "axios";
 import { constants } from "../util/constants";
 
-export default function CatchyTitleCreator(props: { setGeneratedText: React.Dispatch<React.SetStateAction<string>>}) {
+export default function CatchyTitleCreator(props: {
+    setGeneratedText: React.Dispatch<React.SetStateAction<string>>,
+    setLoadingState: React.Dispatch<React.SetStateAction<boolean>>
+}) {
     const [text, setText] = useState("");
     const [targetAudience, setTargetAudience] = useState("");
     const [numTitles, setNumTitles] = useState("");

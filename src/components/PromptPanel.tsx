@@ -14,19 +14,29 @@ import AITextRevisorForm from "./AITextRevisorForm";
 import ResignationEmailForm from "./ResignationEmailForm";
 import CatchyTitleCreator from "./CatchyTitleCreator";
 import SalesInquiryEmailForm from "./SalesInquiryEmailForm";
-import NegotiationEmailForm from "./NegotiationEmailForm";
+import { CircularProgress } from "@mui/material";
 
 export default function PromptPanel() {
-    const [promptFormType, setPromptFormType] = useState("none");
+    const [promptFormType, setPromptForm] = useState("none");
     const [generatedText, setGeneratedText] = useState("");
+    const [loadingState, setLoadingState] = useState(false);
     const supportedPromptForms = {
-        noteSummarizer: <NoteSummarizerForm setGeneratedText={setGeneratedText}/>,
-        aiTextRevisor: <AITextRevisorForm setGeneratedText={setGeneratedText}/>,
-        resignationEmail: <ResignationEmailForm setGeneratedText={setGeneratedText}/>,
-        catchyTitleCreator: <CatchyTitleCreator setGeneratedText={setGeneratedText}/>,
-        salesInquiryEmailForm: <SalesInquiryEmailForm setGeneratedText={setGeneratedText}/>,
-        negotiationEmail: <NegotiationEmailForm setGeneratedText={setGeneratedText}/>,
+        noteSummarizer: <NoteSummarizerForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
+        aiTextRevisor: <AITextRevisorForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
+        resignationEmail: <ResignationEmailForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
+        catchyTitleCreator: <CatchyTitleCreator setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
+        salesInquiryEmailForm: <SalesInquiryEmailForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>
     }
+
+    const setPromptFormType = (promptType: string) => {
+        setGeneratedText("");
+        setLoadingState(false);
+        if (promptType === "none") {
+            return <div></div>;
+        } else {
+            setPromptForm(promptType);
+        }
+    };
 
     return (
         <div>
@@ -61,42 +71,13 @@ export default function PromptPanel() {
                     >
                         Sales Inquiry Email
                     </Dropdown.Item>
-                    <Dropdown.Item
-                        onClick={() => setPromptFormType("negotiationEmail")}
-                    >
-                        Negotiation Email
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                        onClick={() => setPromptFormType("thank_you_email")}
-                    >
-                        Thank You Email
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                        onClick={() => setPromptFormType("cover_letter")}
-                    >
-                        Cover Letter
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                        onClick={() => setPromptFormType("negotiation_email")}
-                    >
-                        Negotiation Email
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                        onClick={() => setPromptFormType("introduction")}
-                    >
-                        Introduction
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                        onClick={() => setPromptFormType("conclusion")}
-                    >
-                        Conclusion
-                    </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
             <br />
             <div>
                 {supportedPromptForms[promptFormType as keyof typeof supportedPromptForms]}
                 <div style={{whiteSpace: "pre-line"}}>{generatedText}</div>
+                {loadingState && <CircularProgress />}
             </div>
         </div>
     );
