@@ -1,4 +1,5 @@
 import axios from "axios";
+import { constants } from "../utils/constants";
 import React from "react";
 import { Button, Col, Container, Form, FormGroup, FormLabel, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
@@ -41,8 +42,9 @@ const Login = () => {
         //     alert("Oops! Some error occured.");
         // });
         localStorage.clear();
-        const token = formDataJSON["username"];
-        localStorage.setItem('user-token', String(token));
+        const token = String(formDataJSON["username"]);
+        localStorage.setItem(constants.LOCAL_TOKEN_KEY_NAME, token);
+        axios.defaults.headers.common[constants.LOCAL_TOKEN_KEY_NAME] = token
         setTimeout(() => {
             navigate('/');
         }

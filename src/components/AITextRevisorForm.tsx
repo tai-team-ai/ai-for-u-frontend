@@ -11,7 +11,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Button, Form, Row, Col } from "react-bootstrap";
 import Select from "react-select";
-import { constants } from "../util/constants";
+import { constants } from "../utils/constants";
 
 
 type ToneOptionsType = {

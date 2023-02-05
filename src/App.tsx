@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
-import { constants } from "./util/constants";
+import { constants } from "./utils/constants";
 import Footer from "./components/Footer";
 import PageNavBar from "./components/Navbar";
 

@@ -7,8 +7,8 @@ import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Login from './auth/Login';
 import Auth from './auth/Auth';
-import ProtectedRoute from './util/ProtectedRoute';
-import { constants } from './util/constants';
+import ProtectedRoute from './utils/ProtectedRoute';
+import { constants } from './utils/constants';
 import LandingPage from './pages/LandingPage';
 
 const root = ReactDOM.createRoot(

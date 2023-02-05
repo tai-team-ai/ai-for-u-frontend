@@ -15,7 +15,7 @@ and follow the same structure as the other form components.
 import { useState } from "react";
 import { Button, TextField, Typography, FormControl, Grid } from "@mui/material";
 import axios from "axios";
-import { constants } from "../util/constants";
+import { constants } from "../utils/constants";
 
 export default function SalesInquiryEmailForm(props: {
     setGeneratedText: React.Dispatch<React.SetStateAction<string>>,
