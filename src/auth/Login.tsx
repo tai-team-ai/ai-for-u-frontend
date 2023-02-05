@@ -44,7 +44,7 @@ const Login = () => {
         localStorage.clear();
         const token = String(formDataJSON["username"]);
         localStorage.setItem(constants.LOCAL_TOKEN_KEY_NAME, token);
-        axios.defaults.headers.common[constants.LOCAL_TOKEN_KEY_NAME] = token
+        // axios.defaults.headers.common[constants.LOCAL_TOKEN_KEY_NAME] = token
         setTimeout(() => {
             navigate('/');
         }

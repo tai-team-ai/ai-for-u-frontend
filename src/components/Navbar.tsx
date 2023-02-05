@@ -10,7 +10,7 @@ const PageNavBar = () => {
     const navigate = useNavigate();
     const logout = () => {
         localStorage.clear();
-        navigate(constants.LOGIN_ROUTE + "/login");
+        navigate(constants.LOGIN_ROUTE);
     }
     return (
         <React.Fragment>
