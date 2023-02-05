@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useState } from "react";
-import { constants } from "../constants";
+import { constants } from "../util/constants";
 import { Button, Form } from "react-bootstrap";
 
 

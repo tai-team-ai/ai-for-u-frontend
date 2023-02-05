@@ -1,11 +1,33 @@
-import { Container, Nav, Navbar } from "react-bootstrap";
+import React from "react";
+import { Button, Nav } from "react-bootstrap";
+import Container from 'react-bootstrap/Container';
+import Navbar from 'react-bootstrap/Navbar';
+import { useNavigate } from "react-router-dom";
+import { constants } from "../util/constants";
 
-export default function Header() {
+
+const LandingPageHeader = () => {
+    const navigate = useNavigate();
+    const logout = () => {
+        localStorage.clear();
+        navigate(constants.LOGIN_ROUTE + "/login");
+    }
     return (
-        <Navbar bg="light" expand="lg">
-            <Container>
-                <Navbar.Brand href="#home">AI Writer</Navbar.Brand>
-            </Container>
-        </Navbar>
+        <React.Fragment>
+            <Navbar bg="dark" expand="lg" className="navbar-dark">
+                <Container>
+                    <Navbar.Brand>AI for U (alpha preview)</Navbar.Brand>
+                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                    <Navbar.Collapse id="basic-navbar-nav">
+                        <Nav className="ms-auto">
+                            <Nav.Link>
+                                <Button className="btn-warning" onClick={logout}>Logout</Button>
+                            </Nav.Link>
+                        </Nav>
+                    </Navbar.Collapse>
+                </Container>
+            </Navbar>
+        </React.Fragment>
     );
 }
+export default LandingPageHeader;

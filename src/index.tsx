@@ -4,13 +4,32 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Login from './auth/Login';
+import Auth from './auth/Auth';
+import ProtectedRoute from './util/ProtectedRoute';
+import { constants } from './util/constants';
+import LandingPage from './pages/LandingPage/LandingPage';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <BrowserRouter basename={'/'}>
+        <Routes>
+            <Route path={constants.LOGIN_ROUTE} element={<Auth />}>
+                <Route path='login' element={<Login />} />
+            </Route>
+            <Route path="/" element={<App />}>
+                <Route path='' element={
+                    <ProtectedRoute>
+                        <LandingPage />
+                    </ProtectedRoute>
+                } />
+            </Route>
+        </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

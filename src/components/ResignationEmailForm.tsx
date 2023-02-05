@@ -14,7 +14,7 @@ follow the same structure as the other form components.
 import { useState } from "react";
 import { Button, TextField, Typography, FormControl, Grid, Slider } from "@mui/material";
 import axios from "axios";
-import { constants } from "../constants";
+import { constants } from "../util/constants";
 import type {} from '@mui/x-date-pickers/themeAugmentation';
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
