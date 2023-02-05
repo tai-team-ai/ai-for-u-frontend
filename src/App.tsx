@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { constants } from "./util/constants";
-import LandingPageHeader from "./components/Header";
 import Footer from "./components/Footer";
+import PageNavBar from "./components/Navbar";
 
 function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -20,7 +20,7 @@ function App() {
 
     return (
         <React.Fragment>
-            {isLoggedIn && <LandingPageHeader />}
+            {isLoggedIn && <PageNavBar />}
             <Outlet />
 			<Footer />
         </React.Fragment>

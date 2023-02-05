@@ -6,7 +6,7 @@ The PromptPanel component is used to display the forms that are available to the
 
 import React from "react";
 import { Container } from "react-bootstrap";
-import PromptPanel from "../../components/PromptPanel";
+import PromptPanel from "../components/PromptPanel";
 
 export default function LandingPage() {
     return (

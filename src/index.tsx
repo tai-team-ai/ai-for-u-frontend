@@ -9,28 +9,29 @@ import Login from './auth/Login';
 import Auth from './auth/Auth';
 import ProtectedRoute from './util/ProtectedRoute';
 import { constants } from './util/constants';
-import LandingPage from './pages/LandingPage/LandingPage';
+import LandingPage from './pages/LandingPage';
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+	document.getElementById('root') as HTMLElement
 );
+
 root.render(
-  <React.StrictMode>
-    <BrowserRouter basename={'/'}>
-        <Routes>
-            <Route path={constants.LOGIN_ROUTE} element={<Auth />}>
-                <Route path='login' element={<Login />} />
-            </Route>
-            <Route path="/" element={<App />}>
-                <Route path='' element={
-                    <ProtectedRoute>
-                        <LandingPage />
-                    </ProtectedRoute>
-                } />
-            </Route>
-        </Routes>
-    </BrowserRouter>
-  </React.StrictMode>
+	<React.StrictMode>
+		<BrowserRouter basename={'/'}>
+			<Routes>
+				<Route path={constants.LOGIN_ROUTE} element={<Auth />}>
+					<Route path='login' element={<Login />} />
+				</Route>
+				<Route path="/" element={<App />}>
+					<Route path='' element={
+						<ProtectedRoute>
+							<LandingPage />
+						</ProtectedRoute>
+					} />
+				</Route>
+			</Routes>
+		</BrowserRouter>
+	</React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

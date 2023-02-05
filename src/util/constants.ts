@@ -7,5 +7,6 @@ export const constants = {
     OPEN_AI_SALES_INQUIRY_EMAIL_API_PREFIX: 'prod/openai/sales-inquiry-email-generator',
     OPEN_AI_NEGOTIATION_EMAIL_API_PREFIX: 'prod/openai/negotiation-email-generator',
     LOCAL_TOKEN_KEY_NAME: 'token',
-    LOGIN_ROUTE: '/auth'
+    LOGIN_ROUTE: '/auth',
+    SITE_NAME: 'AI for U (alpha preview)'
 };

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { constants } from "../util/constants";
 
 
-const LandingPageHeader = () => {
+const PageNavBar = () => {
     const navigate = useNavigate();
     const logout = () => {
         localStorage.clear();
@@ -16,7 +16,7 @@ const LandingPageHeader = () => {
         <React.Fragment>
             <Navbar bg="dark" expand="lg" className="navbar-dark">
                 <Container>
-                    <Navbar.Brand>AI for U (alpha preview)</Navbar.Brand>
+                    <Navbar.Brand>{constants.SITE_NAME}</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="ms-auto">
@@ -30,4 +30,4 @@ const LandingPageHeader = () => {
         </React.Fragment>
     );
 }
-export default LandingPageHeader;
+export default PageNavBar;
