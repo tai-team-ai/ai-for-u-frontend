@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import Login from './auth/Login';
 import Auth from './auth/Auth';
 import ProtectedRoute from './util/ProtectedRoute';
@@ -19,8 +19,11 @@ root.render(
 	<React.StrictMode>
 		<BrowserRouter basename={'/'}>
 			<Routes>
-				<Route path={constants.LOGIN_ROUTE} element={<Auth />}>
-					<Route path='login' element={<Login />} />
+				<Route path={constants.LOGIN_ROUTE} element={
+					<Auth>
+						<Login />
+					</Auth>
+				}>
 				</Route>
 				<Route path="/" element={<App />}>
 					<Route path='' element={
@@ -29,6 +32,7 @@ root.render(
 						</ProtectedRoute>
 					} />
 				</Route>
+				<Route path="*" element={<Navigate to={constants.LOGIN_ROUTE} />} />
 			</Routes>
 		</BrowserRouter>
 	</React.StrictMode>

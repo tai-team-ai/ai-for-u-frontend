@@ -1,12 +1,13 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import Header from "../components/Navbar";
+import AuthNavbar from "../components/AuthNavbar";
 
-const Auth = () => {
+
+const Auth = (props: any) => {
     return (
         <React.Fragment>
-            <Header />
-            <Outlet />
+            <AuthNavbar />
+            {props.children}
         </React.Fragment>
     );
 }
