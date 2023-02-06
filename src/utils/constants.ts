@@ -6,6 +6,7 @@ export const constants = {
     OPEN_AI_CATCHY_TITLE_API_PREFIX: 'prod/openai/catchy-title-creator',
     OPEN_AI_SALES_INQUIRY_EMAIL_API_PREFIX: 'prod/openai/sales-inquiry-email-generator',
     OPEN_AI_NEGOTIATION_EMAIL_API_PREFIX: 'prod/openai/negotiation-email-generator',
+    AUTH_API_PREFIX: 'prod/openai/auth',
     LOCAL_TOKEN_KEY_NAME: 'token',
     LOGIN_ROUTE: '/auth/login',
     SITE_NAME: 'AI for U (alpha preview)'

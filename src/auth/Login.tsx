@@ -15,41 +15,43 @@ const Login = () => {
         }
         const formData = new FormData(formElement);
         const formDataJSON = Object.fromEntries(formData);
+        const token = String(formDataJSON["username"]);
         const btnPointer = document.querySelector('#login-btn');
         if (!btnPointer) {
             return;
         }
         btnPointer.innerHTML = 'Please wait..';
         btnPointer.setAttribute('disabled', "true");
-        // axios.post(loginAPI, formDataJSON).then((response) => {
-        //     btnPointer.innerHTML = 'Login';
-        //     btnPointer.removeAttribute('disabled');
-        //     const data = response.data;
-        //     const token = data.token;
-        //     if (!token) {
-        //         alert('Unable to login. Please try after some time.');
-        //         return;
-        //     }
-        //     localStorage.clear();
-        //     localStorage.setItem('user-token', token);
-        //     setTimeout(() => {
-        //         navigate('/');
-        //     }, 500);
-        // })
-        // .catch((error) => {
-        //     btnPointer.innerHTML = 'Login';
-        //     btnPointer.removeAttribute('disabled');
-        //     alert("Oops! Some error occured.");
-        // });
-        localStorage.clear();
-        const token = String(formDataJSON["username"]);
-        localStorage.setItem(constants.LOCAL_TOKEN_KEY_NAME, token);
 
-        setTimeout(() => {
-            navigate('/');
+        const request_body = {
+            token: token
         }
-        , 500);
-        console.log(formDataJSON);
+        console.log(`Sending request ${JSON.stringify(request_body)} to ${constants.API_URL}${constants.AUTH_API_PREFIX}`)
+        axios.post(constants.API_URL + constants.AUTH_API_PREFIX, request_body)
+            .then((response) => {
+                console.log(response);
+                btnPointer.innerHTML = 'Login';
+                btnPointer.removeAttribute('disabled');
+                const data = response.data;
+                const authenticated = data["authenticated"];
+                console.log("authenticated: " + authenticated)
+                if (authenticated == null || !authenticated) {
+                    alert('Error logging on. Please verify the spelling of your access code and try again.');
+                    return;
+                }
+                localStorage.clear();
+                localStorage.setItem(constants.LOCAL_TOKEN_KEY_NAME, token);
+                setTimeout(() => {
+                    navigate('/');
+                }, 500);
+            })
+            .catch((error) => {
+                btnPointer.innerHTML = 'Login';
+                btnPointer.removeAttribute('disabled');
+                alert("Oops! An error occurred, Please try again.");
+                console.log(error);
+            }
+        );
     }
 
     return (
