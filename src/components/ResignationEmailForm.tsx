@@ -44,6 +44,7 @@ export default function ResignationEmailForm(props: {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         props.setGeneratedText("Generating Email...");
+        props.setLoadingState(true);
         const request = {
             reason: reason,
             resignationDate: resignationDate,
@@ -62,15 +63,16 @@ export default function ResignationEmailForm(props: {
         axios.post(constants.API_URL + constants.OPEN_AI_RESIGNATION_EMAIL_API_PREFIX, request)
         .then(response => {
             console.log(response);
-            let titles = "Generated Catchy Titles:\n";
-            for (const [i, title] of response.data['titles'].entries()) {
-                titles += `Title ${i + 1}:\n${title}\n\n`;
-            }
+            let titles = "Generated Resignation Email:\n";
+            titles += response.data["resignationEmail"];
             props.setGeneratedText(titles);
         })
         .catch((error) => {
             console.log(error);
             props.setGeneratedText("Error generating email. Please try again.");
+        })
+        .finally(() => {
+            props.setLoadingState(false);
         });
     }
 

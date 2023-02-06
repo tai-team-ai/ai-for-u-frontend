@@ -42,6 +42,7 @@ export default function SalesInquiryEmailForm(props: {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         props.setGeneratedText("Generating Email...");
+        props.setLoadingState(true);
         const request = {
             companyName: companyName,
             pointOfContact: pointOfContact,
@@ -62,6 +63,9 @@ export default function SalesInquiryEmailForm(props: {
             console.log(error);
             props.setGeneratedText("Error generating email. Please try again later.");
         })
+        .finally(() => {
+            props.setLoadingState(false);
+        });
     }
 
     return (

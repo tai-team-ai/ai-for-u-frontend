@@ -32,6 +32,7 @@ export default function CatchyTitleCreator(props: {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         props.setGeneratedText("Generating Titles...");
+        props.setLoadingState(true);
         const request = {
             text: text,
             targetAudience: targetAudience,
@@ -52,6 +53,9 @@ export default function CatchyTitleCreator(props: {
             console.log(err);
             props.setGeneratedText("Error generating titles. Please try again.");
         })
+        .finally(() => {
+            props.setLoadingState(false);
+        });
     }
 
     return (
