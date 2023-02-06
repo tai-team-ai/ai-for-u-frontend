@@ -3,11 +3,14 @@ import { constants } from "../utils/constants";
 import React from "react";
 import { Button, Col, Container, Form, FormGroup, FormLabel, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 
 
 const Login = () => {
+    const [loadingState, setLoadingState] = React.useState(false);
     const navigate = useNavigate();
     const submitLoginForm = (event: any) => {
+        setLoadingState(true);
         event.preventDefault();
         const formElement: HTMLFormElement | null = document.querySelector('#loginForm');
         if (!formElement) {
@@ -50,6 +53,9 @@ const Login = () => {
                 btnPointer.removeAttribute('disabled');
                 alert("Oops! An error occurred, Please try again.");
                 console.log(error);
+            })
+            .finally(() => {
+                setLoadingState(false);
             }
         );
     }
@@ -67,6 +73,7 @@ const Login = () => {
                             </FormGroup>
                             <Button type="submit" className="btn-success mt-2" id="login-btn">Login</Button>
                         </Form>
+                        {loadingState && <CircularProgress className="mt-3" />}
                     </Col>
                 </Row>
             </Container>
