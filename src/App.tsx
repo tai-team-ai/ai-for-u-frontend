@@ -24,7 +24,9 @@ function App() {
         <React.Fragment>
             {isLoggedIn && <PageNavBar />}
             <Outlet />
-			<Footer />
+            <div>
+			    <Footer />
+            </div>
         </React.Fragment>
     );
 }

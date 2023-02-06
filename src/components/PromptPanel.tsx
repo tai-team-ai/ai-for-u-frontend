@@ -74,7 +74,7 @@ export default function PromptPanel() {
                 </Dropdown.Menu>
             </Dropdown>
             <br />
-            <div>
+            <div style={{marginBottom:"100px"}}>
                 {supportedPromptForms[promptFormType as keyof typeof supportedPromptForms]}
                 <div style={{whiteSpace: "pre-line"}}>{generatedText}</div>
                 {loadingState && <CircularProgress />}
