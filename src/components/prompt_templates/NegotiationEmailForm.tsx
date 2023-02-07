@@ -9,7 +9,7 @@ is sent using the axios library. The response is then displayed useing th callba
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { constants } from '../utils/constants';
+import { constants } from '../../utils/constants';
 import { Button, TextField, Typography, FormControl, Grid, Slider } from "@mui/material";
 
 export {}

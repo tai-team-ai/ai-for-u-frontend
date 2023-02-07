@@ -9,11 +9,11 @@ and dynamically generated based on the value in the select drop down.
 
 import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
-import NoteSummarizerForm from "./NoteSummarizerForm";
-import AITextRevisorForm from "./AITextRevisorForm";
-import ResignationEmailForm from "./ResignationEmailForm";
-import CatchyTitleCreator from "./CatchyTitleCreator";
-import SalesInquiryEmailForm from "./SalesInquiryEmailForm";
+import NoteSummarizerForm from "./prompt_templates/NoteSummarizerForm";
+import AITextRevisorForm from "./prompt_templates/AITextRevisorForm";
+import ResignationEmailForm from "./prompt_templates/ResignationEmailForm";
+import CatchyTitleCreator from "./prompt_templates/CatchyTitleCreatorForm";
+import SalesInquiryEmailForm from "./prompt_templates/SalesInquiryEmailForm";
 import { CircularProgress } from "@mui/material";
 
 export default function PromptPanel() {
