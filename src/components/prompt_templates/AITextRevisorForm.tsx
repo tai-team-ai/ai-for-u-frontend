@@ -2,7 +2,8 @@
 This module defines the AITextRevisorForm component. This component is a form that allows the user to 
 submit text to the backend for revision. The form contains a text area for the user to input text, a selector 
 for selecting the number of revisions to generate, a multi-select drop down for selecting the revision types,
-a select for the tone of the revisions, and a submit button. The form is submitted to the backend via an axios
+a select for the tone of the revisions, a slider that controls the creativity of the response, a rest button,
+and a submit button. The form is submitted to the backend via an axios
 post request to the endpoint listed in constants.ts. The form is passed a handler for setting the response of the 
 endpoint using handler setGeneratedText. All components should use material ui components and follow the same 
 structure as the other form components.
@@ -11,7 +12,7 @@ structure as the other form components.
 import axios from "axios";
 import { useState } from "react";
 import { constants } from "../../utils/constants";
-import { Box, Button, Chip, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
+import { Box, Button, Chip, FormControl, Grid, InputLabel, MenuItem, OutlinedInput, Select, SelectChangeEvent, Slider, TextField, Typography } from "@mui/material";
 
 
 
@@ -54,7 +55,7 @@ export default function AITextRevisorForm(props: {
     const [numRevisions, setNumRevisions] = useState(1);
     const [revisionTypes, setRevisionTypes] = useState<string[]>([]);
     const [tone, setTone] = useState("neutral");
-    const [menuIsOpen, setMenuIsOpen] = useState(false);
+    const [creativity, setCreativity] = useState(50);
 
 
     const handleRevisionTypeChange = (event: SelectChangeEvent<typeof revisionTypes>) => {
@@ -78,13 +79,16 @@ export default function AITextRevisorForm(props: {
         event.preventDefault();
         props.setGeneratedText("Generating revisions...");
         props.setLoadingState(true);
-        console.log(`Sending request ${JSON.stringify(text)} to ${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`)
-        axios.post(`${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`, {
+
+        const request_body = {
             textToRevise: text,
             revisionTypes: revisionTypes,
             numberOfRevisions: numRevisions,
-            tone: tone
-        })
+            tone: tone,
+            creativity: creativity
+        }
+        console.log(`Sending request ${JSON.stringify(text)} to ${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`)
+        axios.post(`${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`, request_body)
         .then((response) => {
             console.log(response)
             let revisions = ""
@@ -180,6 +184,23 @@ export default function AITextRevisorForm(props: {
                                     <MenuItem key={toneOption} value={toneOption.toLowerCase()}>{toneOption}</MenuItem>
                                 ))}
                             </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid item>
+                        <FormControl fullWidth>
+                            <Typography variant="body1" component="p" gutterBottom>
+                                Creativity Control (0 = least creative, 100 = most creative)
+                            </Typography>
+                            <Slider
+                                defaultValue={0.5}
+                                aria-label="Creativity Control"
+                                valueLabelDisplay="auto"
+                                step={5}
+                                marks
+                                min={0}
+                                max={100}
+                                onChange={(e, value) => setCreativity(value as number)}
+                            />
                         </FormControl>
                     </Grid>
                     <Grid item>
