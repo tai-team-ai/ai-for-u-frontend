@@ -121,6 +121,7 @@ export default function AITextRevisorForm(props: {
                                 multiline
                                 rows={5}
                                 onChange={(e) => setText(e.target.value)}
+                                required
                             />
                         </FormControl>
                     </Grid>
@@ -133,6 +134,7 @@ export default function AITextRevisorForm(props: {
                                 id="num-revisions"
                                 value={numRevisions}
                                 onChange={(e) => setNumRevisions(e.target.value as number)}
+                                required
                             >
                                 <MenuItem value={1}>1</MenuItem>
                                 <MenuItem value={2}>2</MenuItem>
@@ -146,6 +148,7 @@ export default function AITextRevisorForm(props: {
                         <Select
                             labelId="revision-type-label"
                             id="revision-type"
+                            required
                             multiple
                             value={revisionTypes}
                             onChange={handleRevisionTypeChange}
@@ -174,6 +177,7 @@ export default function AITextRevisorForm(props: {
                         <FormControl fullWidth>
                             <InputLabel id="tone-label">Tone</InputLabel>
                             <Select
+                                required
                                 label="Tone"
                                 id="tone"
                                 aria-label="Tone"

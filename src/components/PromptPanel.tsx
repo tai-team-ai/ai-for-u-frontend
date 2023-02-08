@@ -9,7 +9,7 @@ and dynamically generated based on the value in the select drop down.
 
 import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
-import NoteSummarizerForm from "./prompt_templates/NoteSummarizerForm";
+import NoteSummarizerForm from "./prompt_templates/TextSummarizerForm";
 import AITextRevisorForm from "./prompt_templates/AITextRevisorForm";
 import ResignationEmailForm from "./prompt_templates/ResignationEmailForm";
 import CatchyTitleCreator from "./prompt_templates/CatchyTitleCreatorForm";
