@@ -3,7 +3,7 @@ import { Container } from "react-bootstrap";
 const Footer = () => {
     return (
         <React.Fragment>
-            <footer className="bg-light border-top py-3 fixed-bottom">
+            <footer className="bg-light border-top py-3">
                 <Container>
                     &copy; AIforU - 2022
                 </Container>

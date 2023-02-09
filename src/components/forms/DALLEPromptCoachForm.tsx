@@ -45,7 +45,7 @@ export default function DALLEPromptCoachForm(props: {
             })
             .catch((error) => {
                 console.log(error);
-                props.setGeneratedText("Error: " + error);
+                props.setGeneratedText("Unfortunately your AI prompt coach is unavailable. Please try again.\n\nIf the problem persists, try refreshing the page or trying in a few minutes.");
             })
             .finally(() => {
                 props.setLoadingState(false);
@@ -64,7 +64,7 @@ export default function DALLEPromptCoachForm(props: {
                     </Grid>
                     <Grid item xs={12}>
                         <Typography variant="body1" gutterBottom>
-                            Enter a prompt for the image creator. The creator will coach you to create a prompt that will generate a good image.
+                            Enter a prompt for the image creator. The creator will coach you on how to craft a perfect prompt to generate the best image possible!
                         </Typography>
                     </Grid>
                     <Grid item xs={12}>
