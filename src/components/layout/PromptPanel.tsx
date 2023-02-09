@@ -14,6 +14,7 @@ import AITextRevisorForm from "../forms/AITextRevisorForm";
 import ResignationEmailForm from "../forms/ResignationEmailForm";
 import CatchyTitleCreator from "../forms/CatchyTitleCreatorForm";
 import SalesInquiryEmailForm from "../forms/SalesInquiryEmailForm";
+import DALLEPromptCoachForm from "../forms/DALLEPromptCoachForm";
 import { CircularProgress } from "@mui/material";
 
 export default function PromptPanel() {
@@ -21,6 +22,7 @@ export default function PromptPanel() {
     const [generatedText, setGeneratedText] = useState("");
     const [loadingState, setLoadingState] = useState(false);
     const supportedPromptForms = {
+        dallePromptCoach: <DALLEPromptCoachForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
         noteSummarizer: <SummarizerForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
         aiTextRevisor: <AITextRevisorForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
         resignationEmail: <ResignationEmailForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
@@ -46,6 +48,11 @@ export default function PromptPanel() {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
+                    <Dropdown.Item
+                        onClick={() => setPromptFormType("dallePromptCoach")}
+                    >
+                        Image Creator
+                    </Dropdown.Item>
                     <Dropdown.Item
                         onClick={() => setPromptFormType("noteSummarizer")}
                     >
