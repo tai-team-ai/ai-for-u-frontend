@@ -80,14 +80,20 @@ export default function AITextRevisorForm(props: {
         props.setGeneratedText("Generating revisions...");
         props.setLoadingState(true);
 
-        const request_body = {
+        interface LooseObject {
+            [key: string]: any
+        }
+
+        let request_body: LooseObject = {
             textToRevise: text,
-            revisionTypes: revisionTypes,
             numberOfRevisions: numRevisions,
             tone: tone,
             creativity: creativity
         }
-        console.log(`Sending request ${JSON.stringify(text)} to ${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`)
+        if (revisionTypes.length > 0) {
+            request_body.revisionType = revisionTypes;
+        }
+        console.log(`Sending request ${JSON.stringify(request_body)} to ${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`)
         axios.post(`${constants.API_URL}${constants.OPEN_AI_TEXT_REVISOR_API_PREFIX}`, request_body)
         .then((response) => {
             console.log(response)

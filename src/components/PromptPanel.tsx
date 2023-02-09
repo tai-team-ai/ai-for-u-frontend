@@ -57,14 +57,14 @@ export default function PromptPanel() {
                         AI Text Revisor
                     </Dropdown.Item>
                     <Dropdown.Item
-                        onClick={() => setPromptFormType("resignationEmail")}
-                    >
-                        Resignation Email
-                    </Dropdown.Item>
-                    <Dropdown.Item
                         onClick={() => setPromptFormType("catchyTitleCreator")}
                     >
                         Catchy Title Creator
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                        onClick={() => setPromptFormType("resignationEmail")}
+                    >
+                        Resignation Email
                     </Dropdown.Item>
                     <Dropdown.Item
                         onClick={() => setPromptFormType("salesInquiryEmailForm")}

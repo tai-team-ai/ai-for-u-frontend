@@ -11,7 +11,7 @@ follow the same structure as the other form components.
 */
 
 import { useState } from "react";
-import { Button, TextField, Typography, FormControl, Grid, MenuItem, Select, InputLabel } from "@mui/material";
+import { Button, TextField, Typography, FormControl, Grid, MenuItem, Select, InputLabel, Slider } from "@mui/material";
 import axios from "axios";
 import { constants } from "../../utils/constants";
 
@@ -21,12 +21,14 @@ export default function CatchyTitleCreator(props: {
 }) {
     const [text, setText] = useState("");
     const [targetAudience, setTargetAudience] = useState("");
-    const [numTitles, setNumTitles] = useState("");
+    const [numTitles, setNumTitles] = useState(3);
+    const [creativity, setCreativity] = useState(50);
 
     const resetForm = () => {
         setText("");
         setTargetAudience("");
-        setNumTitles("");
+        setNumTitles(3);
+        setCreativity(50);
     }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -36,7 +38,8 @@ export default function CatchyTitleCreator(props: {
         const request = {
             text: text,
             targetAudience: targetAudience,
-            numTitles: numTitles
+            numTitles: numTitles,
+            creativity: creativity
         }
         console.log(`Sending request: ${JSON.stringify(request)} to ${constants.API_URL + constants.OPEN_AI_CATCHY_TITLE_API_PREFIX}`)
 
@@ -98,7 +101,7 @@ export default function CatchyTitleCreator(props: {
                             id="demo-simple-select"
                             value={numTitles}
                             label="Number of Titles"
-                            onChange={(event) => setNumTitles(event.target.value)}
+                            onChange={(event) => setNumTitles(event.target.value as number)}
                             required
                         >
                             <MenuItem value={1}>1</MenuItem>
@@ -107,6 +110,23 @@ export default function CatchyTitleCreator(props: {
                             <MenuItem value={4}>4</MenuItem>
                             <MenuItem value={5}>5</MenuItem>
                         </Select>
+                    </FormControl>
+                </Grid>
+                <Grid item>
+                    <FormControl fullWidth>
+                        <Typography variant="body1" component="p" gutterBottom>
+                            Creativity Control (0 = least creative, 100 = most creative)
+                        </Typography>
+                        <Slider
+                            defaultValue={0.5}
+                            aria-label="Creativity Control"
+                            valueLabelDisplay="auto"
+                            step={5}
+                            marks
+                            min={0}
+                            max={100}
+                            onChange={(event, value) => setCreativity(value as number)}
+                        />
                     </FormControl>
                 </Grid>
                 <Grid item>

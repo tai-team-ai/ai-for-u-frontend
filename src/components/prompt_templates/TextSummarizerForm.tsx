@@ -10,16 +10,16 @@ export default function SummarizerForm(props: {
 }) {
     const [summarizer, setSummarizer] = useState({
         textToSummarize: "",
-        numberOfBullets: "",
-        numberOfActionItems: ""
+        numberOfBullets: 0,
+        numberOfActionItems: 0
     });
     const [includeSummarySentence, setIncludeSummarySentence] = useState(false);
     
     const resetForm = () => {
         setSummarizer({
             textToSummarize: "",
-            numberOfBullets: "",
-            numberOfActionItems: "",
+            numberOfBullets: 0,
+            numberOfActionItems: 0,
         });
         setIncludeSummarySentence(false);
     }
@@ -41,10 +41,16 @@ export default function SummarizerForm(props: {
         })
         .then((response) => {
             console.log(response)
-            const summary_sentence: string = response.data["summarySentence"];
-            const bullet_points: string = response.data["bulletPoints"];
-            const action_items: string = response.data["actionItems"];
-            const summary: string = `Summary:\n${summary_sentence} \n\nBullet Points:\n${bullet_points} \n\nAction Items:\n${action_items}`
+            let summary: string = ""
+            if (includeSummarySentence) {
+                summary += response.data["summarySentence"] + "\n\n";
+            }
+            if (summarizer.numberOfBullets > 0) {
+                summary += "Bullet Points:\n" + response.data["bulletPoints"] + "\n\n";
+            }
+            if (summarizer.numberOfActionItems > 0) {
+                summary += "Action Items:\n" + response.data["actionItems"] + "\n\n";
+            }
             props.setGeneratedText(summary);
         })
         .catch((error) => {

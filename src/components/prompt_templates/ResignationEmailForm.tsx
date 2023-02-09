@@ -50,8 +50,7 @@ export default function ResignationEmailForm(props: {
             resignationDate: resignationDate,
             companyName: companyName,
             managerName: managerName,
-            notes: notes,
-            bluntness: bluntness
+            notes: notes
         }
         
         if (resignationDate === null) {
@@ -142,23 +141,6 @@ export default function ResignationEmailForm(props: {
                                 variant="outlined"
                                 value={notes}
                                 onChange={(event) => setNotes(event.target.value)}
-                            />
-                        </FormControl>
-                    </Grid>
-                    <Grid item>
-                        <FormControl fullWidth>
-                            <Typography id="input-slider" gutterBottom>
-                                Bluntness (0 = most polite, 100 = most blunt)
-                            </Typography>
-                            <Slider
-                                aria-label="Temperature"
-                                defaultValue={30}
-                                valueLabelDisplay="auto"
-                                step={5}
-                                marks
-                                min={0}
-                                max={100}
-                                onChange={(event, newValue) => {setBluntness(newValue as number)}}
                             />
                         </FormControl>
                     </Grid>
