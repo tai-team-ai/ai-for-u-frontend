@@ -9,7 +9,7 @@ follow the same structure as the other form components. Axios is used to send th
 */
 
 import { useState } from "react";
-import { Button, TextField, Typography, FormControl, Grid } from "@mui/material";
+import { Button, TextField, Typography, FormControl, Grid, FormControlLabel, Checkbox } from "@mui/material";
 import axios from "axios";
 import { constants } from "../../utils/constants";
 import SendIcon from '@mui/icons-material/Send';
@@ -22,19 +22,19 @@ export default function DALLEPromptCoachForm(props: {
 }) {
     const [prompt, setPrompt] = useState("");
     const [message, setMessage] = useState("");
+    const [returnCoachingTips, setReturnCoachingTips] = useState(false);
 
     const resetForm = () => {
         setPrompt("");
         setMessage("");
     }
 
-   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         props.setGeneratedText("Generating Response...");
         props.setLoadingState(true);
         const request = {
-            prompt: prompt,
-            message: message
+            prompt: prompt + message
         }
         console.log(`Sending request: ${JSON.stringify(request)} to ${constants.API_URL + constants.OPEN_AI_DALLE_PROMPT_COACH_API_PREFIX}`);
         axios.post(constants.API_URL + constants.OPEN_AI_DALLE_PROMPT_COACH_API_PREFIX, request)
@@ -42,6 +42,7 @@ export default function DALLEPromptCoachForm(props: {
                 console.log(`Received response: ${JSON.stringify(response.data)}`);
                 props.setGeneratedText(response.data.response);
                 setPrompt(prompt + message);
+                setPrompt(prompt + response.data.response);
                 setMessage("");
             })
             .catch((error) => {
@@ -92,11 +93,25 @@ export default function DALLEPromptCoachForm(props: {
                                 value={message}
                                 onChange={(event) => setMessage(event.target.value)}
                                 variant="outlined"
+                                required
                             />
                         </FormControl>
                     </Grid>
                     <Grid item>
                         <Grid container spacing={2} justifyContent="flex-end">
+                            <Grid item>
+                                <FormControl fullWidth>
+                                    <FormControlLabel control= {
+                                        <Checkbox
+                                            checked={returnCoachingTips}
+                                            onChange={(event) => setReturnCoachingTips(event.target.checked)}
+                                            inputProps={{ 'aria-label': 'controlled' }}
+                                        />
+                                    }
+                                    label="Include Image Creation Tips"
+                                    />
+                                </FormControl>
+                            </Grid>
                             <Grid item>
                                 <Button variant="contained" color="secondary" onClick={resetForm}>
                                     Reset
