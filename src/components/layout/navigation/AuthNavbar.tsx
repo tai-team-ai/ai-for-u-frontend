@@ -2,7 +2,7 @@
 import React from "react";
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
-import { constants } from "../utils/constants";
+import { constants } from "../../../utils/constants";
 
 const AuthNavbar = () => {
     return (

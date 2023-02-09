@@ -9,11 +9,11 @@ and dynamically generated based on the value in the select drop down.
 
 import { useState } from "react";
 import { Dropdown } from "react-bootstrap";
-import NoteSummarizerForm from "./prompt_templates/TextSummarizerForm";
-import AITextRevisorForm from "./prompt_templates/AITextRevisorForm";
-import ResignationEmailForm from "./prompt_templates/ResignationEmailForm";
-import CatchyTitleCreator from "./prompt_templates/CatchyTitleCreatorForm";
-import SalesInquiryEmailForm from "./prompt_templates/SalesInquiryEmailForm";
+import SummarizerForm from "../forms/TextSummarizerForm";
+import AITextRevisorForm from "../forms/AITextRevisorForm";
+import ResignationEmailForm from "../forms/ResignationEmailForm";
+import CatchyTitleCreator from "../forms/CatchyTitleCreatorForm";
+import SalesInquiryEmailForm from "../forms/SalesInquiryEmailForm";
 import { CircularProgress } from "@mui/material";
 
 export default function PromptPanel() {
@@ -21,7 +21,7 @@ export default function PromptPanel() {
     const [generatedText, setGeneratedText] = useState("");
     const [loadingState, setLoadingState] = useState(false);
     const supportedPromptForms = {
-        noteSummarizer: <NoteSummarizerForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
+        noteSummarizer: <SummarizerForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
         aiTextRevisor: <AITextRevisorForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
         resignationEmail: <ResignationEmailForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
         catchyTitleCreator: <CatchyTitleCreator setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,

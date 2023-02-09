@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { constants } from "./utils/constants";
-import Footer from "./components/Footer";
-import PageNavBar from "./components/Navbar";
+import Footer from "./components/layout/Footer";
+import PageNavBar from "./components/layout/navigation/Navbar";
 import axios from "axios";
 
 function App() {

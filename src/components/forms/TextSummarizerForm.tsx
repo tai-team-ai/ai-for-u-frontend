@@ -4,7 +4,7 @@ import { constants } from "../../utils/constants";
 import { Button, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 
 
-export default function SummarizerForm(props: {
+export default function (props: {
     setGeneratedText: React.Dispatch<React.SetStateAction<string>>,
     setLoadingState: React.Dispatch<React.SetStateAction<boolean>>
 }) {
