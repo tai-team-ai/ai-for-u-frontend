@@ -20,33 +20,31 @@ export default function DALLEPromptCoachForm(props: {
     setGeneratedText: React.Dispatch<React.SetStateAction<string>>,
     setLoadingState: React.Dispatch<React.SetStateAction<boolean>>
 }) {
-    const [prompt, setPrompt] = useState("");
+    const [dialogue, setDialogue] = useState("");
     const [message, setMessage] = useState("");
     const [returnCoachingTips, setReturnCoachingTips] = useState(false);
 
     const resetForm = () => {
-        setPrompt("");
+        setDialogue("");
         setMessage("");
     }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        props.setGeneratedText("Generating Response...");
-        props.setLoadingState(true);
         const request = {
-            prompt: prompt + message
+            dialogue: dialogue + message
         }
+        props.setLoadingState(true);
+        props.setGeneratedText("");
         console.log(`Sending request: ${JSON.stringify(request)} to ${constants.API_URL + constants.OPEN_AI_DALLE_PROMPT_COACH_API_PREFIX}`);
         axios.post(constants.API_URL + constants.OPEN_AI_DALLE_PROMPT_COACH_API_PREFIX, request)
             .then((response) => {
                 console.log(`Received response: ${JSON.stringify(response.data)}`);
-                props.setGeneratedText(response.data.response);
-                setPrompt(prompt + message);
-                setPrompt(prompt + response.data.response);
+                setDialogue(response.data.dialog);
                 setMessage("");
             })
             .catch((error) => {
-                console.log(`Received error: ${error}`);
+                console.log(error);
                 props.setGeneratedText("Error: " + error);
             })
             .finally(() => {
@@ -75,9 +73,9 @@ export default function DALLEPromptCoachForm(props: {
                                 id="prompt"
                                 label="Prompt"
                                 multiline
-                                rows={4}
-                                value={prompt}
-                                onChange={(event) => setPrompt(event.target.value)}
+                                maxRows={50}
+                                value={dialogue}
+                                onChange={(event) => setDialogue(event.target.value)}
                                 variant="outlined"
                                 disabled
                             />
@@ -89,7 +87,7 @@ export default function DALLEPromptCoachForm(props: {
                                 id="message"
                                 label="What kind of image would you like to create?"
                                 multiline
-                                rows={4}
+                                rows={2}
                                 value={message}
                                 onChange={(event) => setMessage(event.target.value)}
                                 variant="outlined"
@@ -106,6 +104,7 @@ export default function DALLEPromptCoachForm(props: {
                                             checked={returnCoachingTips}
                                             onChange={(event) => setReturnCoachingTips(event.target.checked)}
                                             inputProps={{ 'aria-label': 'controlled' }}
+                                            disabled={dialogue === "" ? false : true}
                                         />
                                     }
                                     label="Include Image Creation Tips"
