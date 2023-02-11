@@ -18,7 +18,8 @@ import { Box } from "@mui/system";
 
 export default function DALLEPromptCoachForm(props: {
     setGeneratedText: React.Dispatch<React.SetStateAction<string>>,
-    setLoadingState: React.Dispatch<React.SetStateAction<boolean>>
+    setLoadingState: React.Dispatch<React.SetStateAction<boolean>>,
+    setGeneratedImageUrl: React.Dispatch<React.SetStateAction<string>>
 }) {
     const [dialogue, setDialogue] = useState("");
     const [message, setMessage] = useState("");
@@ -27,25 +28,30 @@ export default function DALLEPromptCoachForm(props: {
     const resetForm = () => {
         setDialogue("");
         setMessage("");
+        setReturnCoachingTips(false);
+        props.setLoadingState(false);
+        props.setGeneratedText("");
+        props.setGeneratedImageUrl("");
     }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const request = {
-            dialogue: dialogue + message,
+            dialogue: dialogue + "User: " + message,
             returnCoachingTips: returnCoachingTips
         }
-        props.setLoadingState(true);
         props.setGeneratedText("");
+        props.setLoadingState(true);
         console.log(`Sending request: ${JSON.stringify(request)} to ${constants.API_URL + constants.OPEN_AI_DALLE_PROMPT_COACH_API_PREFIX}`);
         axios.post(constants.API_URL + constants.OPEN_AI_DALLE_PROMPT_COACH_API_PREFIX, request)
             .then((response) => {
                 console.log(`Received response: ${JSON.stringify(response.data)}`);
-                if (response.data.dialog === "" && response.data.image_url !== "") {
-                    props.setGeneratedText(response.data.image_url);
+                if (response.data.imageUrl !== "") {
+                    props.setGeneratedText("Here's your optimized prompt & image!🎉\nPrompt: " + response.data.dialogue);
+                    props.setGeneratedImageUrl(response.data.imageUrl);
                 }
                 else {
-                    setDialogue(response.data.dialog);
+                    setDialogue(response.data.dialogue);
                 }
                 setMessage("");
             })

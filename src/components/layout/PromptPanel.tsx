@@ -20,9 +20,10 @@ import { CircularProgress } from "@mui/material";
 export default function PromptPanel() {
     const [promptFormType, setPromptForm] = useState("none");
     const [generatedText, setGeneratedText] = useState("");
+    const [generatedImageUrl, setGeneratedImageUrl] = useState("");
     const [loadingState, setLoadingState] = useState(false);
     const supportedPromptForms = {
-        dallePromptCoach: <DALLEPromptCoachForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
+        dallePromptCoach: <DALLEPromptCoachForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState} setGeneratedImageUrl={setGeneratedImageUrl}/>,
         noteSummarizer: <SummarizerForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
         aiTextRevisor: <AITextRevisorForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
         resignationEmail: <ResignationEmailForm setGeneratedText={setGeneratedText} setLoadingState={setLoadingState}/>,
@@ -84,6 +85,7 @@ export default function PromptPanel() {
             <div style={{marginBottom:"100px"}}>
                 {supportedPromptForms[promptFormType as keyof typeof supportedPromptForms]}
                 <div style={{whiteSpace: "pre-line"}}>{generatedText}</div>
+                {generatedImageUrl !== "" ? <img width="512" height="512" src={generatedImageUrl} alt="generatedText"/> : <div></div>}
                 {loadingState && <CircularProgress />}
             </div>
         </div>
