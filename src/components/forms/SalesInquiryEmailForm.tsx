@@ -80,7 +80,7 @@ export default function SalesInquiryEmailForm(props: {
                             <TextField
                                 required
                                 id="companyName"
-                                label="Company Name"
+                                label="Company Name of the Company You Would Like to Sell Your Product to"
                                 value={companyName}
                                 onChange={(event) => setCompanyName(event.target.value)}
                             />
@@ -91,7 +91,7 @@ export default function SalesInquiryEmailForm(props: {
                             <TextField
                                 required
                                 id="pointOfContact"
-                                label="Point of Contact at Company"
+                                label="Point of Contact at Company You Would Like to Sell Your Product to"
                                 value={pointOfContact}
                                 onChange={(event) => setPointOfContact(event.target.value)}
                             />
@@ -114,7 +114,7 @@ export default function SalesInquiryEmailForm(props: {
                                 required
                                 multiline
                                 id="reason"
-                                label="Reason for Inquiry"
+                                label="Reason for Your Sales Inquiry"
                                 value={reason}
                                 onChange={(event) => setReason(event.target.value)}
                             />
@@ -125,7 +125,7 @@ export default function SalesInquiryEmailForm(props: {
                             <TextField
                                 required
                                 id="productName"
-                                label="Name of Product you are Selling"
+                                label="Name of Product You Would Like to Sell to the Company"
                                 value={productName}
                                 onChange={(event) => setProductName(event.target.value)}
                             />
@@ -137,7 +137,7 @@ export default function SalesInquiryEmailForm(props: {
                                 required
                                 multiline
                                 id="productDescription"
-                                label="Product Description"
+                                label="Your Product's Description"
                                 value={productDescription}
                                 onChange={(event) => setProductDescription(event.target.value)}
                             />
@@ -149,7 +149,7 @@ export default function SalesInquiryEmailForm(props: {
                                 required
                                 multiline
                                 id="problem"
-                                label="Problem that Product Solves"
+                                label="Problem that Your Product Solves"
                                 value={problem}
                                 onChange={(event) => setProblem(event.target.value)}
                             />
