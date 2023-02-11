@@ -32,7 +32,8 @@ export default function DALLEPromptCoachForm(props: {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const request = {
-            dialogue: dialogue + message
+            dialogue: dialogue + message,
+            returnCoachingTips: returnCoachingTips
         }
         props.setLoadingState(true);
         props.setGeneratedText("");
@@ -40,12 +41,17 @@ export default function DALLEPromptCoachForm(props: {
         axios.post(constants.API_URL + constants.OPEN_AI_DALLE_PROMPT_COACH_API_PREFIX, request)
             .then((response) => {
                 console.log(`Received response: ${JSON.stringify(response.data)}`);
-                setDialogue(response.data.dialog);
+                if (response.data.dialog === "" && response.data.image_url !== "") {
+                    props.setGeneratedText(response.data.image_url);
+                }
+                else {
+                    setDialogue(response.data.dialog);
+                }
                 setMessage("");
             })
             .catch((error) => {
                 console.log(error);
-                props.setGeneratedText("Unfortunately your AI prompt coach is unavailable. Please try again.\n\nIf the problem persists, try refreshing the page or trying in a few minutes.");
+                props.setGeneratedText("An error generating your image has occured. Please try again.\n\nIf the problem persists, try refreshing the page or trying in a few minutes.");
             })
             .finally(() => {
                 props.setLoadingState(false);
@@ -67,20 +73,23 @@ export default function DALLEPromptCoachForm(props: {
                             Enter a prompt for the image creator. The creator will coach you on how to craft a perfect prompt to generate the best image possible!
                         </Typography>
                     </Grid>
-                    <Grid item xs={12}>
-                        <FormControl fullWidth>
-                            <TextField
-                                id="prompt"
-                                label="Prompt"
-                                multiline
-                                maxRows={50}
-                                value={dialogue}
-                                onChange={(event) => setDialogue(event.target.value)}
-                                variant="outlined"
-                                disabled
-                            />
-                        </FormControl>
-                    </Grid>
+                    {dialogue !== "" ? 
+                        <Grid item xs={12}>
+                            <FormControl fullWidth>
+                                <TextField
+                                    id="prompt"
+                                    label="Prompt Coaching Session"
+                                    multiline
+                                    maxRows={50}
+                                    value={dialogue}
+                                    onChange={(event) => setDialogue(event.target.value)}
+                                    variant="outlined"
+                                    disabled
+                                />
+                            </FormControl>
+                        </Grid>
+                        : null    
+                    }
                     <Grid item xs={12}>
                         <FormControl fullWidth>
                             <TextField
@@ -104,7 +113,6 @@ export default function DALLEPromptCoachForm(props: {
                                             checked={returnCoachingTips}
                                             onChange={(event) => setReturnCoachingTips(event.target.checked)}
                                             inputProps={{ 'aria-label': 'controlled' }}
-                                            disabled={dialogue === "" ? false : true}
                                         />
                                     }
                                     label="Include Image Creation Tips"
