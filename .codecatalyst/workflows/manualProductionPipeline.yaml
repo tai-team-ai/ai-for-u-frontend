@@ -2,35 +2,6 @@ Name: manualProductionPipeline
 SchemaVersion: "1.0"
 Triggers: []
 Actions:
-  BuildAndTest:
-    Identifier: aws/build@v1
-    Compute:
-      Type: Lambda
-      Fleet: Linux.x86-64.XLarge
-    Inputs:
-      Sources:
-        - WorkflowSource
-    Outputs:
-      Artifacts:
-        - Name: build
-          Files:
-            - cdk/**/*
-      AutoDiscoverReports:
-        IncludePaths:
-          - coverage/**
-          - reports/**
-    Configuration:
-      Steps:
-        - Run: npm install
-        - Run: npm test -- --coverage --watchAll=false --testResultsProcessor="jest-junit"
-        - Run: npm run build
-        - Run: mkdir -p cdk/frontend/build
-        - Run: mv build/* cdk/frontend/build/
-    Environment:
-      Connections:
-        - Role: CodeCatalystPreviewDevelopmentAdministrator-vcldb2
-          Name: Production
-      Name: production
   CDKBootstrapAction:
     Identifier: aws/cdk-bootstrap@v1
     Configuration:
@@ -61,8 +32,5 @@ Actions:
       Name: production
     DependsOn:
       - CDKBootstrapAction
-      - BuildAndTest
     Inputs:
-      Artifacts:
-        - build
       Sources: []
