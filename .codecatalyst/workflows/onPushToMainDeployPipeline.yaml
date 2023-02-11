@@ -1,5 +1,5 @@
 
-Name: onPushToMainDeployPipeline
+Name: onPushToMainDevPipeline
 SchemaVersion: "1.0"
 Triggers:
   - Type: PUSH
