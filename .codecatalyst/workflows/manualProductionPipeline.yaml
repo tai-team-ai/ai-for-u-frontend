@@ -6,6 +6,7 @@ Actions:
     Identifier: aws/build@v1
     Compute:
       Type: Lambda
+      Fleet: Linux.x86-64.XLarge
     Inputs:
       Sources:
         - WorkflowSource
