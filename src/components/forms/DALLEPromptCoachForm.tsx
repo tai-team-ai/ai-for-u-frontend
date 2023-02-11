@@ -24,6 +24,7 @@ export default function DALLEPromptCoachForm(props: {
     const [dialogue, setDialogue] = useState("");
     const [message, setMessage] = useState("");
     const [returnCoachingTips, setReturnCoachingTips] = useState(false);
+    const [messageLabel, setMessageLabel] = useState("What kind of image would you like to create?");
 
     const resetForm = () => {
         setDialogue("");
@@ -50,8 +51,10 @@ export default function DALLEPromptCoachForm(props: {
                 if (response.data.imageUrls !==  undefined && response.data.imageUrls.length !== 0) {
                     props.setGeneratedText("Here's your optimized prompt & image!🎉\nPrompt: " + response.data.dialogue);
                     props.setGeneratedImageUrls(response.data.imageUrls);
+                    setMessageLabel("What kind of image would you like to create?");
                 }
                 else {
+                    setMessageLabel("Please provide more details about the image you would like to create.");
                     setDialogue(response.data.dialogue);
                 }
                 setMessage("");
@@ -101,7 +104,7 @@ export default function DALLEPromptCoachForm(props: {
                         <FormControl fullWidth>
                             <TextField
                                 id="message"
-                                label="What kind of image would you like to create?"
+                                label={messageLabel}
                                 multiline
                                 rows={2}
                                 value={message}
