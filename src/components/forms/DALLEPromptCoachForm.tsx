@@ -19,7 +19,7 @@ import { Box } from "@mui/system";
 export default function DALLEPromptCoachForm(props: {
     setGeneratedText: React.Dispatch<React.SetStateAction<string>>,
     setLoadingState: React.Dispatch<React.SetStateAction<boolean>>,
-    setGeneratedImageUrl: React.Dispatch<React.SetStateAction<string>>
+    setGeneratedImageUrls: React.Dispatch<React.SetStateAction<string[]>>
 }) {
     const [dialogue, setDialogue] = useState("");
     const [message, setMessage] = useState("");
@@ -31,7 +31,7 @@ export default function DALLEPromptCoachForm(props: {
         setReturnCoachingTips(false);
         props.setLoadingState(false);
         props.setGeneratedText("");
-        props.setGeneratedImageUrl("");
+        props.setGeneratedImageUrls([""]);
     }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -42,13 +42,14 @@ export default function DALLEPromptCoachForm(props: {
         }
         props.setGeneratedText("");
         props.setLoadingState(true);
+        props.setGeneratedImageUrls([""]);
         console.log(`Sending request: ${JSON.stringify(request)} to ${constants.API_URL + constants.OPEN_AI_DALLE_PROMPT_COACH_API_PREFIX}`);
         axios.post(constants.API_URL + constants.OPEN_AI_DALLE_PROMPT_COACH_API_PREFIX, request)
             .then((response) => {
                 console.log(`Received response: ${JSON.stringify(response.data)}`);
-                if (response.data.imageUrl !== "") {
+                if (response.data.imageUrls !==  undefined && response.data.imageUrls.length !== 0) {
                     props.setGeneratedText("Here's your optimized prompt & image!🎉\nPrompt: " + response.data.dialogue);
-                    props.setGeneratedImageUrl(response.data.imageUrl);
+                    props.setGeneratedImageUrls(response.data.imageUrls);
                 }
                 else {
                     setDialogue(response.data.dialogue);
