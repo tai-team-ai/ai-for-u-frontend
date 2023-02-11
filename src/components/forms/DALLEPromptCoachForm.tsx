@@ -82,6 +82,9 @@ export default function DALLEPromptCoachForm(props: {
                         <Typography variant="body1" gutterBottom>
                             Enter a prompt for the image creator. The creator will coach you on how to craft a perfect prompt to generate the best image possible!
                         </Typography>
+                        <Typography variant="h6" gutterBottom>
+                            (You will receive an error if you request explicit content or request images with peoples names.)
+                        </Typography>
                     </Grid>
                     {dialogue !== "" ? 
                         <Grid item xs={12}>
