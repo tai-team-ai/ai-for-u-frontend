@@ -114,7 +114,7 @@ export default function SalesInquiryEmailForm(props: {
                                 required
                                 multiline
                                 id="reason"
-                                label="Reason for Your Sales Inquiry"
+                                label="Reason for Your Sales Inquiry (why are you contacting this company?)"
                                 value={reason}
                                 onChange={(event) => setReason(event.target.value)}
                             />

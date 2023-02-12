@@ -86,9 +86,11 @@ export default function PromptPanel() {
             <br />
             <div style={{marginBottom:"100px"}}>
                 {supportedPromptForms[promptFormType as keyof typeof supportedPromptForms]}
-                <div style={{whiteSpace: "pre-line"}}>{generatedText}</div>
-                {generatedImageUrls[0] !== "" ? images(generatedImageUrls) : <div></div>}
                 {loadingState && <CircularProgress />}
+                <b>{generatedText}</b>
+                <div style={{height:"20px"}}></div>
+                {generatedImageUrls[0] !== "" ? images(generatedImageUrls) : <div></div>}
+                <div style={{height:"100px"}}></div>
             </div>
         </div>
     );
