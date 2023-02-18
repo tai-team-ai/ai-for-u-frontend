@@ -1,12 +1,12 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import AuthNavbar from "../components/layout/navigation/AuthNavbar";
+import Navbar from "../components/layout/navigation/Navbar";
 
 
 const Auth = (props: any) => {
     return (
         <React.Fragment>
-            <AuthNavbar />
+            <Navbar isLoggedIn={false} />
             {props.children}
         </React.Fragment>
     );

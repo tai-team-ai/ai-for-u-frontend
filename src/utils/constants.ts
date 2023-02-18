@@ -10,7 +10,13 @@ export const constants = {
     OPEN_AI_NEGOTIATION_EMAIL_API_PREFIX: DEPLOYMENT_ENV + '/openai/negotiation-email-generator',
     AUTH_API_PREFIX: DEPLOYMENT_ENV + '/openai/auth',
     LOCAL_TOKEN_KEY_NAME: 'token',
-    LOGIN_ROUTE: '/auth/login',
     SITE_NAME: 'AI for U (alpha preview)',
-    OPEN_AI_DALLE_PROMPT_COACH_API_PREFIX: DEPLOYMENT_ENV + '/openai/dalle-prompt-coach'
+    OPEN_AI_DALLE_PROMPT_COACH_API_PREFIX: DEPLOYMENT_ENV + '/openai/dalle-prompt-coach',
 };
+
+export const routes = {
+    LOGIN: '/auth/login',
+    SANDBOX: '/app/sandbox/',
+    TEMPLATES: '/app/templates/',
+    APP: '/app',
+}

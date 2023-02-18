@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { constants } from "./constants";
+import { constants, routes } from "./constants";
 
 
 const ProtectedRoute = (props: any) => {
@@ -10,7 +10,7 @@ const ProtectedRoute = (props: any) => {
         const userToken = localStorage.getItem(constants.LOCAL_TOKEN_KEY_NAME);
         if (!userToken || userToken === 'undefined') {
             setIsLoggedIn(false);
-            return navigate(constants.LOGIN_ROUTE);
+            return navigate(routes.LOGIN);
         }
         setIsLoggedIn(true);
     }

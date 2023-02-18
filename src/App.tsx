@@ -22,7 +22,7 @@ function App() {
 
     return (
         <React.Fragment>
-            {isLoggedIn && <PageNavBar />}
+            {isLoggedIn && <PageNavBar isLoggedIn={true} />}
             <Outlet />
             <div>
 			    <Footer />

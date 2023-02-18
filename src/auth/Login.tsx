@@ -1,30 +1,23 @@
+import React, {useRef} from "react";
 import axios from "axios";
 import { constants } from "../utils/constants";
-import React from "react";
-import { Button, Col, Container, Form, FormGroup, FormLabel, Row } from "react-bootstrap";
+// import { Col, Container, Form, FormGroup, FormLabel, Row } from "react-bootstrap";
+import { CssBaseline, Navbar, Button, Input, Loading } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 
-
 const Login = () => {
-    const [loadingState, setLoadingState] = React.useState(false);
+    const [loggingIn, setLoggingIn] = React.useState(false);
     const navigate = useNavigate();
+    const loginForm = useRef<HTMLFormElement>(null)
     const submitLoginForm = (event: any) => {
-        setLoadingState(true);
+        if (!loginForm.current) return;
+        setLoggingIn(true);
         event.preventDefault();
-        const formElement: HTMLFormElement | null = document.querySelector('#loginForm');
-        if (!formElement) {
-            return;
-        }
-        const formData = new FormData(formElement);
+
+        const formData = new FormData(loginForm.current);
         const formDataJSON = Object.fromEntries(formData);
         const token = String(formDataJSON["username"]);
-        const btnPointer = document.querySelector('#login-btn');
-        if (!btnPointer) {
-            return;
-        }
-        btnPointer.innerHTML = 'Please wait..';
-        btnPointer.setAttribute('disabled', "true");
 
         const request_body = {
             token: token
@@ -33,8 +26,6 @@ const Login = () => {
         axios.post(constants.API_URL + constants.AUTH_API_PREFIX, request_body)
             .then((response) => {
                 console.log(response);
-                btnPointer.innerHTML = 'Login';
-                btnPointer.removeAttribute('disabled');
                 const data = response.data;
                 const authenticated = data["authenticated"];
                 console.log("authenticated: " + authenticated)
@@ -49,34 +40,39 @@ const Login = () => {
                 }, 500);
             })
             .catch((error) => {
-                btnPointer.innerHTML = 'Login';
-                btnPointer.removeAttribute('disabled');
                 alert("Oops! An error occurred, Please try again.");
                 console.log(error);
             })
             .finally(() => {
-                setLoadingState(false);
+                setLoggingIn(false);
             }
         );
     }
 
     return (
         <React.Fragment>
-            <Container className="my-5">
                 <h2 className="fw-normal mb-5">Login to Access Preview</h2>
-                <Row>
-                    <Col md={{span: 6}}>
-                        <Form id="loginForm" onSubmit={submitLoginForm}>
-                            <FormGroup className="mb-3">
-                                <FormLabel htmlFor={'login-username'}>Access-Code</FormLabel>
-                                <input type={'text'} className="form-control" id={'login-username'} name="username" required />
-                            </FormGroup>
-                            <Button type="submit" className="btn-success mt-2" id="login-btn">Login</Button>
-                        </Form>
-                        {loadingState && <CircularProgress className="mt-3" />}
-                    </Col>
-                </Row>
-            </Container>
+                <form ref={loginForm} id="loginForm" onSubmit={submitLoginForm}>
+                    <Input
+                        clearable
+                        label="Access-Code"
+                        placeholder=""
+                        initialValue="" 
+                        type="password"
+                    />
+                    <Button
+                        type="submit"
+                        id="login-btn"
+                        disabled={loggingIn}
+                    >
+                        {loggingIn ? (
+                            <Loading type="points" />
+                        ) : (
+                            "Login"
+                        )}
+                        </Button>
+                </form>
+                {loggingIn && <CircularProgress className="mt-3" />}
         </React.Fragment>
     );
 }
