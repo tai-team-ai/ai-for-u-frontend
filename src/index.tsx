@@ -22,12 +22,12 @@ root.render(
 		<NextUIProvider>
 			<BrowserRouter basename={'/'}>
 				<Routes>
-					<Route path={routes.LOGIN} element={
+					{/* <Route path={routes.LOGIN} element={
 						<Auth>
 							<Login />
 						</Auth>
 					}>
-					</Route>
+					</Route> */}
 					<Route path={routes.APP} element={<App />}>
 						<Route path='' element={
 							<ProtectedRoute>

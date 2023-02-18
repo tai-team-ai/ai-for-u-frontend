@@ -1,19 +1,25 @@
 import React, {useRef} from "react";
 import axios from "axios";
 import { constants } from "../utils/constants";
-// import { Col, Container, Form, FormGroup, FormLabel, Row } from "react-bootstrap";
-import { CssBaseline, Navbar, Button, Input, Loading } from "@nextui-org/react";
+import { Modal, Button, Input, Loading } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
+import PasswordIcon from "@mui/icons-material/Password"
 
-const Login = () => {
+interface LoginModalProps {
+    open: boolean
+    setOpen: (o: boolean) => void
+}
+const LoginModal = ({open, setOpen}: LoginModalProps) => {
     const [loggingIn, setLoggingIn] = React.useState(false);
     const navigate = useNavigate();
     const loginForm = useRef<HTMLFormElement>(null)
-    const submitLoginForm = (event: any) => {
+
+    const submitLoginForm = (event?: any) => {
         if (!loginForm.current) return;
-        setLoggingIn(true);
         event.preventDefault();
+        
+        setLoggingIn(true);
 
         const formData = new FormData(loginForm.current);
         const formDataJSON = Object.fromEntries(formData);
@@ -45,24 +51,41 @@ const Login = () => {
             })
             .finally(() => {
                 setLoggingIn(false);
+                setOpen(false)
             }
         );
     }
 
     return (
-        <React.Fragment>
-                <h2 className="fw-normal mb-5">Login to Access Preview</h2>
-                <form ref={loginForm} id="loginForm" onSubmit={submitLoginForm}>
-                    <Input
-                        clearable
-                        label="Access-Code"
-                        placeholder=""
-                        initialValue="" 
-                        type="password"
-                    />
+        <Modal
+            open={open}
+            closeButton
+            onClose={() => setOpen(false)}
+        >
+            <form ref={loginForm} id="loginForm" onSubmit={submitLoginForm}>
+                <Modal.Header justify="flex-start">
+                    <h3>Login to Access Preview</h3>
+                </Modal.Header>
+                <Modal.Body>
+                        <Input.Password
+                            fullWidth
+                            label="Access-Code"
+                            placeholder=""
+                            initialValue=""
+                        />
+                </Modal.Body>
+                <Modal.Footer>
                     <Button
+                        auto
+                        light
+                        color="error"
+                        onPress={() => {setOpen(false)}}
+                    >
+                        Close
+                    </Button>
+                    <Button
+                        auto
                         type="submit"
-                        id="login-btn"
                         disabled={loggingIn}
                     >
                         {loggingIn ? (
@@ -70,10 +93,10 @@ const Login = () => {
                         ) : (
                             "Login"
                         )}
-                        </Button>
-                </form>
-                {loggingIn && <CircularProgress className="mt-3" />}
-        </React.Fragment>
+                    </Button>
+                </Modal.Footer>
+            </form>
+        </Modal>
     );
 }
-export default Login;
+export default LoginModal;

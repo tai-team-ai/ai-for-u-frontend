@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 // import { Button, Nav } from "react-bootstrap";
 import { CssBaseline, Navbar, Button, Link, Text, Card, Radio } from "@nextui-org/react";
 // import Container from 'react-bootstrap/Container';
@@ -6,11 +6,15 @@ import { CssBaseline, Navbar, Button, Link, Text, Card, Radio } from "@nextui-or
 import { useNavigate } from "react-router-dom";
 import { constants, routes } from "../../../utils/constants";
 import { NavbarProps } from "react-bootstrap";
+import LoginModal from "../../../auth/Login";
 
-const LoginButtons = () => {
+interface LoginButtonProps {
+    onLogin: () => void
+}
+const LoginButtons = ({onLogin}: LoginButtonProps) => {
     return (
         <>
-            <Navbar.Link color="inherit" href="#">
+            <Navbar.Link color="inherit" onPress={onLogin}>
                 Login
             </Navbar.Link>
             <Navbar.Item>
@@ -42,6 +46,8 @@ interface NavBarProps {
 }
 
 const NavBar = (props: NavBarProps) => {
+    const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
+    
     return (
         <React.Fragment>
             {/* <Navbar bg="dark" expand="lg" className="navbar-dark">
@@ -73,10 +79,14 @@ const NavBar = (props: NavBarProps) => {
                     {props.isLoggedIn ? (
                         <LogoutButtons />
                     ) : (
-                        <LoginButtons />
+                        <LoginButtons onLogin={() => setShowLoginModal(true)} />
                     )}
                 </Navbar.Content>
             </Navbar>
+            <LoginModal
+                open={showLoginModal}
+                setOpen={(o) => setShowLoginModal(o)}
+            />
         </React.Fragment>
     );
 }
