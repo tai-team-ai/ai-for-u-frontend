@@ -11,6 +11,7 @@ function Layout(props: LayoutProps) {
     return (
         <SSRProvider>
         <PageNavbar isLoggedIn={false}/>
+        {props.children}
         <div>
             <Footer/>
         </div>
