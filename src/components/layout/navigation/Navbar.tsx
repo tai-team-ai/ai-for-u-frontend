@@ -3,9 +3,8 @@ import React, {useState} from "react";
 import { CssBaseline, Navbar, Button, Link, Text, Card, Radio } from "@nextui-org/react";
 // import Container from 'react-bootstrap/Container';
 // import Navbar from 'react-bootstrap/Navbar';
-import { useNavigate } from "react-router-dom";
+import Router from 'next/router';
 import { constants, routes } from "../../../utils/constants";
-import { NavbarProps } from "react-bootstrap";
 import LoginModal from "../../../auth/Login";
 
 interface LoginButtonProps {
@@ -27,10 +26,10 @@ const LoginButtons = ({onLogin}: LoginButtonProps) => {
 }
 
 const LogoutButtons = () => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const logout = () => {
         localStorage.clear();
-        navigate(routes.LOGIN);
+        Router.push(routes.ROOT);
     }
     return (
         <Navbar.Item>
@@ -47,7 +46,7 @@ interface NavBarProps {
 
 const NavBar = (props: NavBarProps) => {
     const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
-    
+
     return (
         <React.Fragment>
             {/* <Navbar bg="dark" expand="lg" className="navbar-dark">

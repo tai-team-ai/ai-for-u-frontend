@@ -1,10 +1,8 @@
 import React, {useRef} from "react";
 import axios from "axios";
-import { constants } from "../utils/constants";
+import { constants } from "@/utils/constants";
 import { Modal, Button, Input, Loading } from "@nextui-org/react";
-import { useNavigate } from "react-router-dom";
-import { CircularProgress } from "@mui/material";
-import PasswordIcon from "@mui/icons-material/Password"
+import Router from 'next/router';
 
 interface LoginModalProps {
     open: boolean
@@ -12,13 +10,12 @@ interface LoginModalProps {
 }
 const LoginModal = ({open, setOpen}: LoginModalProps) => {
     const [loggingIn, setLoggingIn] = React.useState(false);
-    const navigate = useNavigate();
     const loginForm = useRef<HTMLFormElement>(null)
 
     const submitLoginForm = (event?: any) => {
         if (!loginForm.current) return;
         event.preventDefault();
-        
+
         setLoggingIn(true);
 
         const formData = new FormData(loginForm.current);
@@ -42,7 +39,7 @@ const LoginModal = ({open, setOpen}: LoginModalProps) => {
                 localStorage.clear();
                 localStorage.setItem(constants.LOCAL_TOKEN_KEY_NAME, token);
                 setTimeout(() => {
-                    navigate('/');
+                    Router.push('/');
                 }, 500);
             })
             .catch((error) => {

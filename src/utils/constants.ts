@@ -19,4 +19,5 @@ export const routes = {
     SANDBOX: '/app/sandbox/',
     TEMPLATES: '/app/templates/',
     APP: '/app',
+    ROOT: '/',
 }

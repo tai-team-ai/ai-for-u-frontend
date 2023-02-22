@@ -1,6 +1,5 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
-import Navbar from "../components/layout/navigation/Navbar";
+import Navbar from "@/components/layout/navigation/Navbar";
 
 
 const Auth = (props: any) => {
