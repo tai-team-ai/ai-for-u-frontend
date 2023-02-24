@@ -1,15 +1,13 @@
 import React, {useState} from "react";
-// import { Button, Nav } from "react-bootstrap";
-import { CssBaseline, Navbar, Button, Link, Text, Card, Radio } from "@nextui-org/react";
-// import Container from 'react-bootstrap/Container';
-// import Navbar from 'react-bootstrap/Navbar';
-import Router from 'next/router';
+import { Navbar, Button, Link, Text} from "@nextui-org/react";
 import { constants, routes } from "../../../utils/constants";
 import LoginModal from "../../../auth/Login";
+import { useSession, signOut } from "next-auth/react";
 
 interface LoginButtonProps {
     onLogin: () => void
 }
+
 const LoginButtons = ({onLogin}: LoginButtonProps) => {
     return (
         <>
@@ -26,14 +24,9 @@ const LoginButtons = ({onLogin}: LoginButtonProps) => {
 }
 
 const LogoutButtons = () => {
-    // const navigate = useNavigate();
-    const logout = () => {
-        localStorage.clear();
-        Router.push(routes.ROOT);
-    }
     return (
         <Navbar.Item>
-            <Button color="error" onClick={logout}>
+            <Button color="error" onPress={() => signOut()}>
                 Logout
             </Button>
         </Navbar.Item>
@@ -41,11 +34,11 @@ const LogoutButtons = () => {
 }
 
 interface NavBarProps {
-    isLoggedIn: boolean
 }
 
-const NavBar = (props: NavBarProps) => {
+const NavBar = ({}: NavBarProps) => {
     const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
+    const {data: session} = useSession();
 
     return (
         <React.Fragment>
@@ -75,7 +68,7 @@ const NavBar = (props: NavBarProps) => {
                 <Navbar.Link href='#'>Go Pro</Navbar.Link>
                 </Navbar.Content>
                 <Navbar.Content>
-                    {props.isLoggedIn ? (
+                    {session ? (
                         <LogoutButtons />
                     ) : (
                         <LoginButtons onLogin={() => setShowLoginModal(true)} />

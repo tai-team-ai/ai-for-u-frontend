@@ -1,17 +1,18 @@
 import PageNavbar from '@/components/layout/navigation/Navbar';
 import Footer from '@/components/layout/Footer';
 import { SSRProvider } from 'react-bootstrap';
+import { useSession } from 'next-auth/react';
 
 
 interface LayoutProps {
     children: any;
 }
 
-function Layout(props: LayoutProps) {
+function Layout({children}: LayoutProps) {
     return (
         <SSRProvider>
-        <PageNavbar isLoggedIn={false}/>
-        {props.children}
+            <PageNavbar/>
+        {children}
         <div>
             <Footer/>
         </div>
