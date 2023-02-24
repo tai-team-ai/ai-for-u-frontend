@@ -1,0 +1,20 @@
+.container {
+    display: flex;
+    overflow: hidden;
+
+    font-size: 32px;
+    line-height: 1.5;
+}
+
+.rotator {
+    margin-left: .25em;
+    height: 1.5em;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
+.element {
+    transition: transform .3s ease-in-out;
+}
