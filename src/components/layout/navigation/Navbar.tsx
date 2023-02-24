@@ -1,8 +1,5 @@
 import React, {useState} from "react";
-// import { Button, Nav } from "react-bootstrap";
-import { CssBaseline, Navbar, Button, Link, Text, Card, Radio } from "@nextui-org/react";
-// import Container from 'react-bootstrap/Container';
-// import Navbar from 'react-bootstrap/Navbar';
+import { Navbar, Button, Link, Text } from "@nextui-org/react";
 import Router from 'next/router';
 import { constants, routes } from "../../../utils/constants";
 import LoginModal from "../../../auth/Login";
