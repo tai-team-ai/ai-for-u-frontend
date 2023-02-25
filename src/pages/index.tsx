@@ -57,7 +57,6 @@ function Home() {
 
     return (
         <Layout>
-            <Spacer y={1} />
             <section className={styles["hero-section"]}>
                 <Container gap={0}>
                     <Row gap={0}>

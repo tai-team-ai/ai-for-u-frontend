@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import { Navbar, Button, Link, Text } from "@nextui-org/react";
 import Router from 'next/router';
 import { constants, routes } from "../../../utils/constants";
-import LoginModal from "../../../auth/Login";
+import LoginModal from "../../modals/LoginModal";
 
 interface LoginButtonProps {
     onLogin: () => void

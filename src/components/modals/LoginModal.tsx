@@ -60,7 +60,7 @@ const LoginModal = ({open, setOpen}: LoginModalProps) => {
             onClose={() => setOpen(false)}
         >
             <form ref={loginForm} id="loginForm" onSubmit={submitLoginForm}>
-                <Modal.Header justify="flex-start">
+                <Modal.Header>
                     <h3>Login to Access Preview</h3>
                 </Modal.Header>
                 <Modal.Body>
