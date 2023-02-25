@@ -1,49 +1,80 @@
 import React, {useRef} from "react";
 import { Modal, Button, Input, Loading, Image } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
+import { validateSignUp } from "@/utils/validation";
 
 
 interface LoginModalProps {
     open: boolean
     setOpen: (o: boolean) => void
+    isSignUp: boolean
 }
 
 
-const LoginModal = ({open, setOpen}: LoginModalProps) => {
+const LoginModal = ({open, setOpen, isSignUp = false}: LoginModalProps) => {
     const [loggingIn, setLoggingIn] = React.useState(false);
     const loginForm = useRef<HTMLFormElement>(null)
 
-    const submitLoginForm = (event?: any) => {
+    const submitLoginForm = async (event?: any) => {
         if (!loginForm.current) return;
         event.preventDefault();
 
         setLoggingIn(true);
+        try {
+            const formData = new FormData(loginForm.current);
+            const formDataJSON = Object.fromEntries(formData);
+            const email = String(formDataJSON["email"]);
+            const password = String(formDataJSON["password"]);
+            const errorMsg: HTMLParagraphElement | null = document.querySelector(".error-msg");
+            if (errorMsg !== null) {
+                errorMsg.textContent = ""
+                errorMsg.style.display = "none";
+            }
 
-        const formData = new FormData(loginForm.current);
-        const formDataJSON = Object.fromEntries(formData);
-        const username = String(formDataJSON["email"]);
-        const password = String(formDataJSON["password"]);
-        const errorMsg: HTMLParagraphElement | null = document.querySelector(".error-msg");
-        if (errorMsg !== null) {
-            errorMsg.textContent = ""
-            errorMsg.style.display = "none";
-        }
-        signIn("credentials", {username, password, redirect: false})
-            .then((response) => {
-                if(typeof response !== "undefined") {
-                    if (response.ok) {
-                        setLoggingIn(false);
-                        setOpen(false);
-                    }
-                    else {
-                        setLoggingIn(false);
-                        if (errorMsg !== null) {
-                            errorMsg.textContent = "Invalid email or password";
-                            errorMsg.style.display = "block";
-                        }
+            if(isSignUp) {
+                const confirmPassword = String(formDataJSON["confirmPassword"]);
+                const errors = validateSignUp({email, password, confirmPassword});
+                if(errors.length > 0) {
+                    if(errorMsg !== null) {
+                        errorMsg.innerHTML = errors.join("<br/>");
+                        errorMsg.style.display = "block";
+                        return;
                     }
                 }
-            })
+                const response = await fetch("/api/auth/signup", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({email, password, confirmPassword})
+                });
+
+                const data = await response.json();
+                if(response.status === 422) {
+                    if (errorMsg !== null) {
+                        errorMsg.innerHTML = data.message.replace("\n", "<br/>");
+                        errorMsg.style.display = "block";
+                        return;
+                    }
+                }
+            }
+
+            signIn("credentials", { email, password, redirect: false})
+                .then((response) => {
+                    if(typeof response !== "undefined") {
+                        if (response.ok) {
+                            setOpen(false);
+                        }
+                        else {
+                            if (errorMsg !== null) {
+                                errorMsg.textContent = "Invalid email or password";
+                                errorMsg.style.display = "block";
+                            }
+                        }
+                    }
+                });
+        }
+        finally {
+            setLoggingIn(false);
+        }
     }
 
     return (
@@ -54,13 +85,16 @@ const LoginModal = ({open, setOpen}: LoginModalProps) => {
         >
 
                 <Modal.Header justify="flex-start">
-                    <h3>Login to Access Preview</h3>
+                    <h3>
+                        {isSignUp? "Sign up to Access Preview" : "Login to Access Preview"}
+                    </h3>
 
                 </Modal.Header>
                 <Modal.Body>
                 <p style={{color: "red", border: "solid 1px red", backgroundColor: "#ff000011", padding: "1em", display: "none"}} className="error-msg"></p>
                     <form ref={loginForm} id="loginForm" onSubmit={submitLoginForm}>
                         <Input
+                            required
                             fullWidth
                             label="Email"
                             placeholder=""
@@ -70,11 +104,24 @@ const LoginModal = ({open, setOpen}: LoginModalProps) => {
                         />
                         <Input.Password
                             fullWidth
+                            required
                             label="Password"
                             placeholder=""
                             initialValue=""
                             name="password"
                         />
+                        {isSignUp?
+                        <Input.Password
+                            fullWidth
+                            required
+                            label="Confirm Password"
+                            placeholder=""
+                            initialValue=""
+                            name="confirmPassword"
+                        />
+                        :
+                        ""
+                        }
                     <Button
                         auto
                         type="submit"
@@ -85,7 +132,7 @@ const LoginModal = ({open, setOpen}: LoginModalProps) => {
                         {loggingIn ? (
                             <Loading type="points" />
                         ) : (
-                            "Login"
+                            isSignUp? "Signup" : "Login"
                         )}
                     </Button>
                     </form>
@@ -100,7 +147,9 @@ const LoginModal = ({open, setOpen}: LoginModalProps) => {
                             size="lg"
                             iconLeftCss={{left: "0"}}
                             icon={<Image src="/btn_google_light_normal_ios.svg"/>}
-                    > Sign in with Google</Button>
+                    >
+                        {isSignUp ? "Sign up with Google" : "Sign in with Google"}
+                    </Button>
                     </form>
 
                 </Modal.Body>

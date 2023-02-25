@@ -6,16 +6,17 @@ import { useSession, signOut } from "next-auth/react";
 
 interface LoginButtonProps {
     onLogin: () => void
+    onSignUp: () => void
 }
 
-const LoginButtons = ({onLogin}: LoginButtonProps) => {
+const LoginButtons = ({onLogin, onSignUp}: LoginButtonProps) => {
     return (
         <>
             <Navbar.Link color="inherit" onPress={onLogin}>
                 Login
             </Navbar.Link>
             <Navbar.Item>
-                <Button auto flat as={Link} href="#">
+                <Button auto flat onPress={onSignUp}>
                 Sign Up
                 </Button>
             </Navbar.Item>
@@ -38,6 +39,7 @@ interface NavBarProps {
 
 const NavBar = ({}: NavBarProps) => {
     const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
+    const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false)
     const {data: session} = useSession();
 
     return (
@@ -71,13 +73,22 @@ const NavBar = ({}: NavBarProps) => {
                     {session ? (
                         <LogoutButtons />
                     ) : (
-                        <LoginButtons onLogin={() => setShowLoginModal(true)} />
+                        <LoginButtons
+                            onLogin={() => setShowLoginModal(true)}
+                            onSignUp={() => setShowSignUpModal(true)}
+                        />
                     )}
                 </Navbar.Content>
             </Navbar>
             <LoginModal
                 open={showLoginModal}
                 setOpen={(o) => setShowLoginModal(o)}
+                isSignUp={false}
+            />
+            <LoginModal
+                open={showSignUpModal}
+                setOpen={(o) => setShowSignUpModal(o)}
+                isSignUp={true}
             />
         </React.Fragment>
     );
