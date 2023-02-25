@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "react-bootstrap";
+import { Container } from "@nextui-org/react";
 const Footer = () => {
     return (
         <React.Fragment>

@@ -1,26 +1,48 @@
 
 import React, { useEffect, useState } from "react";
-import { constants } from "@/utils/constants";
+import { constants, routes } from "@/utils/constants";
 import axios from "axios";
 import Layout from '@/components/layout/layout'
+import AIForAnimation from '@/components/elements/AIForAnimation'
 import styles from '@/styles/Home.module.css';
 import Image from "next/image";
+import { Card, Col, Container, Row, Spacer, Text, Button, Link } from "@nextui-org/react";
 
 interface TrustBuilderProps {
-    companyName: string;
-    logo: string;
+    companyName: string
+    src: string
+    size: number
 }
 
 function TrustBuilder(props: TrustBuilderProps) {
     return (
-        <div className={styles["trust-builder-card"]}>
-            <Image src={props.logo} alt={props.companyName}/>
-        </div>
+        <Card className={styles["trust-builder-card"]}>
+            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
+            <Col>
+                <Text size={12} weight="bold" transform="uppercase" color="#ffffff">
+                    Trust Builder
+                </Text>
+                <Text h4 color="white">
+                    {props.companyName}
+                </Text>
+            </Col>
+            </Card.Header>
+            <Card.Image
+                className={styles["trust-builder-image"]}
+                src={props.src}
+                objectFit="cover"
+                width="100%"
+                height={300}
+                alt={props.companyName}
+            />
+        </Card>
     )
 }
 
 function Home() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    // const navigate = useNavigate();
+
     const checkUserToken = () => {
         const userToken = localStorage.getItem(constants.LOCAL_TOKEN_KEY_NAME);
         if (!userToken || userToken === 'undefined') {
@@ -35,30 +57,73 @@ function Home() {
 
     return (
         <Layout>
+            <Spacer y={1} />
             <section className={styles["hero-section"]}>
-                <div className={styles["hero-content"]}>
-                    <h1 className={styles["hero-heading"]}>
-                        CTA
-                    </h1>
-                    <p className={styles["hero-paragraph"]}>
-                        Eu dolor nulla officia officia nostrud nostrud consectetur adipisicing. Qui adipisicing consectetur sit ea amet. Aute excepteur pariatur duis culpa sint ipsum ad eu non consequat veniam qui. Tempor commodo incididunt irure dolore eu officia commodo consequat aliquip.
-                    </p>
-                    <div className={styles["templates-btn"]}>
-                        Templates
-                    </div>
-                    <div className={styles["sandbox-btn"]}>
-                        Sandbox
-                    </div>
-                </div>
-                <div className={styles["hero-graphic"]}>
-                    <Image src="" alt="" className={styles["hero-image"]}/>
-                </div>
+                <Container gap={0}>
+                    <Row gap={0}>
+                        <Col>
+                            <Container>
+                                <Row justify="center">
+                                    <Text h1 className={styles["hero-heading"]}>
+                                        CTA
+                                    </Text>
+                                </Row>
+                                <Row justify="center">
+                                    <p className={styles["hero-paragraph"]}>
+                                        Eu dolor nulla officia officia nostrud nostrud consectetur adipisicing. Qui adipisicing consectetur sit ea amet. Aute excepteur pariatur duis culpa sint ipsum ad eu non consequat veniam qui. Tempor commodo incididunt irure dolore eu officia commodo consequat aliquip.
+                                    </p>
+                                </Row>
+                                <Spacer y={0.5} />
+                                <Row justify="center">
+                                    <Link href={routes.TEMPLATES}>
+                                        <Button
+                                            flat
+                                            size="lg"
+                                            className={styles["templates-btn"]}>
+                                            Templates
+                                        </Button>
+                                    </Link>
+                                </Row>
+                                <Spacer y={0.5} />
+                                <Row justify="center">
+                                    <Link href={routes.SANDBOX}>
+                                        <Button
+                                            flat
+                                            size="lg"
+                                            className={styles["sandbox-btn"]}>
+                                            Sandbox
+                                        </Button>
+                                    </Link>
+                                </Row>
+                                <Spacer y={0.5} />
+                            </Container>
+                        </Col>
+                        <Spacer y={1} />
+                        <Col>
+                            <div className={styles["hero-graphic"]}>
+                                <AIForAnimation />
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
             </section>
             <section className={styles["trust-builders"]}>
-                <TrustBuilder logo="" companyName="" />
-                <TrustBuilder logo="" companyName="" />
-                <TrustBuilder logo="" companyName="" />
-                <TrustBuilder logo="" companyName="" />
+                <Container>
+                    <Row gap={1}>
+                        <Col >
+                            <TrustBuilder src="/images/trust-builder/1.jpg" size={300} companyName="AIForU" />
+                        </Col>
+                        <Col>
+                            <TrustBuilder src="/images/trust-builder/2.jpg" size={300} companyName="Macrosoft" />
+                        </Col>
+                        <Col>
+                            <TrustBuilder src="/images/trust-builder/3.jpg" size={300} companyName="Goggle" />
+                        </Col>
+                        <Col>
+                            <TrustBuilder src="/images/trust-builder/4.jpg" size={300} companyName="Whalemart" />
+                        </Col>
+                    </Row>
+                </Container>
             </section>
             <section className={styles["pages-section"]}>
                 <div className={styles["pages-content"]}>

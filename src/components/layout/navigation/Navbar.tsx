@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Navbar, Button, Link, Text} from "@nextui-org/react";
+import { Navbar, Button, Link, Text } from "@nextui-org/react";
 import { constants, routes } from "../../../utils/constants";
 import LoginModal from "../../../auth/Login";
 import { useSession, signOut } from "next-auth/react";
