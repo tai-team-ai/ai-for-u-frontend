@@ -1,20 +1,22 @@
 import React, {useState} from "react";
 import { Navbar, Button, Link, Text } from "@nextui-org/react";
-import Router from 'next/router';
 import { constants, routes } from "../../../utils/constants";
 import LoginModal from "../../../auth/Login";
+import { useSession, signOut } from "next-auth/react";
 
 interface LoginButtonProps {
     onLogin: () => void
+    onSignUp: () => void
 }
-const LoginButtons = ({onLogin}: LoginButtonProps) => {
+
+const LoginButtons = ({onLogin, onSignUp}: LoginButtonProps) => {
     return (
         <>
             <Navbar.Link color="inherit" onPress={onLogin}>
                 Login
             </Navbar.Link>
             <Navbar.Item>
-                <Button auto flat as={Link} href="#">
+                <Button auto flat onPress={onSignUp}>
                 Sign Up
                 </Button>
             </Navbar.Item>
@@ -23,14 +25,9 @@ const LoginButtons = ({onLogin}: LoginButtonProps) => {
 }
 
 const LogoutButtons = () => {
-    // const navigate = useNavigate();
-    const logout = () => {
-        localStorage.clear();
-        Router.push(routes.ROOT);
-    }
     return (
         <Navbar.Item>
-            <Button color="error" onClick={logout}>
+            <Button color="error" onPress={() => signOut()}>
                 Logout
             </Button>
         </Navbar.Item>
@@ -38,11 +35,12 @@ const LogoutButtons = () => {
 }
 
 interface NavBarProps {
-    isLoggedIn: boolean
 }
 
-const NavBar = (props: NavBarProps) => {
+const NavBar = ({}: NavBarProps) => {
     const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
+    const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false)
+    const {data: session} = useSession();
 
     return (
         <React.Fragment>
@@ -72,16 +70,25 @@ const NavBar = (props: NavBarProps) => {
                 <Navbar.Link href='#'>Go Pro</Navbar.Link>
                 </Navbar.Content>
                 <Navbar.Content>
-                    {props.isLoggedIn ? (
+                    {session ? (
                         <LogoutButtons />
                     ) : (
-                        <LoginButtons onLogin={() => setShowLoginModal(true)} />
+                        <LoginButtons
+                            onLogin={() => setShowLoginModal(true)}
+                            onSignUp={() => setShowSignUpModal(true)}
+                        />
                     )}
                 </Navbar.Content>
             </Navbar>
             <LoginModal
                 open={showLoginModal}
                 setOpen={(o) => setShowLoginModal(o)}
+                isSignUp={false}
+            />
+            <LoginModal
+                open={showSignUpModal}
+                setOpen={(o) => setShowSignUpModal(o)}
+                isSignUp={true}
             />
         </React.Fragment>
     );
