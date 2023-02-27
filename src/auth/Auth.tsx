@@ -5,7 +5,7 @@ import Navbar from "@/components/layout/navigation/Navbar";
 const Auth = (props: any) => {
     return (
         <React.Fragment>
-            <Navbar isLoggedIn={false} />
+            <Navbar/>
             {props.children}
         </React.Fragment>
     );
