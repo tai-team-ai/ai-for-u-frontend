@@ -1,78 +1,69 @@
+import React, { useRef, useState } from 'react'
 import Layout from '@/components/layout/layout'
 import Link from 'next/link'
 import styles from '@/styles/Templates.module.css'
-import React from 'react'
-import {Input, Modal, Button} from '@nextui-org/react'
+import {Input, Modal, Button, Card, Container, Row, Col, Grid, Text, Loading} from '@nextui-org/react'
+import SubscribeModal from '@/components/modals/SubscribeModal'
 
 
 interface TemplateCardProps {
-    name?: string
+    name: string
     href?: string
     onPress?: () => void
 }
 
 
-function TemplateCard({name = "Coming Soon...", href = "#", onPress}: TemplateCardProps) {
-    const classNames: string[] = [styles["template-card"]];
-    if (href === "#") {
-        classNames.push(styles["coming-soon"])
-    }
-    return <Link className={classNames.join(" ")} href={href} onClick={onPress}>
-        {name}
-    </Link>
+function TemplateCard({name, href = "#", onPress = () => {}}: TemplateCardProps) {
+    return (
+        <Link href={href} style={{width: "100%"}}>
+            <Card
+                isPressable
+                isHoverable
+                variant="bordered"
+                className={styles["template-card"]}
+                disableRipple={true} // if this page is turned into a single page app, then we'd want to enable this again
+                css={{ h: "$24", $$cardColor: '$colors$primary' }}
+                onPress={onPress}
+                >
+                    <Card.Body css={{display: 'flex', justifyContent: "center", alignItems: "center"}}>
+                        <Text
+                            size="$xl"
+                            weight="bold"
+                            color="white" >
+                            {name}
+                        </Text>
+                    </Card.Body>
+            </Card>
+        </Link>
+    )
 }
-
 
 interface TemplatesProps {
 
 }
 
 function Templates({}: TemplatesProps) {
-    const [visible, setVisible] = React.useState(false);
-    const handler = () => setVisible(true);
+    const [showSubscribeModal, setShowSubscribeModal] = useState<boolean>(false);
 
-    const closeHandler = () => {
-        setVisible(false);
-    };
     return (
         <Layout>
-            <div className={styles["templates"]}>
-                <TemplateCard
-                    href="/templates/resignation-letter"
-                    name="Resignation Letter"
-                />
-                <TemplateCard
-                    onPress={handler}
-                />
-            </div>
-            <Modal
-                closeButton
-                open={visible}
-                onClose={closeHandler}
-            >
-                <Modal.Header>
-                    <h1>Premium feature coming soon!</h1>
-                </Modal.Header>
-                <Modal.Body>
-                    <div>Join our mailing list</div>
-                    <Input
-                        clearable
-                        bordered
-                        fullWidth
-                        color="primary"
-                        size="lg"
-                        placeholder="Email"
-                    />
-                    <Button
-                        auto
-                        flat
-                        color="primary"
-                        onPress={closeHandler}
-                    >
-                        Subscribe
-                    </Button>
-                </Modal.Body>
-            </Modal>
+            <section className={styles["templates-section"]}>
+                <Grid.Container gap={2} justify='center'>
+                    <Grid md={3} sm={4} xs={6}>
+                        <TemplateCard
+                            href="/templates/resignation-letter"
+                            name="Resignation Letter"
+                        />
+                    </Grid>
+                    <Grid md={3} sm={4} xs={6}>
+                        <TemplateCard
+                            name="Coming Soon..."
+                            onPress={() => setShowSubscribeModal(true)}
+                        />
+                    </Grid>
+                </Grid.Container>
+            </section>
+            <SubscribeModal open={showSubscribeModal} setOpen={setShowSubscribeModal} />
         </Layout>
     )
 }

@@ -1,5 +1,5 @@
 import React, {useRef} from "react";
-import { Modal, Button, Input, Loading, Image } from "@nextui-org/react";
+import { Modal, Button, Input, Loading, Image, Text } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
 import { validateSignUp } from "@/utils/validation";
 
@@ -83,12 +83,10 @@ const LoginModal = ({open, setOpen, isSignUp = false}: LoginModalProps) => {
             closeButton
             onClose={() => setOpen(false)}
         >
-
-                <Modal.Header justify="flex-start">
-                    <h3>
+                <Modal.Header>
+                    <Text h3>
                         {isSignUp? "Sign up to Access Preview" : "Login to Access Preview"}
-                    </h3>
-
+                    </Text>
                 </Modal.Header>
                 <Modal.Body>
                 <p style={{color: "red", border: "solid 1px red", backgroundColor: "#ff000011", padding: "1em", display: "none"}} className="error-msg"></p>
@@ -122,19 +120,19 @@ const LoginModal = ({open, setOpen, isSignUp = false}: LoginModalProps) => {
                         :
                         ""
                         }
-                    <Button
-                        auto
-                        type="submit"
-                        disabled={loggingIn}
-                        form="loginForm"
-                        css={{marginTop: "1em"}}
-                    >
-                        {loggingIn ? (
-                            <Loading type="points" />
-                        ) : (
-                            isSignUp? "Signup" : "Login"
-                        )}
-                    </Button>
+                        <Button
+                            auto
+                            type="submit"
+                            disabled={loggingIn}
+                            form="loginForm"
+                            css={{marginTop: "1em"}}
+                        >
+                            {loggingIn ? (
+                                <Loading type="points" />
+                            ) : (
+                                isSignUp? "Signup" : "Login"
+                            )}
+                        </Button>
                     </form>
 
                     <form id="googleForm">
@@ -147,9 +145,9 @@ const LoginModal = ({open, setOpen, isSignUp = false}: LoginModalProps) => {
                             size="lg"
                             iconLeftCss={{left: "0"}}
                             icon={<Image src="/btn_google_light_normal_ios.svg"/>}
-                    >
-                        {isSignUp ? "Sign up with Google" : "Sign in with Google"}
-                    </Button>
+                        >
+                            {isSignUp ? "Sign up with Google" : "Sign in with Google"}
+                        </Button>
                     </form>
 
                 </Modal.Body>

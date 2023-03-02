@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { Navbar, Button, Link, Text } from "@nextui-org/react";
 import { constants, routes } from "../../../utils/constants";
-import LoginModal from "../../../auth/Login";
+import LoginModal from "../../modals/LoginModal";
 import { useSession, signOut } from "next-auth/react";
 
 interface LoginButtonProps {
@@ -44,19 +44,6 @@ const NavBar = ({}: NavBarProps) => {
 
     return (
         <React.Fragment>
-            {/* <Navbar bg="dark" expand="lg" className="navbar-dark">
-                <Container>
-                    <Navbar.Brand>{constants.SITE_NAME}</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        <Nav className="ms-auto">
-                            <Nav.Link>
-                                <Button className="btn-warning" onClick={logout}>Logout</Button>
-                            </Nav.Link>
-                        </Nav>
-                    </Navbar.Collapse>
-                </Container>
-            </Navbar> */}
             <Navbar isBordered variant="floating">
                 <Navbar.Brand>
                 {/* <AcmeLogo /> */}
@@ -65,9 +52,9 @@ const NavBar = ({}: NavBarProps) => {
                 </Text>
                 </Navbar.Brand>
                 <Navbar.Content hideIn="xs">
-                <Navbar.Link href={routes.SANDBOX}>Sandbox</Navbar.Link>
-                <Navbar.Link href={routes.TEMPLATES}>Templates</Navbar.Link>
-                <Navbar.Link href='#'>Go Pro</Navbar.Link>
+                    <Navbar.Link href={routes.SANDBOX}>Sandbox</Navbar.Link>
+                    <Navbar.Link href={routes.TEMPLATES}>Templates</Navbar.Link>
+                    <Navbar.Link href='#'>Go Pro</Navbar.Link>
                 </Navbar.Content>
                 <Navbar.Content>
                     {session ? (

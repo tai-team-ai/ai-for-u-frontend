@@ -1,6 +1,6 @@
 import PageNavbar from '@/components/layout/navigation/Navbar';
 import Footer from '@/components/layout/Footer';
-import { Container } from '@nextui-org/react'
+import { Container, Spacer } from '@nextui-org/react'
 import { SSRProvider } from 'react-bootstrap';
 import { useSession } from 'next-auth/react';
 
@@ -13,12 +13,11 @@ function Layout({children}: LayoutProps) {
     return (
         <SSRProvider>
             <PageNavbar/>
+            <Spacer y={1} />
             <Container>
                 {children}
             </Container>
-            <div>
-                <Footer/>
-            </div>
+            <Footer/>
         </SSRProvider>
     )
 }
