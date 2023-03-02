@@ -1,7 +1,6 @@
-import useMongoDBClient from '@/adapters/mongodb'
 import { NextApiRequest, NextApiResponse } from 'next';
-import bcrypt from 'bcrypt'
 import { validateSignUp } from '@/utils/validation';
+import useDynamoDBClient, {getUserByEmail, putNewUser} from '@/adapters/dynamodb';
 
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
@@ -14,18 +13,18 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         res.status(422).json({message: errors.join("\n")});
         return;
     }
-    let client = await useMongoDBClient();
-    try {
-        const users = client.db().collection("users");
-        const userExists = await users.findOne({ email });
-        if (userExists) {
-            res.status(422).json({ message: `User already exists for email ${email}` });
-            return;
+    const client = useDynamoDBClient();
+    const data = await getUserByEmail(client, email);
+    if(typeof data.Items === "undefined" || data.Items.length === 0) {
+        const putOutput = await putNewUser(client, {email, password});
+        if (typeof putOutput.$metadata.httpStatusCode !== "undefined") {
+            res.status(putOutput.$metadata.httpStatusCode).json({ message: putOutput.ItemCollectionMetrics?.ItemCollectionKey });
         }
-        const user = await users.insertOne({email, password: bcrypt.hashSync(password, 12)});
-        res.status(201).json({message: "User created", ...user});
+        else {
+            res.status(201).json({ message: "User created" });
+        }
+        return;
     }
-    finally {
-        client.close();
-    }
+    res.status(422).json({ message: `User already exists for email ${email}` });
+    return;
 }
