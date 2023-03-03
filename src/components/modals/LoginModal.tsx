@@ -134,22 +134,16 @@ const LoginModal = ({open, setOpen, isSignUp = false}: LoginModalProps) => {
                             )}
                         </Button>
                     </form>
-
-                    <form id="googleForm">
-
-                        <Button
-                            onPress={() => signIn("google")}
-                            className="google-login-btn"
-                            type="submit"
-                            bordered
-                            size="lg"
-                            iconLeftCss={{left: "0"}}
-                            icon={<Image src="/btn_google_light_normal_ios.svg"/>}
-                        >
-                            {isSignUp ? "Sign up with Google" : "Sign in with Google"}
-                        </Button>
-                    </form>
-
+                    <Button
+                        onPress={() => signIn("google")}
+                        className="google-login-btn"
+                        bordered
+                        size="lg"
+                        iconLeftCss={{left: "0"}}
+                        icon={<Image src="/btn_google_light_normal_ios.svg"/>}
+                    >
+                        {isSignUp ? "Sign up with Google" : "Sign in with Google"}
+                    </Button>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button

@@ -6,7 +6,7 @@ import useDynamoDBClient, { authorizeUser } from '@/adapters/dynamodb'
 import { DynamoDBAdapter } from '@next-auth/dynamodb-adapter'
 
 
-const authOptions: AuthOptions = NextAuth({
+const authOptions: AuthOptions = {
     adapter: DynamoDBAdapter(useDynamoDBClient()),
     session: {
         strategy: "jwt"
@@ -33,6 +33,6 @@ const authOptions: AuthOptions = NextAuth({
             }
         }),
     ]
-})
+}
 
-export default authOptions;
+export default NextAuth(authOptions);
