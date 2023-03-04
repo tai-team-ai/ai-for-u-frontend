@@ -23,9 +23,9 @@ export default function Template({isSandbox = false, children = null}: TemplateP
                     <div className={styles["examples"]}>
                         <Grid.Container gap={1} justify='flex-start'>
                         {
-                            TemplateCards.map((c) => {
+                            TemplateCards.map((c, i) => {
                                 return (
-                                    <Grid xs={12}>
+                                    <Grid key={i} xs={12}>
                                         {c}
                                     </Grid>
                                 )

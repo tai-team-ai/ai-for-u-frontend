@@ -16,8 +16,8 @@ export const constants = {
 
 export const routes = {
     LOGIN: '/auth/login',
-    SANDBOX: '/app/sandbox/',
-    TEMPLATES: '/app/templates/',
+    SANDBOX: '/app/sandbox',
+    TEMPLATES: '/app/templates',
     APP: '/app',
     ROOT: '/',
 }

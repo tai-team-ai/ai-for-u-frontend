@@ -42,18 +42,23 @@ const NavBar = ({}: NavBarProps) => {
     const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false)
     const {data: session} = useSession();
 
+    const sandboxActive = typeof window !== 'undefined' && window.location.pathname == routes.SANDBOX;
+    const templatesActive = typeof window !== 'undefined' && window.location.pathname == routes.TEMPLATES;
+
+    console.log("sandboxActive: " + sandboxActive)
+    console.log("templatesActive: " + templatesActive)
+
     return (
         <React.Fragment>
             <Navbar isBordered variant="floating">
                 <Navbar.Brand>
-                {/* <AcmeLogo /> */}
-                <Text b color="inherit" hideIn="xs">
-                    {constants.SITE_NAME}
-                </Text>
+                    <Link href={routes.ROOT}>
+                        <Text b>{constants.SITE_NAME}</Text>
+                    </Link>
                 </Navbar.Brand>
                 <Navbar.Content hideIn="xs">
-                    <Navbar.Link href={routes.SANDBOX}>Sandbox</Navbar.Link>
-                    <Navbar.Link href={routes.TEMPLATES}>Templates</Navbar.Link>
+                    <Navbar.Link isActive={sandboxActive} href={routes.SANDBOX}>Sandbox</Navbar.Link>
+                    <Navbar.Link isActive={templatesActive} href={routes.TEMPLATES}>Templates</Navbar.Link>
                     <Navbar.Link href='#'>Go Pro</Navbar.Link>
                 </Navbar.Content>
                 <Navbar.Content>

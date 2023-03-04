@@ -56,7 +56,7 @@ function Sandbox() {
                 <Card variant="bordered" className={styles["chat-box"]}>
                 <Card.Body className={styles["chat-box-messages"]}>
                     {
-                        messages.map((m) => <Message from={m.from}>{m.text}</Message>)
+                        messages.map((m, i) => <Message from={m.from} key={i}>{m.text}</Message>)
                     }
                 </Card.Body>
                 <Card.Footer>
@@ -71,7 +71,7 @@ function Sandbox() {
                                     size="sm"
                                     auto
                                     className={styles['send-button']}
-                                    onPress={send}>
+                                    onClick={send}>
                                     <SendIcon fontSize='inherit' shapeRendering='rounded' />
                                 </Button>
                             }
