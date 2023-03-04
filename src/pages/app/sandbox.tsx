@@ -3,7 +3,7 @@ import Template from '@/components/layout/template'
 import styles from '@/styles/Sandbox.module.css'
 import { Button, Card, Input, Text, useInput } from '@nextui-org/react';
 import SendIcon from '@mui/icons-material/Send';
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 
 interface MessageProps {
     from: 'user'|'ai'
@@ -11,7 +11,7 @@ interface MessageProps {
 
 function Message(props: PropsWithChildren<MessageProps>) {
     return (
-        <div className={`${styles["message"]} ${styles[props.from]}`}>
+        <div className={`message ${styles["message"]} ${styles[props.from]}`}>
             {props.children}
         </div>
     )
@@ -43,6 +43,12 @@ function Sandbox() {
 
         reset()
     }
+
+    useEffect(() => {
+        const els = document.getElementsByClassName('message')
+        if (!els || !els.length) return;
+        els[els.length - 1].scrollIntoView({behavior: "smooth"});
+    })
 
     return (
         <Layout>
