@@ -1,0 +1,40 @@
+.send-button {
+    font-size: 18px;
+    padding: 8px;
+    margin-right: 4px;
+}
+
+.user-input-form {
+    width: 100%;
+}
+
+.chat-box {
+    height: 100%;
+}
+
+.chat-box-messages {
+    padding-top: 8px;
+    padding-bottom: 0;
+}
+
+.message {
+    display: inline;
+    max-width: 80%;
+
+    padding: 8px;
+    border-radius: 12px;
+    margin: 4px 0;
+}
+
+.message.ai {
+    align-self: flex-start;
+    background: rgba(0, 0, 0, 0.15);
+    border-bottom-left-radius: 0;
+}
+
+.message.user {
+    color: white;
+    align-self: flex-end;
+    background: #0072F5;
+    border-bottom-right-radius: 0;
+}
