@@ -39,7 +39,7 @@ function Sandbox() {
             text: userInput,
             from: 'user'
         })
-        setMessages(messages)
+        setMessages([...messages])
 
         reset()
     }
@@ -48,7 +48,7 @@ function Sandbox() {
         const els = document.getElementsByClassName('message')
         if (!els || !els.length) return;
         els[els.length - 1].scrollIntoView({behavior: "smooth"});
-    })
+    }, [messages])
 
     return (
         <Layout>
