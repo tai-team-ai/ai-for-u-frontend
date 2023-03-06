@@ -45,9 +45,6 @@ const NavBar = ({}: NavBarProps) => {
     const sandboxActive = typeof window !== 'undefined' && window.location.pathname == routes.SANDBOX;
     const templatesActive = typeof window !== 'undefined' && window.location.pathname == routes.TEMPLATES;
 
-    console.log("sandboxActive: " + sandboxActive)
-    console.log("templatesActive: " + templatesActive)
-
     return (
         <React.Fragment>
             <Navbar isBordered variant="floating">
