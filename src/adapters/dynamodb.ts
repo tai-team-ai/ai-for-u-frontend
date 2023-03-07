@@ -55,7 +55,7 @@ export async function authorizeUser({ email, password }: AuthCredentials) {
     if (!bcrypt.compareSync(password, item.password)) {
         return null;
     }
-    return { id: email, name: email, email: email };
+    return { id: item.id, name: email, email: email };
 }
 
 interface NewUserProps {
@@ -74,6 +74,7 @@ export async function putNewUser(client: DynamoDBDocument, { email, password, us
         Item: {
             "pk": `USER#${userId}`,
             "sk": `USER#${userId}`,
+            id: userId,
             type: "USER",
             "GSI1PK": `USER#${email}`,
             "GSI1SK": `USER#${email}`,

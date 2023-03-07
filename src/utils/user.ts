@@ -6,9 +6,10 @@ export function getUserID(session: Session|null) {
     let id;
     if (session && typeof session.user.id !== "undefined") {
         id = session.user.id;
-        if(typeof window !== "undefined") {
-            window.localStorage.setItem("userID", id);
-        }
+        // TODO: figure out whether or not this is a good approach
+        // if(typeof window !== "undefined") {
+        //     window.localStorage.setItem("userID", id);
+        // }
     }
     else if(typeof window !== "undefined") { // not logged in
         // check localStorage
