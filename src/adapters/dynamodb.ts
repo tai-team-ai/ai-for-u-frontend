@@ -55,17 +55,26 @@ export async function authorizeUser({ email, password }: AuthCredentials) {
     if (!bcrypt.compareSync(password, item.password)) {
         return null;
     }
-    return { id: email, name: email, email: email };
+    return { id: item.id, name: email, email: email };
 }
 
-export async function putNewUser(client: DynamoDBDocument, {email, password}: AuthCredentials) {
-    const id = uuid()
+interface NewUserProps {
+    email: string
+    password: string
+    userId?: string
+}
+
+export async function putNewUser(client: DynamoDBDocument, { email, password, userId }: NewUserProps) {
+    if( typeof userId === "undefined") {
+        userId = uuid();
+    }
     password = bcrypt.hashSync(password, 12);
     const putOutput = await client.put({
         TableName: "next-auth",
         Item: {
-            "pk": `USER#${id}`,
-            "sk": `USER#${id}`,
+            "pk": `USER#${userId}`,
+            "sk": `USER#${userId}`,
+            id: userId,
             type: "USER",
             "GSI1PK": `USER#${email}`,
             "GSI1SK": `USER#${email}`,
