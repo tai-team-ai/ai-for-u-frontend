@@ -11,6 +11,14 @@ const authOptions: AuthOptions = {
     session: {
         strategy: "jwt"
     },
+    callbacks: {
+        session: async ({session, token}) => {
+            if(typeof session.user !== "undefined" && typeof token.sub !== "undefined") {
+                session.user.id = token.sub.split("#")[1];
+            }
+            return session;
+        }
+    },
     providers: [
         // OAuth authentication providers...
         GoogleProvider({

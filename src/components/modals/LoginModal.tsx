@@ -2,6 +2,7 @@ import React, {useRef} from "react";
 import { Modal, Button, Input, Loading, Image, Text } from "@nextui-org/react";
 import { signIn } from "next-auth/react";
 import { validateSignUp } from "@/utils/validation";
+import { getUserID } from "@/utils/user";
 
 
 interface LoginModalProps {
@@ -43,7 +44,10 @@ const LoginModal = ({open, setOpen, isSignUp = false}: LoginModalProps) => {
                 }
                 const response = await fetch("/api/auth/signup", {
                     method: "POST",
-                    headers: {"Content-Type": "application/json"},
+                    headers: {
+                        "Content-Type": "application/json",
+                        "User-ID": getUserID(null)!
+                    },
                     body: JSON.stringify({email, password, confirmPassword})
                 });
 
