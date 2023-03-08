@@ -24,3 +24,8 @@ export function validateSignUp({ email, password, confirmPassword }: validateSig
     }
     return errors;
 }
+
+export function validateEmail(email: string): boolean {
+    const validEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    return email.match(validEmail) !== null;
+}

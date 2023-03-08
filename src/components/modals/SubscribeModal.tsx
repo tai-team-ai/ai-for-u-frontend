@@ -1,5 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Modal, Button, Input, Loading, Text } from "@nextui-org/react";
+import { getUserID } from "@/utils/user";
+import { validateEmail } from "@/utils/validation";
 
 interface SubscribeModalProps {
     open: boolean
@@ -11,17 +13,34 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubscribed, setIsSubscribed] = useState(false);
 
-    const submitForm = () => {
-        if (!userEmail.current) return;
+    const submitForm = async () => {
+        if (!userEmail.current) {
+            return;
+        }
+        if (!validateEmail(userEmail.current.value)) {
+            return;// TODO: display error message??
+        }
 
         setIsSubmitting(true)
-        // todo, actually subscribe to a mailing list
+        const email = userEmail.current.value;
+        const response = await fetch("/api/email-list", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "User-ID": getUserID(null)!
+            },
+            body: JSON.stringify({ email })
+        });
         console.log(`subscribing user email: ${userEmail.current.value}`)
-
-        setTimeout(() => {
-            setIsSubmitting(false)
-            setIsSubscribed(true)
-        }, 2000)
+        if(response.status === 200) {
+            setIsSubmitting(false);
+            setIsSubscribed(true);
+        }
+        else {
+            setIsSubmitting(false);
+            const {message} = await response.json();
+            console.error(message); // TODO: display error message??
+        }
     }
 
     return (
@@ -60,6 +79,9 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
                     >
                         Close
                     </Button>
+                    {
+
+                    isSubscribed? null :
                     <Button
                         auto
                         flat
@@ -72,9 +94,10 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
                             "Subscribe"
                         )}
                     </Button>
+                    }
                 </Modal.Footer>
             </form>
-            
+
         </Modal>
     )
 }
