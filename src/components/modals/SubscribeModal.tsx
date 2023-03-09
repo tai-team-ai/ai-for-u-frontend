@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import { Modal, Button, Input, Loading, Text } from "@nextui-org/react";
 import { getUserID } from "@/utils/user";
 import { validateEmail } from "@/utils/validation";
+import { uFetch } from "@/utils/http";
+import { useSession } from "next-auth/react";
 
 interface SubscribeModalProps {
     open: boolean
@@ -12,6 +14,7 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
     const userEmail = useRef<HTMLInputElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubscribed, setIsSubscribed] = useState(false);
+    const { data: session } = useSession();
 
     const submitForm = async () => {
         if (!userEmail.current) {
@@ -23,15 +26,11 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
 
         setIsSubmitting(true)
         const email = userEmail.current.value;
-        const response = await fetch("/api/email-list", {
+        const response = await uFetch("/api/email-list", {
+            session: session,
             method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "User-ID": getUserID(null)!
-            },
             body: JSON.stringify({ email })
         });
-        console.log(`subscribing user email: ${userEmail.current.value}`)
         if(response.status === 200) {
             setIsSubmitting(false);
             setIsSubscribed(true);

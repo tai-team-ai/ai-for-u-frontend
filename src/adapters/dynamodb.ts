@@ -85,15 +85,17 @@ export async function putNewUser(client: DynamoDBDocument, { email, password, us
 }
 
 interface EmailListSignupProps {
+    userId: string;
     email: string;
 }
 
-export async function addEmailToEmailList(client: DynamoDBDocument, {email}: EmailListSignupProps) {
+export async function addEmailToEmailList(client: DynamoDBDocument, {userId, email}: EmailListSignupProps) {
     await client.put({
-        TableName: "email-list",
+        TableName: "user-data",
         Item: {
+            uuid: userId,
             email: email,
-            subscribed: true
+            email_list: true
         }
     });
 }
