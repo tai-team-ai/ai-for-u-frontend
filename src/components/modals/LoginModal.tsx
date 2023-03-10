@@ -3,7 +3,7 @@ import { Modal, Button, Input, Loading, Image, Text, Card } from "@nextui-org/re
 import EmailIcon from '@mui/icons-material/Email';
 import { signIn } from "next-auth/react";
 import { validateSignUp } from "@/utils/validation";
-import { getUserID } from "@/utils/user";
+import { uFetch } from "@/utils/http";
 
 
 interface LoginModalProps {
@@ -44,14 +44,10 @@ const LoginModal = ({open, setOpen, isSignUp = false}: LoginModalProps) => {
                 if(errors.length > 0) {
                     setErrorMessage(errors.join("<br/>"));
                 }
-                const response = await fetch("/api/auth/signup", {
+                const response = await uFetch("/api/auth/signup", {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "User-ID": getUserID(null)!
-                    },
-                    body: JSON.stringify({email, password, confirmPassword})
-                });
+                    body: JSON.stringify({ email, password, confirmPassword }),
+                })
 
                 const data = await response.json();
                 if(response.status === 422) {
@@ -150,7 +146,6 @@ const LoginModal = ({open, setOpen, isSignUp = false}: LoginModalProps) => {
                     {isSignUp ? "Sign up with Google" : "Login with Google"}
                 </Button>
             </>
- 
         )
     }
 

@@ -1,5 +1,9 @@
 import React, { useState, useRef } from "react";
 import { Modal, Button, Input, Loading, Text } from "@nextui-org/react";
+import { getUserID } from "@/utils/user";
+import { validateEmail } from "@/utils/validation";
+import { uFetch } from "@/utils/http";
+import { useSession } from "next-auth/react";
 
 interface SubscribeModalProps {
     open: boolean
@@ -10,18 +14,32 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
     const userEmail = useRef<HTMLInputElement>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSubscribed, setIsSubscribed] = useState(false);
+    const { data: session } = useSession();
 
-    const submitForm = () => {
-        if (!userEmail.current) return;
+    const submitForm = async () => {
+        if (!userEmail.current) {
+            return;
+        }
+        if (!validateEmail(userEmail.current.value)) {
+            return;// TODO: display error message??
+        }
 
         setIsSubmitting(true)
-        // todo, actually subscribe to a mailing list
-        console.log(`subscribing user email: ${userEmail.current.value}`)
-
-        setTimeout(() => {
-            setIsSubmitting(false)
-            setIsSubscribed(true)
-        }, 2000)
+        const email = userEmail.current.value;
+        const response = await uFetch("/api/email-list", {
+            session: session,
+            method: "POST",
+            body: JSON.stringify({ email })
+        });
+        if(response.status === 200) {
+            setIsSubmitting(false);
+            setIsSubscribed(true);
+        }
+        else {
+            setIsSubmitting(false);
+            const {message} = await response.json();
+            console.error(message); // TODO: display error message??
+        }
     }
 
     return (
@@ -60,6 +78,9 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
                     >
                         Close
                     </Button>
+                    {
+
+                    isSubscribed? null :
                     <Button
                         auto
                         flat
@@ -72,9 +93,10 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
                             "Subscribe"
                         )}
                     </Button>
+                    }
                 </Modal.Footer>
             </form>
-            
+
         </Modal>
     )
 }
