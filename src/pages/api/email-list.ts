@@ -13,7 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(401).json({message: "Invalid Email"});
         return;
     }
-    let userId = req.headers["user-id"]
+    let userId = req.headers["UUID".toLowerCase()]
     if (typeof userId === "undefined") {
         console.log(req.headers);
         res.status(403).json({message: "Forbidden"});  // a user id was not provided so the request possibly came from an outside entity (not a browser)
