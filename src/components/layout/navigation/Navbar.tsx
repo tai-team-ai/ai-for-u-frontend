@@ -3,6 +3,7 @@ import { Navbar, Button, Link, Text } from "@nextui-org/react";
 import { constants, routes } from "../../../utils/constants";
 import LoginModal from "../../modals/LoginModal";
 import { useSession, signOut } from "next-auth/react";
+import styles from '@/styles/Navbar.module.css';
 
 interface LoginButtonProps {
     onLogin: () => void
@@ -50,7 +51,7 @@ const NavBar = ({}: NavBarProps) => {
             <Navbar isBordered variant="floating">
                 <Navbar.Brand>
                     <Link href={routes.ROOT}>
-                        <Text b>{constants.SITE_NAME}</Text>
+                        <img className={styles['logo']} src="/logo.png"></img>
                     </Link>
                 </Navbar.Brand>
                 <Navbar.Content hideIn="xs">
