@@ -4,6 +4,8 @@ import styles from '@/styles/Sandbox.module.css'
 import { Button, Card, Input, Text, useInput } from '@nextui-org/react';
 import SendIcon from '@mui/icons-material/Send';
 import { PropsWithChildren, useEffect, useState } from 'react';
+import { v4 as uuid } from 'uuid';
+import { uFetch } from '@/utils/http';
 
 interface MessageProps {
     from: 'user'|'ai'
@@ -23,7 +25,10 @@ interface ConversationMessage {
 }
 
 function Sandbox() {
-    const { value: userInput, reset, bindings: userInputBindings } = useInput("");
+    const { value: userMessage, reset, bindings: userInputBindings } = useInput("");
+    const conversationUuid = uuid();
+    const url = "/api/ai-for-u/sandbox-chatgpt"
+
     const [messages, setMessages] = useState<ConversationMessage[]>([
         {
             text: "Hey, yo. I'm an AI",
@@ -31,17 +36,47 @@ function Sandbox() {
         }
     ])
 
+    const getAIMessage = (message: string) => {
+        if(typeof document === "undefined") {
+            return;
+        }
+        const sendBtn = document.querySelector(`.${styles["send-button"]}`);
+        if(sendBtn) {
+            sendBtn.setAttribute("disabled", "true");
+        }
+        uFetch(url, {
+            method: "POST",
+            body: JSON.stringify({
+                conversationUuid,
+                userMessage
+            })
+        }).then(async response => {
+            const body = await response.json();
+            messages.push({
+                text: body.gptResponse,
+                from: "ai"
+            });
+            setMessages(messages);
+            reset();
+        }).finally(() => {
+            if(sendBtn) {
+                sendBtn.removeAttribute("disabled");
+            }
+        })
+    }
+
+
     const send = (event?: any) => {
-        console.log("user sending message: " + userInput)
         event?.preventDefault && event?.preventDefault()
 
         messages.push({
-            text: userInput,
+            text: userMessage,
             from: 'user'
         })
         setMessages([...messages])
 
         reset()
+        getAIMessage(userMessage);
     }
 
     useEffect(() => {
@@ -81,7 +116,7 @@ function Sandbox() {
                 </Card>
             </Template>
         </Layout>
-       
+
     )
 }
 
