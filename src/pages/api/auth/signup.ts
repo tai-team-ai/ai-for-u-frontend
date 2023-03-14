@@ -16,8 +16,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     const client = useDynamoDBClient();
     const data = await getUserByEmail(client, email);
     if(typeof data.Items === "undefined" || data.Items.length === 0) {
-        let userId = req.headers["UUID"] as string | undefined;
-        const putOutput = await putNewUser(client, {email, password, userId});
+        const putOutput = await putNewUser(client, {email, password});
         if (typeof putOutput.$metadata.httpStatusCode !== "undefined") {
             res.status(putOutput.$metadata.httpStatusCode).json({ message: putOutput.ItemCollectionMetrics?.ItemCollectionKey });
         }
