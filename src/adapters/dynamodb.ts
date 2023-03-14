@@ -61,13 +61,10 @@ export async function authorizeUser({ email, password }: AuthCredentials) {
 interface NewUserProps {
     email: string
     password: string
-    userId?: string
 }
 
-export async function putNewUser(client: DynamoDBDocument, { email, password, userId }: NewUserProps) {
-    if( typeof userId === "undefined") {
-        userId = uuid();
-    }
+export async function putNewUser(client: DynamoDBDocument, { email, password }: NewUserProps) {
+    const userId = uuid();
     password = bcrypt.hashSync(password, 12);
     const putOutput = await client.put({
         TableName: "next-auth",
@@ -76,6 +73,9 @@ export async function putNewUser(client: DynamoDBDocument, { email, password, us
             "sk": `USER#${userId}`,
             id: userId,
             type: "USER",
+            email: email,
+            emailVerified: null,
+            provider: "credentials",
             "GSI1PK": `USER#${email}`,
             "GSI1SK": `USER#${email}`,
             password: `${password}`
