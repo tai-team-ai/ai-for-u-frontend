@@ -46,18 +46,40 @@ const NavBar = ({}: NavBarProps) => {
     const sandboxActive = typeof window !== 'undefined' && window.location.pathname == routes.SANDBOX;
     const templatesActive = typeof window !== 'undefined' && window.location.pathname == routes.TEMPLATES;
 
+    const navbarItems = [{
+        text: "Sandbox",
+        href: routes.SANDBOX,
+        isActive: sandboxActive
+    }, {
+        text: "Templates",
+        href: routes.TEMPLATES,
+        isActive: templatesActive
+    }, {
+        text: "Go Pro",
+        href: "#",
+        isActive: false
+    }]
+
     return (
         <React.Fragment>
             <Navbar isBordered variant="floating">
                 <Navbar.Brand>
-                    <Link href={routes.ROOT}>
-                        <img className={styles['logo']} src="/logo.png"></img>
-                    </Link>
+                    <Navbar.Toggle showIn="sm" aria-label="toggle navigation" />
+                    <Text hideIn="sm">
+                        <Link href={routes.ROOT}>
+                            <img className={styles['logo']} src="/logo-full.png"></img>
+                        </Link>
+                    </Text>
+                    <Text showIn="sm">
+                        <Link href={routes.ROOT}>
+                            <img className={styles['logo']} src="/logo-a.png"></img>
+                        </Link>
+                    </Text>
                 </Navbar.Brand>
-                <Navbar.Content hideIn="xs">
-                    <Navbar.Link isActive={sandboxActive} href={routes.SANDBOX}>Sandbox</Navbar.Link>
-                    <Navbar.Link isActive={templatesActive} href={routes.TEMPLATES}>Templates</Navbar.Link>
-                    <Navbar.Link href='#'>Go Pro</Navbar.Link>
+                <Navbar.Content hideIn="sm">
+                    {navbarItems.map((nav, idx) => (
+                        <Navbar.Link key={idx} isActive={nav.isActive} href={nav.href}>{nav.text}</Navbar.Link>    
+                    ))}
                 </Navbar.Content>
                 <Navbar.Content>
                     {session ? (
@@ -69,6 +91,21 @@ const NavBar = ({}: NavBarProps) => {
                         />
                     )}
                 </Navbar.Content>
+                <Navbar.Collapse showIn="sm">
+                    {navbarItems.map((nav, idx) => (
+                        <Navbar.CollapseItem key={idx}>
+                            <Link
+                                color="inherit"
+                                css={{
+                                    minWidth: "100%",
+                                }}
+                                href={nav.href}
+                            >
+                                {nav.text}
+                            </Link>
+                        </Navbar.CollapseItem>
+                    ))}
+                </Navbar.Collapse>
             </Navbar>
             <LoginModal
                 open={showLoginModal}
