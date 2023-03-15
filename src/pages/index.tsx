@@ -6,7 +6,7 @@ import Layout from '@/components/layout/layout'
 import AIForAnimation from '@/components/elements/AIForAnimation'
 import styles from '@/styles/Home.module.css';
 import Image from "next/image";
-import { Card, Col, Container, Row, Spacer, Text, Button, Link } from "@nextui-org/react";
+import { Card, Col, Container, Row, Spacer, Text, Button, Link, Grid } from "@nextui-org/react";
 
 interface TrustBuilderProps {
     companyName: string
@@ -58,71 +58,66 @@ function Home() {
     return (
         <Layout>
             <section className={styles["hero-section"]}>
-                <Container gap={0}>
-                    <Row gap={0}>
-                        <Col>
-                            <Container>
-                                <Row justify="center">
-                                    <Text h1 className={styles["hero-heading"]}>
-                                        CTA
-                                    </Text>
-                                </Row>
-                                <Row justify="center">
-                                    <p className={styles["hero-paragraph"]}>
-                                        Eu dolor nulla officia officia nostrud nostrud consectetur adipisicing. Qui adipisicing consectetur sit ea amet. Aute excepteur pariatur duis culpa sint ipsum ad eu non consequat veniam qui. Tempor commodo incididunt irure dolore eu officia commodo consequat aliquip.
-                                    </p>
-                                </Row>
-                                <Spacer y={0.5} />
-                                <Row justify="center">
-                                    <Link href={routes.TEMPLATES}>
-                                        <Button
-                                            flat
-                                            size="lg"
-                                            className={styles["templates-btn"]}>
-                                            Templates
-                                        </Button>
-                                    </Link>
-                                </Row>
-                                <Spacer y={0.5} />
-                                <Row justify="center">
-                                    <Link href={routes.SANDBOX}>
-                                        <Button
-                                            flat
-                                            size="lg"
-                                            className={styles["sandbox-btn"]}>
-                                            Sandbox
-                                        </Button>
-                                    </Link>
-                                </Row>
-                                <Spacer y={0.5} />
-                            </Container>
-                        </Col>
-                        <Spacer y={1} />
-                        <Col>
-                            <div className={styles["hero-graphic"]}>
-                                <AIForAnimation />
-                            </div>
-                        </Col>
-                    </Row>
-                </Container>
+                <Grid.Container gap={1} direction="row-reverse">
+                    <Grid xs={12} sm={6}>
+                        <div className={styles["hero-graphic"]}>
+                            <AIForAnimation />
+                        </div>
+                    </Grid>
+                    <Grid xs={12} sm={6}>
+                        <Container>
+                            <Row justify="center">
+                                <Text h1 className={styles["hero-heading"]}>
+                                    CTA
+                                </Text>
+                            </Row>
+                            <Row justify="center">
+                                <p className={styles["hero-paragraph"]}>
+                                    Eu dolor nulla officia officia nostrud nostrud consectetur adipisicing. Qui adipisicing consectetur sit ea amet. Aute excepteur pariatur duis culpa sint ipsum ad eu non consequat veniam qui. Tempor commodo incididunt irure dolore eu officia commodo consequat aliquip.
+                                </p>
+                            </Row>
+                            <Spacer y={0.5} />
+                            <Row justify="center">
+                                <Link href={routes.TEMPLATES}>
+                                    <Button
+                                        flat
+                                        size="lg"
+                                        className={styles["templates-btn"]}>
+                                        Templates
+                                    </Button>
+                                </Link>
+                            </Row>
+                            <Spacer y={0.5} />
+                            <Row justify="center">
+                                <Link href={routes.SANDBOX}>
+                                    <Button
+                                        flat
+                                        size="lg"
+                                        className={styles["sandbox-btn"]}>
+                                        Sandbox
+                                    </Button>
+                                </Link>
+                            </Row>
+                            <Spacer y={0.5} />
+                        </Container>
+                    </Grid>
+                </Grid.Container>
             </section>
             <section className={styles["trust-builders"]}>
-                <Container>
-                    <Row gap={1}>
-                        <Col >
-                            <TrustBuilder src="/images/trust-builder/1.jpg" size={300} companyName="AIForU" />
-                        </Col>
-                        <Col>
-                            <TrustBuilder src="/images/trust-builder/2.jpg" size={300} companyName="Macrosoft" />
-                        </Col>
-                        <Col>
-                            <TrustBuilder src="/images/trust-builder/3.jpg" size={300} companyName="Goggle" />
-                        </Col>
-                        <Col>
-                            <TrustBuilder src="/images/trust-builder/4.jpg" size={300} companyName="Whalemart" />
-                        </Col>
-                    </Row>
-                </Container>
+                <Grid.Container gap={1}>
+                    <Grid xs={6} sm={3}>
+                        <TrustBuilder src="/images/trust-builder/1.jpg" size={300} companyName="AIForU" />
+                    </Grid>
+                    <Grid xs={6} sm={3}>
+                        <TrustBuilder src="/images/trust-builder/2.jpg" size={300} companyName="Macrosoft" />
+                    </Grid>
+                    <Grid xs={6} sm={3}>
+                        <TrustBuilder src="/images/trust-builder/3.jpg" size={300} companyName="Goggle" />
+                    </Grid>
+                    <Grid xs={6} sm={3}>
+                        <TrustBuilder src="/images/trust-builder/4.jpg" size={300} companyName="Whalemart" />
+                    </Grid>
+                </Grid.Container>
             </section>
             <section className={styles["pages-section"]}>
                 <div className={styles["pages-content"]}>

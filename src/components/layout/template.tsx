@@ -1,4 +1,3 @@
-import Layout from '@/components/layout/layout'
 import styles from '@/styles/Template.module.css'
 import {routes} from '@/utils/constants'
 import { Grid, Text } from '@nextui-org/react'
@@ -14,8 +13,14 @@ interface TemplateProps {
 
 export default function Template({isSandbox = false, children = null}: TemplateProps) {
     return (
-        <Grid.Container gap={1}>
-            <Grid sm={3}>
+        <Grid.Container gap={1} direction="row-reverse">
+            <Grid sm={9} xs={12}>
+                <section className={styles["content"]}>
+                    {children}
+                    {isSandbox ? null : <Link href={routes.TEMPLATES}>Back to Templates</Link>}
+                </section>
+            </Grid>
+            <Grid sm={3} xs={12}>
                 <section className={styles["example-section"]}>
                     <Text h2 className={styles["example-header"]}>
                         Examples
@@ -33,12 +38,6 @@ export default function Template({isSandbox = false, children = null}: TemplateP
                         }
                         </Grid.Container>
                     </div>
-                </section>
-            </Grid>
-            <Grid sm={9}>
-                <section className={styles["content"]}>
-                    {children}
-                    {isSandbox ? null : <Link href={routes.TEMPLATES}>Back to Templates</Link>}
                 </section>
             </Grid>
 
