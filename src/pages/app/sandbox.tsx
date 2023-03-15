@@ -7,16 +7,44 @@ import { PropsWithChildren, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { uFetch } from '@/utils/http';
 import Image from 'next/image';
+import FeedbackModal from '@/components/modals/FeedbackModal';
 
 interface MessageProps {
     from: 'user'|'ai'
 }
 
-function Message(props: PropsWithChildren<MessageProps>) {
+function Message({from, children}: PropsWithChildren<MessageProps>) {
+    const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false)
+    let message = children;
+    if (typeof children === "undefined" || children === null) {
+        message = "";
+    } else {
+        message = `${children}`;
+    }
     return (
-        <div className={`message ${styles["message"]} ${styles[props.from]}`}>
-            {props.children}
+        <>
+        <div className={`message ${styles["message"]} ${styles[from]}`}>
+            {children}
         </div>
+        {
+            from === 'ai'?
+            <>
+            <div>
+                <span
+                    className={styles["rate-btn"]}
+                    onClick={() => setShowFeedbackModal(true)}
+                >
+                    Rate this response?
+                </span>
+            </div>
+            <FeedbackModal
+                open={showFeedbackModal}
+                setOpen={setShowFeedbackModal}
+                message={`${message}`}
+                template="chat-sandbox"
+            /></> : null
+        }
+        </>
     )
 }
 
