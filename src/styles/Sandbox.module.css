@@ -65,3 +65,14 @@
 .dot:nth-child(3) {
     animation-delay: 0.66s;
 }
+
+.rate-btn {
+    margin-left: 2em;
+    font-size: 10pt;
+    cursor: pointer;
+    color: grey;
+}
+
+.rate-btn:hover {
+    color: black;
+}
