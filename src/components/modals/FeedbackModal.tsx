@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import { Modal, Button, Input, Loading, Image, Text, Card } from "@nextui-org/react";
 import EmailIcon from '@mui/icons-material/Email';
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { validateSignUp } from "@/utils/validation";
 import { uFetch } from "@/utils/http";
 import styles from "@/styles/FeedbackModal.module.css"
@@ -43,12 +43,14 @@ const StarRating = ({rating, setRating}: StarRatingProps) => {
 }
 
 const FeedbackModal = ({open, setOpen, message, template}: FeedbackModalProps) => {
+    const {data: session} = useSession()
     const [rating, setRating] = useState(5);
     const [feedback, setFeedback] = useState("");
 
     const submitFeedback = async () => {
 
         const response = await uFetch("/api/ai-for-u/feedback", {
+            session: session,
             method: "POST",
             body: JSON.stringify({rating, feedback, message, template})
         });
