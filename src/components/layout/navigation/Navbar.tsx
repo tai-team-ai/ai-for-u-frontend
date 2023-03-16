@@ -4,6 +4,7 @@ import { constants, routes } from "../../../utils/constants";
 import LoginModal from "../../modals/LoginModal";
 import { useSession, signOut } from "next-auth/react";
 import styles from '@/styles/Navbar.module.css';
+import { getUserID } from "@/utils/user";
 
 interface LoginButtonProps {
     onLogin: () => void
@@ -42,6 +43,7 @@ const NavBar = ({}: NavBarProps) => {
     const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
     const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false)
     const {data: session} = useSession();
+    getUserID(session);
 
     const sandboxActive = typeof window !== 'undefined' && window.location.pathname == routes.SANDBOX;
     const templatesActive = typeof window !== 'undefined' && window.location.pathname == routes.TEMPLATES;
@@ -78,7 +80,7 @@ const NavBar = ({}: NavBarProps) => {
                 </Navbar.Brand>
                 <Navbar.Content hideIn="sm">
                     {navbarItems.map((nav, idx) => (
-                        <Navbar.Link key={idx} isActive={nav.isActive} href={nav.href}>{nav.text}</Navbar.Link>    
+                        <Navbar.Link key={idx} isActive={nav.isActive} href={nav.href}>{nav.text}</Navbar.Link>
                     ))}
                 </Navbar.Content>
                 <Navbar.Content>

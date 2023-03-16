@@ -5,6 +5,7 @@ import { Card, Grid, Text } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { PropsWithChildren, useState } from 'react'
+import { getExamples } from '@/utils/user'
 
 
 interface TemplateProps {
@@ -57,22 +58,18 @@ export default function Template({isSandbox = false, children = null, exampleUrl
 
     if(exampleUrl && !loading) {
         setLoading(true)
-        uFetch(exampleUrl, {
-            session: session,
-            method: "GET",
-        }).then(res => {
-            return res.json();
-        }).then(data => {
-            for(let i = 0;i < data.exampleNames.length;i++) {
-                examples.push({
-                    name: data.exampleNames[i],
-                    example: data.examples[i]
-                });
-            }
-            setExamples([...examples]);
-        }).catch(error => {
-
-        });
+        getExamples(session, exampleUrl)
+            .then(data => {
+                if(typeof data.exampleNames !== "undefined") {
+                    for(let i = 0;i < data.exampleNames.length;i++) {
+                        examples.push({
+                            name: data.exampleNames[i],
+                            example: data.examples[i],
+                        })
+                    }
+                    setExamples([...examples]);
+                }
+            })
     }
 
     return (
