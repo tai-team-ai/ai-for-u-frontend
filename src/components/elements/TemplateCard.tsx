@@ -9,8 +9,8 @@ export const TemplateCards = [
         href="/templates/resignation-letter"
         name="Resignation Letter" />,
     <TemplateCard
-        href="/templates/notes-summarizer"
-        name="Notes Summarizer" />,
+        href="/templates/text-summarizer"
+        name="Text Summarizer" />,
 ]
 
 interface TemplateCardProps {

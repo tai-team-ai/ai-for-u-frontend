@@ -5,36 +5,47 @@ import { Button, Checkbox, Input, Textarea } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 
+interface TextSummarizerProps {
+    textToSummarize: string
+    includeSummarySentence: boolean
+    numberOfBullets: number
+    numberOfActionItems: number
+    freeformCommand: string
+}
+
 const NoteSummarizer = () => {
     const {data: session} = useSession();
-    const [notesToSummarize, setNotesToSummarize] = useState("");
+    const [textToSummarize, setTextToSummarize] = useState("");
     const [numberOfBullets, setNumberOfBullets] = useState(0);
     const [numberOfActionItems, setNumberOfActionItems] = useState(0);
     const [includeSummarySentence, setIncludeSummarySentence] = useState(false);
+    const [freeformCommand, setFreeformCommand] = useState("");
     const [generatedText, setGeneratedText] = useState("");
     const body = {
-        notesToSummarize,
+        textToSummarize,
         numberOfBullets,
         numberOfActionItems,
-        includeSummarySentence
+        includeSummarySentence,
+        freeformCommand,
     }
 
     const resetValues = () => {
-        setNotesToSummarize("");
+        setTextToSummarize("");
         setNumberOfBullets(0);
         setNumberOfActionItems(0);
         setIncludeSummarySentence(false);
+        setFreeformCommand("");
     }
 
     const submitNotes = async () => {
-        const response = await uFetch("/api/ai-for-u/note-summarizer", {
+        const response = await uFetch("/api/ai-for-u/text-summarizer", {
             session,
             method: "POST",
             body: JSON.stringify(body),
         });
         const data = await response.json();
         if(response.status === 200) {
-            const {summarySentence, bulletPoints, actionItems} = data;
+            const {summarySentence, bulletPoints, actionItems, freeformSection} = data;
             const text = summarySentence? [summarySentence] : [];
             if(bulletPoints) {
                 text.push("");
@@ -46,6 +57,8 @@ const NoteSummarizer = () => {
                 text.push("Action Items:")
                 text.push(actionItems);
             }
+            text.push("");
+            text.push(freeformSection);
             setGeneratedText(text.join("\n"));
         }
         else if (response.status === 422) {
@@ -53,16 +66,25 @@ const NoteSummarizer = () => {
         }
     }
 
+    const fillExample = ({textToSummarize, numberOfBullets, numberOfActionItems, includeSummarySentence, freeformCommand}: TextSummarizerProps) => {
+        resetValues();
+        setTextToSummarize(textToSummarize);
+        setNumberOfBullets(numberOfBullets);
+        setNumberOfActionItems(numberOfActionItems);
+        setIncludeSummarySentence(includeSummarySentence);
+        setFreeformCommand(freeformCommand);
+    }
+
     return (
         <Layout>
-            <Template>
-                <h1>Note Summarizer</h1>
+            <Template exampleUrl="/api/ai-for-u/text-summarizer-examples" fillExample={fillExample}>
+                <h1>Text Summarizer</h1>
                 <Textarea
                     autoFocus
                     fullWidth
                     label="Text to Summarize *"
-                    value={notesToSummarize}
-                    onChange={(event) => {setNotesToSummarize(event.target.value)}}
+                    value={textToSummarize}
+                    onChange={(event) => {setTextToSummarize(event.target.value)}}
                 />
 
                 <Input
@@ -86,6 +108,13 @@ const NoteSummarizer = () => {
                         onChange={(event) => {setIncludeSummarySentence(event)}}
                     />
                 </div>
+                <Input
+                    type="text"
+                    fullWidth
+                    label="Freeform Command"
+                    value={freeformCommand}
+                    onChange={(event) => {setFreeformCommand(event.target.value)}}
+                />
                 <Textarea
                     fullWidth
                     label="Results"
