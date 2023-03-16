@@ -28,11 +28,11 @@ const LoginButtons = ({onLogin, onSignUp}: LoginButtonProps) => {
 
 const LogoutButtons = () => {
     return (
-        <Navbar.Item>
-            <Button color="error" onPress={() => signOut()}>
+        <Navbar.Link>
+            <Button auto flat onPress={() => signOut()}>
                 Logout
             </Button>
-        </Navbar.Item>
+        </Navbar.Link>
     )
 }
 
@@ -64,7 +64,9 @@ const NavBar = ({}: NavBarProps) => {
 
     return (
         <React.Fragment>
-            <Navbar isBordered variant="floating">
+            <Navbar isBordered variant="floating" css={{
+                zIndex: "500"
+            }}>
                 <Navbar.Brand>
                     <Navbar.Toggle showIn="sm" aria-label="toggle navigation" />
                     <Text hideIn="sm">
