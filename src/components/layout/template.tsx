@@ -79,6 +79,7 @@ export default function Template({isSandbox = false, children = null, exampleUrl
         <Grid.Container gap={1} direction="row-reverse">
             <Grid sm={9} xs={12}>
                 <section className={styles["content"]}>
+                    {isSandbox ? null : <Link style={{float:"right"}} href={routes.TEMPLATES}>X</Link>}
                     {children}
                     {isSandbox ? null : <Link href={routes.TEMPLATES}>Back to Templates</Link>}
                 </section>
