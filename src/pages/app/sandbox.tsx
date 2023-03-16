@@ -66,7 +66,7 @@ interface ConversationMessage {
 }
 
 function Sandbox() {
-    const { value: userMessage, reset, bindings: userInputBindings } = useInput("");
+    const { value: userMessage, setValue, reset, bindings: userInputBindings } = useInput("");
     const conversationUuid = uuid();
     const url = "/api/ai-for-u/sandbox-chatgpt"
 
@@ -132,9 +132,13 @@ function Sandbox() {
         els[els.length - 1].scrollIntoView({behavior: "smooth"});
     }, [messages])
 
+    const fillExample = (example: string) => {
+        setValue(example);
+    }
+
     return (
         <Layout>
-            <Template isSandbox={true}>
+            <Template isSandbox={true} exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples" fillExample={fillExample}>
                 <Card variant="bordered" className={styles["chat-box"]}>
                 <Card.Body className={styles["chat-box-messages"]}>
                     {
@@ -167,7 +171,6 @@ function Sandbox() {
                 </Card>
             </Template>
         </Layout>
-
     )
 }
 
