@@ -4,6 +4,7 @@ import { uFetch } from "@/utils/http";
 import { Button, Checkbox, Input, Textarea } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { convertNewlines } from "@/utils/response";
 
 interface TextSummarizerProps {
     textToSummarize: string
@@ -20,7 +21,7 @@ const NoteSummarizer = () => {
     const [numberOfActionItems, setNumberOfActionItems] = useState(0);
     const [includeSummarySentence, setIncludeSummarySentence] = useState(false);
     const [freeformCommand, setFreeformCommand] = useState("");
-    const [generatedText, setGeneratedText] = useState("");
+    const [generatedText, setGeneratedText] = useState<JSX.Element>(()=><></>);
     const body = {
         textToSummarize,
         numberOfBullets,
@@ -35,6 +36,7 @@ const NoteSummarizer = () => {
         setNumberOfActionItems(0);
         setIncludeSummarySentence(false);
         setFreeformCommand("");
+        setGeneratedText(<></>)
     }
 
     const submitNotes = async () => {
@@ -46,20 +48,13 @@ const NoteSummarizer = () => {
         const data = await response.json();
         if(response.status === 200) {
             const {summarySentence, bulletPoints, actionItems, freeformSection} = data;
-            const text = summarySentence? [summarySentence] : [];
-            if(bulletPoints) {
-                text.push("");
-                text.push("Bullet Points:")
-                text.push(bulletPoints);
-            }
-            if(actionItems) {
-                text.push("");
-                text.push("Action Items:")
-                text.push(actionItems);
-            }
-            text.push("");
-            text.push(freeformSection);
-            setGeneratedText(text.join("\n"));
+
+            setGeneratedText(<>
+                <div>{convertNewlines(summarySentence)}</div>
+                <div>{convertNewlines(bulletPoints)}</div>
+                <div>{convertNewlines(actionItems)}</div>
+                <div>{convertNewlines(freeformSection)}</div>
+            </>);
         }
         else if (response.status === 422) {
 
@@ -115,12 +110,9 @@ const NoteSummarizer = () => {
                     value={freeformCommand}
                     onChange={(event) => {setFreeformCommand(event.target.value)}}
                 />
-                <Textarea
-                    fullWidth
-                    label="Results"
-                    readOnly
-                    value={generatedText}
-                    ></Textarea>
+                <div>
+                    {generatedText}
+                </div>
                 <Button
                     light
                     color="error"
