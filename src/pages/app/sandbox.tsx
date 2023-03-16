@@ -10,6 +10,7 @@ import Image from 'next/image';
 import FeedbackModal from '@/components/modals/FeedbackModal';
 import { getInitialChat } from '@/utils/user';
 import { useSession } from 'next-auth/react';
+import { convertNewlines } from '@/utils/response';
 
 interface MessageProps {
     from: 'user'|'ai'
@@ -155,7 +156,7 @@ function Sandbox() {
                 <Card variant="bordered" className={styles["chat-box"]}>
                 <Card.Body className={styles["chat-box-messages"]}>
                     {
-                        messages.map((m, i) => <Message from={m.from} key={i}>{m.text}</Message>)
+                        messages.map((m, i) => <Message from={m.from} key={i}>{convertNewlines(m.text)}</Message>)
                     }
                 </Card.Body>
                 <Card.Footer>
