@@ -8,6 +8,8 @@ import { v4 as uuid } from 'uuid';
 import { uFetch } from '@/utils/http';
 import Image from 'next/image';
 import FeedbackModal from '@/components/modals/FeedbackModal';
+import { getInitialChat } from '@/utils/user';
+import { useSession } from 'next-auth/react';
 
 interface MessageProps {
     from: 'user'|'ai'
@@ -66,6 +68,7 @@ interface ConversationMessage {
 }
 
 function Sandbox() {
+    const {data: session} = useSession();
     const { value: userMessage, setValue, reset, bindings: userInputBindings } = useInput("");
     const conversationUuid = uuid();
     const url = "/api/ai-for-u/sandbox-chatgpt"
@@ -86,6 +89,7 @@ function Sandbox() {
             typingDots.removeAttribute("hidden");
         }
         uFetch(url, {
+            session,
             method: "POST",
             body: JSON.stringify({
                 conversationUuid,
@@ -109,7 +113,16 @@ function Sandbox() {
         })
     }
     if(messages.length === 0) {
-        getAIMessage("");
+        getInitialChat(session).then(gptResponse => {
+            if(messages.length === 0) {
+                messages.push({
+                    text: gptResponse,
+                    from: "ai"
+                });
+                setMessages([...messages]);
+                reset();
+            }
+        })
     }
 
 
