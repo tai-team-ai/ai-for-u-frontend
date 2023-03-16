@@ -52,15 +52,9 @@ function Message({from, children}: PropsWithChildren<MessageProps>) {
 }
 
 function TypingDots() {
-    return <svg width="100" height="40" viewBox="0 0 100 50">
-        <path d="M10,30 h85 q5,0 5,-5
-        v-10 q0,-5 -5,-5
-        h-80 q-5,0 -5,5
-        z" stroke="#ddd" fill="#ddd" strokeWidth="20"></path>
-        <circle className={styles["dot"]} cx="25" cy="20" r="5" fill="#000000"></circle>
-        <circle className={styles["dot"]} cx="50" cy="20" r="5" fill="#000000"></circle>
-        <circle className={styles["dot"]} cx="75" cy="20" r="5" fill="#000000"></circle>
-    </svg>
+    return <div  id="typing-dots" className={`message ${styles["message"]} ${styles["ai"]} ${styles["typing-dots"]}`}>
+        <span>&#x2022;</span><span>&#x2022;</span><span>&#x2022;</span>
+    </div>
 }
 
 interface ConversationMessage {
@@ -80,14 +74,14 @@ function Sandbox() {
         if(typeof document === "undefined") {
             return;
         }
-        const typingDots = document.querySelector("#typing-dots");
+        const typingDots: HTMLDivElement|null = document.querySelector("#typing-dots");
         const sendBtn = document.querySelector(`.${styles["send-button"]}`);
         if(sendBtn) {
             sendBtn.setAttribute("disabled", "true");
 
         }
         if(typingDots) {
-            typingDots.removeAttribute("hidden");
+            typingDots.style.display = "inherit";
         }
         uFetch(url, {
             session,
@@ -109,7 +103,7 @@ function Sandbox() {
                 sendBtn.removeAttribute("disabled");
             }
             if(typingDots) {
-                typingDots.setAttribute("hidden", "");
+                typingDots.style.display = "none";
             }
         })
     }
@@ -158,13 +152,10 @@ function Sandbox() {
                     {
                         messages.map((m, i) => <Message from={m.from} key={i}>{convertNewlines(m.text)}</Message>)
                     }
+                    <TypingDots/>
                 </Card.Body>
                 <Card.Footer>
                     <form className={styles['user-input-form']} onSubmit={send}>
-                        <div id="typing-dots" hidden >
-                            <TypingDots/>
-                        </div>
-
                         <Input
                             {...userInputBindings}
                             fullWidth
