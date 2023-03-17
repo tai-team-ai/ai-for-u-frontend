@@ -4,7 +4,6 @@ import { uFetch } from "@/utils/http";
 import { Button, Checkbox, Input, Textarea } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { convertNewlines } from "@/utils/response";
 import { updateInput } from "@/utils/input";
 
 interface TextSummarizerProps {
@@ -67,10 +66,10 @@ const NoteSummarizer = () => {
             const {summarySentence, bulletPoints, actionItems, freeformSection} = data;
 
             setGeneratedText(<>
-                <div>{convertNewlines(summarySentence)}</div>
-                <div>{convertNewlines(bulletPoints)}</div>
-                <div>{convertNewlines(actionItems)}</div>
-                <div>{convertNewlines(freeformSection)}</div>
+                <pre>{summarySentence}</pre>
+                <pre>{bulletPoints}</pre>
+                <pre>{actionItems}</pre>
+                <pre>{freeformSection}</pre>
             </>);
         }
         else if (response.status === 422) {

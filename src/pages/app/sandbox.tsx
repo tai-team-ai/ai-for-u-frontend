@@ -9,7 +9,6 @@ import { uFetch } from '@/utils/http';
 import FeedbackModal from '@/components/modals/FeedbackModal';
 import { getInitialChat } from '@/utils/user';
 import { useSession } from 'next-auth/react';
-import { convertNewlines } from '@/utils/response';
 import { KeyboardEvent } from 'react';
 import { updateInput } from '@/utils/input';
 
@@ -28,7 +27,7 @@ function Message({from, children}: PropsWithChildren<MessageProps>) {
     return (
         <>
         <div className={`message ${styles["message"]} ${styles[from]}`}>
-            {children}
+            <pre>{children}</pre>
         </div>
         {
             from === 'ai'?
@@ -180,7 +179,7 @@ function Sandbox() {
                 <Card variant="bordered" className={styles["chat-box"]}>
                 <Card.Body className={styles["chat-box-messages"]}>
                     {
-                        messages.map((m, i) => <Message from={m.from} key={i}>{convertNewlines(m.text)}</Message>)
+                        messages.map((m, i) => <Message from={m.from} key={i}>{m.text}</Message>)
                     }
                     {loading ? <TypingDots/> : null}
                 </Card.Body>
