@@ -2,10 +2,15 @@
     font-size: 18px;
     padding: 8px;
     margin-right: 4px;
+    position:absolute;
+    bottom: 0;
+    right:0;
+    height: 2em;
 }
 
 .user-input-form {
     width: 100%;
+    position: relative;
 }
 
 .chat-box {
@@ -50,10 +55,6 @@
         transform: translateY(0);
         color: black;
     }
-}
-
-.typing-dots {
-    display: none;
 }
 
 .typing-dots span {
