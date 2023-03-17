@@ -5,6 +5,7 @@ import { Button, Checkbox, Input, Textarea } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { convertNewlines } from "@/utils/response";
+import { updateInput } from "@/utils/input";
 
 interface TextSummarizerProps {
     textToSummarize: string
@@ -30,12 +31,28 @@ const NoteSummarizer = () => {
         freeformCommand,
     }
 
+    const updateTextToSummarize = (text: string) => {
+        updateInput({selector:"#text-to-summarize", value:text, update:setTextToSummarize});
+    }
+    const updateNumberOfBullets = (num: number) => {
+        updateInput({selector:"#number-of-bullets", value:num, update:setNumberOfBullets});
+    }
+    const updateNumberOfActionItems = (num: number) => {
+        updateInput({selector:"#number-of-action-items", value:num, update:setNumberOfActionItems});
+    }
+    const updateIncludeSummarySentence = (checked: boolean) => {
+        updateInput({selector:"#include-summary-sentence", value:checked, update:setIncludeSummarySentence});
+    }
+    const updateFreeformCommand = (text: string) => {
+        updateInput({selector:"#freeform-command", value:text, update:setFreeformCommand});
+    }
+
     const resetValues = () => {
-        setTextToSummarize("");
-        setNumberOfBullets(0);
-        setNumberOfActionItems(0);
-        setIncludeSummarySentence(false);
-        setFreeformCommand("");
+        updateTextToSummarize("")
+        updateNumberOfBullets(0)
+        updateNumberOfActionItems(0)
+        updateIncludeSummarySentence(false)
+        updateFreeformCommand("")
         setGeneratedText(<></>)
     }
 
@@ -63,11 +80,11 @@ const NoteSummarizer = () => {
 
     const fillExample = ({textToSummarize, numberOfBullets, numberOfActionItems, includeSummarySentence, freeformCommand}: TextSummarizerProps) => {
         resetValues();
-        setTextToSummarize(textToSummarize);
-        setNumberOfBullets(numberOfBullets);
-        setNumberOfActionItems(numberOfActionItems);
-        setIncludeSummarySentence(includeSummarySentence);
-        setFreeformCommand(freeformCommand);
+        updateTextToSummarize(textToSummarize);
+        updateNumberOfBullets(numberOfBullets);
+        updateNumberOfActionItems(numberOfActionItems);
+        updateIncludeSummarySentence(includeSummarySentence);
+        updateFreeformCommand(freeformCommand);
     }
 
     return (
@@ -75,39 +92,39 @@ const NoteSummarizer = () => {
             <Template exampleUrl="/api/ai-for-u/text-summarizer-examples" fillExample={fillExample}>
                 <h1>Text Summarizer</h1>
                 <Textarea
+                    id="text-to-summarize"
                     autoFocus
                     fullWidth
                     label="Text to Summarize *"
-                    value={textToSummarize}
                     onChange={(event) => {setTextToSummarize(event.target.value)}}
                 />
 
                 <Input
+                    id="number-of-bullets"
                     type="number"
                     fullWidth
                     label="Number of Bullets"
-                    value={numberOfBullets}
                     onChange={(event) => {setNumberOfBullets(Number(event.target.value))}}
                 />
                 <Input
+                    id="number-of-action-items"
                     type="number"
                     fullWidth
                     label="Number of Action Items"
-                    value={numberOfActionItems}
                     onChange={(event) => {setNumberOfActionItems(Number(event.target.value))}}
                 />
                 <div>
                     <Checkbox
+                        id="include-summary-sentence"
                         label="Include Summary Sentence"
-                        isSelected={includeSummarySentence}
                         onChange={(event) => {setIncludeSummarySentence(event)}}
                     />
                 </div>
                 <Input
+                    id="freeform-command"
                     type="text"
                     fullWidth
                     label="Freeform Command"
-                    value={freeformCommand}
                     onChange={(event) => {setFreeformCommand(event.target.value)}}
                 />
                 <div>

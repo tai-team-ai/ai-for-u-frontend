@@ -1,16 +1,17 @@
 import Layout from '@/components/layout/layout'
 import Template from '@/components/layout/template'
 import styles from '@/styles/Sandbox.module.css'
-import { Button, Card, Input, Text, useInput } from '@nextui-org/react';
+import { Button, Card, FormElement, Input, Textarea, useInput } from '@nextui-org/react';
 import SendIcon from '@mui/icons-material/Send';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { uFetch } from '@/utils/http';
-import Image from 'next/image';
 import FeedbackModal from '@/components/modals/FeedbackModal';
 import { getInitialChat } from '@/utils/user';
 import { useSession } from 'next-auth/react';
 import { convertNewlines } from '@/utils/response';
+import { KeyboardEvent } from 'react';
+import { updateInput } from '@/utils/input';
 
 interface MessageProps {
     from: 'user'|'ai'
@@ -52,7 +53,7 @@ function Message({from, children}: PropsWithChildren<MessageProps>) {
 }
 
 function TypingDots() {
-    return <div  id="typing-dots" className={`message ${styles["message"]} ${styles["ai"]} ${styles["typing-dots"]}`}>
+    return <div  id="typing-dots" className={`${styles["message"]} ${styles["ai"]} ${styles["typing-dots"]}`}>
         <span>&#x2022;</span><span>&#x2022;</span><span>&#x2022;</span>
     </div>
 }
@@ -64,24 +65,30 @@ interface ConversationMessage {
 
 function Sandbox() {
     const {data: session} = useSession();
-    const { value: userMessage, setValue, reset, bindings: userInputBindings } = useInput("");
-    const conversationUuid = uuid();
+    const [userMessage, setUserMessage] = useState("");
+    // @ts-ignore
+    if(typeof global._conversationUuid === "undefined") {
+        // @ts-ignore
+        global._conversationUuid = uuid();
+    }
+    // @ts-ignore
+    const conversationUuid = global._conversationUuid;
     const url = "/api/ai-for-u/sandbox-chatgpt"
 
     const [messages, setMessages] = useState<ConversationMessage[]>([]);
+    const [loading, setLoading] = useState(false);
+
+    const updateTextbox = (message: string) => {
+        updateInput({
+            selector: `.${styles['user-input-form']} textarea`,
+            value: message,
+            update: setUserMessage,
+        })
+    }
 
     const getAIMessage = (message: string) => {
         if(typeof document === "undefined") {
             return;
-        }
-        const typingDots: HTMLDivElement|null = document.querySelector("#typing-dots");
-        const sendBtn = document.querySelector(`.${styles["send-button"]}`);
-        if(sendBtn) {
-            sendBtn.setAttribute("disabled", "true");
-
-        }
-        if(typingDots) {
-            typingDots.style.display = "inherit";
         }
         uFetch(url, {
             session,
@@ -91,20 +98,16 @@ function Sandbox() {
                 userMessage: message
             })
         }).then(async response => {
-            const body = await response.json();
-            messages.push({
-                text: body.gptResponse,
-                from: "ai"
-            });
-            setMessages([...messages]);
-            reset();
+            if(response.status >= 200 && response.status < 300) {
+                const body = await response.json();
+                messages.push({
+                    text: body.gptResponse,
+                    from: "ai"
+                });
+                setMessages([...messages]);
+            }
         }).finally(() => {
-            if(sendBtn) {
-                sendBtn.removeAttribute("disabled");
-            }
-            if(typingDots) {
-                typingDots.style.display = "none";
-            }
+            setLoading(false);
         })
     }
     if(messages.length === 0) {
@@ -115,22 +118,25 @@ function Sandbox() {
                     from: "ai"
                 });
                 setMessages([...messages]);
-                reset();
             }
         })
     }
 
 
     const send = (event?: any) => {
-        event?.preventDefault && event?.preventDefault()
+        event?.preventDefault && event?.preventDefault();
+        if(loading || userMessage.trim().length === 0) {
+            return;
+        }
+        setLoading(true);
 
         messages.push({
             text: userMessage,
             from: 'user'
         })
         setMessages([...messages])
+        updateTextbox("")
 
-        reset()
         getAIMessage(userMessage);
     }
 
@@ -141,7 +147,31 @@ function Sandbox() {
     }, [messages])
 
     const fillExample = (example: string) => {
-        setValue(example);
+        updateTextbox(example)
+    }
+
+    const [rows, setRows] = useState(1);
+    const onKeyDown = (event: KeyboardEvent<FormElement>) => {
+        if(event.key === "Enter") {
+            if(event.ctrlKey) {
+                (event.target as HTMLTextAreaElement).value = (event.target as HTMLTextAreaElement).value + "\n";
+            }
+            else {
+                event.preventDefault();
+                const form: HTMLFormElement|null = document.querySelector(`form.${styles['user-input-form']}`);
+                if(form) {
+                    form.requestSubmit();
+                    return;
+                }
+            }
+        }
+    }
+
+    const resizeRows = (event: KeyboardEvent<FormElement>) => {
+        const newRows = (event.target as HTMLTextAreaElement).value.split("\n").length;
+        if(newRows != rows) {
+            setRows(newRows);
+        }
     }
 
     return (
@@ -152,25 +182,27 @@ function Sandbox() {
                     {
                         messages.map((m, i) => <Message from={m.from} key={i}>{convertNewlines(m.text)}</Message>)
                     }
-                    <TypingDots/>
+                    {loading ? <TypingDots/> : null}
                 </Card.Body>
                 <Card.Footer>
                     <form className={styles['user-input-form']} onSubmit={send}>
-                        <Input
-                            {...userInputBindings}
+                        <Textarea
                             fullWidth
-                            contentRightStyling={false}
+                            minRows={1}
+                            maxRows={5}
+                            onChange={event => setUserMessage(event.target.value)}
+                            onKeyDown={onKeyDown}
+                            onKeyUp={resizeRows}
                             placeholder="Type your message..."
-                            contentRight={
-                                <Button
-                                    size="sm"
-                                    auto
-                                    className={styles['send-button']}
-                                    onClick={send}>
-                                    <SendIcon fontSize='inherit' shapeRendering='rounded' />
-                                </Button>
-                            }
                         />
+                        <Button
+                            size="sm"
+                            auto
+                            className={styles['send-button']}
+                            onPress={send}
+                        >
+                            <SendIcon shapeRendering='rounded'/>
+                        </Button>
                     </form>
                 </Card.Footer>
                 </Card>
