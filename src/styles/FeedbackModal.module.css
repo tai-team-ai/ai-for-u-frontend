@@ -16,3 +16,13 @@
     color: #ccc;
 }
 
+.rate-btn {
+    margin-left: 2em;
+    font-size: 10pt;
+    cursor: pointer;
+    color: grey;
+}
+
+.rate-btn:hover {
+    color: black;
+}
