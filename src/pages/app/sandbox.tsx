@@ -1,12 +1,12 @@
 import Layout from '@/components/layout/layout'
 import Template from '@/components/layout/template'
 import styles from '@/styles/Sandbox.module.css'
-import { Button, Card, FormElement, Input, Textarea, useInput } from '@nextui-org/react';
+import { Button, Card, FormElement, Textarea } from '@nextui-org/react';
 import SendIcon from '@mui/icons-material/Send';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { uFetch } from '@/utils/http';
-import FeedbackModal from '@/components/modals/FeedbackModal';
+import { RateResponse } from '@/components/modals/FeedbackModal';
 import { getInitialChat } from '@/utils/user';
 import { useSession } from 'next-auth/react';
 import { KeyboardEvent } from 'react';
@@ -17,7 +17,6 @@ interface MessageProps {
 }
 
 function Message({from, children}: PropsWithChildren<MessageProps>) {
-    const [showFeedbackModal, setShowFeedbackModal] = useState<boolean>(false)
     let message = children;
     if (typeof children === "undefined" || children === null) {
         message = "";
@@ -30,22 +29,7 @@ function Message({from, children}: PropsWithChildren<MessageProps>) {
             <pre>{children}</pre>
         </div>
         {
-            from === 'ai'?
-            <>
-            <div>
-                <span
-                    className={styles["rate-btn"]}
-                    onClick={() => setShowFeedbackModal(true)}
-                >
-                    Rate this response?
-                </span>
-            </div>
-            <FeedbackModal
-                open={showFeedbackModal}
-                setOpen={setShowFeedbackModal}
-                message={`${message}`}
-                template="chat-sandbox"
-            /></> : null
+            from === 'ai'? <RateResponse message={String(message)} template="chat-sandbox"/> : null
         }
         </>
     )

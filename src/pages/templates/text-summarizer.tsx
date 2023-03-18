@@ -1,10 +1,11 @@
 import Layout from "@/components/layout/layout";
 import Template from "@/components/layout/template";
 import { uFetch } from "@/utils/http";
-import { Button, Checkbox, Input, Textarea } from "@nextui-org/react";
+import { Button, Checkbox, Input, Textarea, Loading, Spacer } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { updateInput } from "@/utils/input";
+import { RateResponse } from "@/components/modals/FeedbackModal"
 
 interface TextSummarizerProps {
     textToSummarize: string
@@ -16,12 +17,13 @@ interface TextSummarizerProps {
 
 const NoteSummarizer = () => {
     const {data: session} = useSession();
+    const [loading, setLoading] = useState(false);
     const [textToSummarize, setTextToSummarize] = useState("");
     const [numberOfBullets, setNumberOfBullets] = useState(0);
     const [numberOfActionItems, setNumberOfActionItems] = useState(0);
     const [includeSummarySentence, setIncludeSummarySentence] = useState(false);
     const [freeformCommand, setFreeformCommand] = useState("");
-    const [generatedText, setGeneratedText] = useState<JSX.Element>(()=><></>);
+    const [generatedText, setGeneratedText] = useState("");
     const body = {
         textToSummarize,
         numberOfBullets,
@@ -52,10 +54,11 @@ const NoteSummarizer = () => {
         updateNumberOfActionItems(0)
         updateIncludeSummarySentence(false)
         updateFreeformCommand("")
-        setGeneratedText(<></>)
+        setGeneratedText("")
     }
 
     const submitNotes = async () => {
+        setLoading(true);
         const response = await uFetch("/api/ai-for-u/text-summarizer", {
             session,
             method: "POST",
@@ -65,16 +68,12 @@ const NoteSummarizer = () => {
         if(response.status === 200) {
             const {summarySentence, bulletPoints, actionItems, freeformSection} = data;
 
-            setGeneratedText(<>
-                <pre>{summarySentence}</pre>
-                <pre>{bulletPoints}</pre>
-                <pre>{actionItems}</pre>
-                <pre>{freeformSection}</pre>
-            </>);
+            setGeneratedText(Object.values(data).join("\n"));
         }
         else if (response.status === 422) {
 
         }
+        setLoading(false);
     }
 
     const fillExample = ({textToSummarize, numberOfBullets, numberOfActionItems, includeSummarySentence, freeformCommand}: TextSummarizerProps) => {
@@ -126,22 +125,54 @@ const NoteSummarizer = () => {
                     label="Freeform Command"
                     onChange={(event) => {setFreeformCommand(event.target.value)}}
                 />
-                <div>
-                    {generatedText}
-                </div>
-                <Button
-                    light
-                    color="error"
-                    onPress={resetValues}
-                >
-                    Reset
-                </Button>
-                <Button
-                    onPress={submitNotes}
-                >
-                    Submit
-                </Button>
+                {
 
+                    <>
+                        <div
+                            style={{
+                                padding: "1em",
+                                margin: "1em",
+                                height: "20em",
+                                maxHeight: "20em",
+                                overflowY: "scroll",
+                                borderRadius: "15px",
+                                border: "solid 1px lightGray",
+                            }}
+                        >
+                            <pre>{generatedText}</pre>
+                        </div>
+                        {
+                            generatedText.length === 0 ? null :
+                            <RateResponse message={generatedText} template="text-summarizer"/>
+                        }
+                            <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end"}}>
+                                {
+                                    loading ?
+                                    <Loading
+                                        type="gradient"
+                                        css={{display: "block"}}
+                                    /> : <>
+                                    <Button
+                                        auto
+                                        light
+                                        color="error"
+                                        onPress={resetValues}
+                                    >
+                                        Reset
+                                    </Button>
+                                    <Button
+                                        auto
+                                        flat
+                                        onPress={submitNotes}
+                                    >
+                                        Submit
+                                    </Button>
+                                    </>
+                                }
+                            </div>
+
+                    </>
+                }
             </Template>
         </Layout>
 

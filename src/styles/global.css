@@ -14,11 +14,11 @@ code {
 
 pre {
     white-space: pre-wrap;
-    margin: inherit;
-    line-height: inherit;
+    margin: initial;
+    line-height: initial;
     font-family: inherit;
-    padding: inherit;
-    border-radius: inherit;
-    text-align: inherit;
-    overflow: inherit;
+    padding: initial;
+    border-radius: initial;
+    text-align: initial;
+    overflow: initial;
 }

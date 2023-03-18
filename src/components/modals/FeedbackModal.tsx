@@ -6,6 +6,31 @@ import { validateSignUp } from "@/utils/validation";
 import { uFetch } from "@/utils/http";
 import styles from "@/styles/FeedbackModal.module.css"
 
+interface ResponseProps {
+    message: string
+    template: string
+}
+
+export function RateResponse({message, template}: ResponseProps) {
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+    return (
+    <>
+        <div>
+            <span
+                className={styles["rate-btn"]}
+                onClick={() => setShowFeedbackModal(true)}
+            >
+                Rate this response?
+            </span>
+        </div>
+        <FeedbackModal
+            open={showFeedbackModal}
+            setOpen={setShowFeedbackModal}
+            message={message}
+            template={template}
+        />
+    </>)
+}
 
 interface FeedbackModalProps {
     open: boolean
@@ -46,9 +71,10 @@ const FeedbackModal = ({open, setOpen, message, template}: FeedbackModalProps) =
     const {data: session} = useSession()
     const [rating, setRating] = useState(5);
     const [feedback, setFeedback] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const submitFeedback = async () => {
-
+        setLoading(true);
         const response = await uFetch("/api/ai-for-u/feedback", {
             session: session,
             method: "POST",
@@ -56,8 +82,8 @@ const FeedbackModal = ({open, setOpen, message, template}: FeedbackModalProps) =
         });
         const data = await response.json();
         console.log(data);
-
         setOpen(false);
+        setLoading(false);
     }
 
     return (
@@ -66,6 +92,13 @@ const FeedbackModal = ({open, setOpen, message, template}: FeedbackModalProps) =
             closeButton
             onClose={() => setOpen(false)}
         >
+            {loading ?
+                <><Loading
+                    size="xl"
+                    color="primary"
+                    type="gradient"
+                    css={{paddingBottom: "1em"}}
+                /></> : <>
                 <Modal.Header>
                     <Text h3>
                         How did the AI do?
@@ -105,6 +138,7 @@ const FeedbackModal = ({open, setOpen, message, template}: FeedbackModalProps) =
                         </Button>
 
                     </Modal.Footer>
+            </>}
         </Modal>
     );
 }
