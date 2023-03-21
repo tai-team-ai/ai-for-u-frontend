@@ -28,7 +28,8 @@ const prefetchExample = async (session: Session|null, route: string): Promise<Ex
 const prefetchExamples = (session: Session|null) => {
     const routes = [
         "/api/ai-for-u/sandbox-chatgpt-examples",
-        "/api/ai-for-u/text-summarizer-examples"
+        "/api/ai-for-u/text-summarizer-examples",
+        "/api/ai-for-u/text-revisor-examples",
     ]
     for(const route of routes) {
         prefetchExample(session, route);

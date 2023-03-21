@@ -11,6 +11,9 @@ export const TemplateCards = [
     <TemplateCard
         href="/templates/text-summarizer"
         name="Text Summarizer" />,
+    <TemplateCard
+        href="/templates/text-revisor"
+        name="Text Revisor" />,
 ]
 
 interface TemplateCardProps {
