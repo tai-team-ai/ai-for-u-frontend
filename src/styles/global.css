@@ -11,14 +11,3 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
         monospace;
 }
-
-pre {
-    white-space: pre-wrap;
-    margin: initial;
-    line-height: initial;
-    font-family: inherit;
-    padding: initial;
-    border-radius: initial;
-    text-align: initial;
-    overflow: initial;
-}

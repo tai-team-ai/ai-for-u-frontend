@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { PropsWithChildren, useState } from 'react'
 import Layout from '@/components/layout/layout'
 import styles from '@/styles/Templates.module.css'
 import {Grid} from '@nextui-org/react'
