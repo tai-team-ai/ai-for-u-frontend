@@ -6,6 +6,7 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { FormEvent, FormEventHandler, PropsWithChildren, useState } from 'react'
 import { getExamples } from '@/utils/user'
+import { RateResponse } from '../modals/FeedbackModal'
 
 
 interface TemplateProps {
@@ -48,6 +49,40 @@ const Example = ({example, fillExample, ...props}: PropsWithChildren<ExampleProp
                         </Text>
                     </Card.Body>
             </Card>
+        </>
+    )
+}
+
+interface ResultBoxProps {
+    showResult: boolean
+    loading: boolean
+    rawResponse: string
+    template: string
+}
+
+export function ResultBox({showResult, loading, rawResponse, template, children}: PropsWithChildren<ResultBoxProps>) {
+    return (
+        <>
+        {
+            showResult ?
+                <>
+                <div className={styles["result-box"]}>
+                    {loading ?
+                    <Loading
+                        type="gradient"
+                        css={{
+                            display: "grid",
+                            justifyContent: "center"
+                        }}
+                    /> :
+                    <>
+                        {children}
+                    </>}
+                </div>
+                {loading ? null : <RateResponse message={rawResponse} template={template}/>}
+                </>:
+                null
+        }
         </>
     )
 }
@@ -104,10 +139,7 @@ export default function Template({isSandbox = false, children = null, exampleUrl
                             <div style={{display: "flex", flexDirection: "row", justifyContent: "flex-end"}}>
                                 {
                                     formLoading ?
-                                    <Loading
-                                        type="gradient"
-                                        css={{display: "block"}}
-                                    /> : <>
+                                    null : <>
                                     <Button
                                         auto
                                         light

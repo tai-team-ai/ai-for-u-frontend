@@ -3,14 +3,14 @@ import Template from '@/components/layout/template'
 import styles from '@/styles/Sandbox.module.css'
 import { Button, Card, FormElement, Textarea } from '@nextui-org/react';
 import SendIcon from '@mui/icons-material/Send';
-import { PropsWithChildren, useEffect, useState } from 'react';
+import { FormEvent, PropsWithChildren, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { uFetch } from '@/utils/http';
 import { RateResponse } from '@/components/modals/FeedbackModal';
 import { getInitialChat } from '@/utils/user';
 import { useSession } from 'next-auth/react';
 import { KeyboardEvent } from 'react';
-import { updateInput } from '@/utils/input';
+import Markdown from "markdown-to-jsx"
 
 interface MessageProps {
     from: 'user'|'ai'
@@ -26,7 +26,7 @@ function Message({from, children}: PropsWithChildren<MessageProps>) {
     return (
         <>
         <div className={`message ${styles["message"]} ${styles[from]}`}>
-            <pre>{children}</pre>
+            <Markdown>{`${children}`}</Markdown>
         </div>
         {
             from === 'ai'? <RateResponse message={String(message)} template="chat-sandbox"/> : null
@@ -48,7 +48,6 @@ interface ConversationMessage {
 
 function Sandbox() {
     const {data: session} = useSession();
-    const [userMessage, setUserMessage] = useState("");
     // @ts-ignore
     if(typeof global._conversationUuid === "undefined") {
         // @ts-ignore
@@ -56,18 +55,11 @@ function Sandbox() {
     }
     // @ts-ignore
     const conversationUuid = global._conversationUuid;
+
     const url = "/api/ai-for-u/sandbox-chatgpt"
 
     const [messages, setMessages] = useState<ConversationMessage[]>([]);
     const [loading, setLoading] = useState(false);
-
-    const updateTextbox = (message: string) => {
-        updateInput({
-            selector: `.${styles['user-input-form']} textarea`,
-            value: message,
-            update: setUserMessage,
-        })
-    }
 
     const getAIMessage = (message: string) => {
         if(typeof document === "undefined") {
@@ -106,21 +98,24 @@ function Sandbox() {
     }
 
 
-    const send = (event?: any) => {
-        event?.preventDefault && event?.preventDefault();
-        if(loading || userMessage.trim().length === 0) {
+
+    const onSubmit = (event: FormEvent) => {
+        event.preventDefault();
+        // @ts-ignore
+        const userMessage = event.target.userMessage;
+        if(loading || userMessage.value.trim().length === 0) {
             return;
         }
         setLoading(true);
 
         messages.push({
-            text: userMessage,
+            text: userMessage.value,
             from: 'user'
         })
         setMessages([...messages])
-        updateTextbox("")
 
-        getAIMessage(userMessage);
+        getAIMessage(userMessage.value);
+        userMessage.value = "";
     }
 
     useEffect(() => {
@@ -130,7 +125,10 @@ function Sandbox() {
     }, [messages])
 
     const fillExample = (example: string) => {
-        updateTextbox(example)
+        const userInput: HTMLTextAreaElement|null = document.querySelector("#userMessage");
+        if(userInput) {
+            userInput.value = example;
+        }
     }
 
     const [rows, setRows] = useState(1);
@@ -141,7 +139,7 @@ function Sandbox() {
             }
             else {
                 event.preventDefault();
-                const form: HTMLFormElement|null = document.querySelector(`form.${styles['user-input-form']}`);
+                const form: null|HTMLFormElement = document.querySelector("#task-form")
                 if(form) {
                     form.requestSubmit();
                     return;
@@ -159,7 +157,7 @@ function Sandbox() {
 
     return (
         <Layout>
-            <Template isSandbox={true} exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples" fillExample={fillExample}>
+            <Template isSandbox={true} exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples" fillExample={fillExample} handleSubmit={onSubmit}>
                 <Card variant="bordered" className={styles["chat-box"]}>
                 <Card.Body className={styles["chat-box-messages"]}>
                     {
@@ -168,25 +166,25 @@ function Sandbox() {
                     {loading ? <TypingDots/> : null}
                 </Card.Body>
                 <Card.Footer>
-                    <form className={styles['user-input-form']} onSubmit={send}>
-                        <Textarea
-                            fullWidth
-                            minRows={1}
-                            maxRows={5}
-                            onChange={event => setUserMessage(event.target.value)}
-                            onKeyDown={onKeyDown}
-                            onKeyUp={resizeRows}
-                            placeholder="Type your message..."
-                        />
-                        <Button
-                            size="sm"
-                            auto
-                            className={styles['send-button']}
-                            onPress={send}
-                        >
-                            <SendIcon shapeRendering='rounded'/>
-                        </Button>
-                    </form>
+                    <Textarea
+                        id="userMessage"
+                        name="userMessage"
+                        fullWidth
+                        minRows={1}
+                        maxRows={5}
+                        onKeyDown={onKeyDown}
+                        onKeyUp={resizeRows}
+                        form="task-form"
+                        placeholder="Type your message..."
+                    />
+                    <Button
+                        size="sm"
+                        auto
+                        className={styles['send-button']}
+                        type="submit"
+                    >
+                        <SendIcon shapeRendering='rounded'/>
+                    </Button>
                 </Card.Footer>
                 </Card>
             </Template>

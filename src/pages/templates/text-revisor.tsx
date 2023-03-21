@@ -1,18 +1,23 @@
-import Template from "@/components/layout/template";
+import Template, { ResultBox } from "@/components/layout/template";
 import Layout from "@/components/layout/layout";
 
-import { Input, Textarea } from "@nextui-org/react";
+import { Input, Textarea, Text } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import { uFetch } from "@/utils/http";
 import { useSession } from "next-auth/react";
+import Markdown from 'markdown-to-jsx';
 
 
 const TextRevisor = () => {
     const {data: session} = useSession();
     const [loading, setLoading] = useState(false);
+    const [showResult, setShowResult] = useState(false);
+    const [rawResponse, setRawResponse] = useState("");
+    const [revisedTextList, setRevisedTextList] = useState<string[]>([]);
 
     const onSubmit = async (event: FormEvent) => {
         setLoading(true);
+        setShowResult(true);
         event.preventDefault();
         const data = {
             // @ts-ignore
@@ -31,7 +36,8 @@ const TextRevisor = () => {
 
         uFetch("/api/ai-for-u/text-revisor", {session, method: "POST", body: JSON.stringify(data)}).then(response => response.json())
         .then(data => {
-            alert(JSON.stringify(data));
+            setRevisedTextList([...data.revisedTextList]);
+            setRawResponse(data.revisedTextList.join("\n"));
             setLoading(false);
         })
     }
@@ -58,6 +64,12 @@ const TextRevisor = () => {
                     </select>
                     <Input id="creativity" name="creativity" type="number" fullWidth label="Creativity"/>
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform Command"/>
+                    <ResultBox showResult={showResult} loading={loading} rawResponse={rawResponse} template="text-revisor">
+                        {revisedTextList.map((text, index) => <>
+                            <Text h3>{`Revision ${index+1}`}</Text>
+                            <Markdown>{text}</Markdown>
+                        </>)}
+                    </ResultBox>
                 </Template>
             </Layout>
         </>
