@@ -6,14 +6,14 @@ import {Card, Text} from '@nextui-org/react'
 
 export const TemplateCards = [
     <TemplateCard
-        href="/templates/resignation-letter"
-        name="Resignation Letter" />,
-    <TemplateCard
         href="/templates/text-summarizer"
         name="Text Summarizer" />,
     <TemplateCard
         href="/templates/text-revisor"
         name="Text Revisor" />,
+    <TemplateCard
+        href="/templates/catchy-title-creator"
+        name="Catchy Title Creator" />,
 ]
 
 interface TemplateCardProps {
