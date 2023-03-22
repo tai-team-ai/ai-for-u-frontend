@@ -10,10 +10,11 @@ interface LoginModalProps {
     open: boolean
     setOpen: (o: boolean) => void
     isSignUp: boolean
+    error?: string | null
 }
 
 
-const LoginModal = ({open, setOpen, isSignUp = false}: LoginModalProps) => {
+const LoginModal = ({open, setOpen, isSignUp = false, error = null}: LoginModalProps) => {
     const [loggingIn, setLoggingIn] = React.useState(false);
     const loginForm = useRef<HTMLFormElement>(null);
 
@@ -23,7 +24,7 @@ const LoginModal = ({open, setOpen, isSignUp = false}: LoginModalProps) => {
     useEffect(() => {
         if (open) {
             setModalState("providers")
-            setErrorMessage("")
+            setErrorMessage(error ? error : "");
         }
     }, [open])
 
@@ -153,7 +154,12 @@ const LoginModal = ({open, setOpen, isSignUp = false}: LoginModalProps) => {
         <Modal
             open={open}
             closeButton
-            onClose={() => setOpen(false)}
+            onClose={() => {
+                setOpen(false);
+                if(window.location.toString() !== window.location.toString().split("?")[0]) {
+                    window.location.replace(window.location.toString().split("?")[0])
+                }
+            }}
         >
                 <Modal.Header>
                     <Text h3>
