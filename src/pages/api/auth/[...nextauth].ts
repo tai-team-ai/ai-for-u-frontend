@@ -42,7 +42,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     return authorizeUser(credentials);
                 }
             }),
-        ]
+        ],
+        pages: {
+            signIn: "/",
+        }
     }
     return NextAuth(req, res, authOptions);
 }

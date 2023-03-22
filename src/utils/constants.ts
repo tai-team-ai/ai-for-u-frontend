@@ -21,3 +21,7 @@ export const routes = {
     APP: '/app',
     ROOT: '/',
 }
+
+export const errors = {
+    OAuthAccountNotLinked: "To confirm your identity, sign in with the same account you used originally."
+}

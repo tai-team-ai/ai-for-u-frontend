@@ -10,7 +10,7 @@ export function validateSignUp({ email, password, confirmPassword }: validateSig
     if (!email) {
         errors.push("Email is a required field");
     }
-    if (!email.includes("@")) {
+    if (!validateEmail(email)) {
         errors.push("Invalid formated Email");
     }
     if (!password) {
@@ -21,6 +21,12 @@ export function validateSignUp({ email, password, confirmPassword }: validateSig
     }
     if (password !== confirmPassword) {
         errors.push("password and confirm password must match")
+    }
+    if (password.length < 6) {
+        errors.push("password must be at least 6 characters long")
+    }
+    if (password.toLowerCase() === password) {
+        errors.push("password must be a mix of upper and lower case letters")
     }
     return errors;
 }
