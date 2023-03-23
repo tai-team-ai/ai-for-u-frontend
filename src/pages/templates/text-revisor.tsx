@@ -7,6 +7,7 @@ import { uFetch } from "@/utils/http";
 import { useSession } from "next-auth/react";
 import Markdown from 'markdown-to-jsx';
 import { placeholderDefault } from "@/utils/transform";
+import { ShowDiffBtn } from "@/components/elements/diffview";
 
 
 const TextRevisor = () => {
@@ -15,18 +16,20 @@ const TextRevisor = () => {
     const [showResult, setShowResult] = useState(false);
     const [rawResponse, setRawResponse] = useState("");
     const [revisedTextList, setRevisedTextList] = useState<string[]>([]);
+    const [initialValue, setInitialValue] = useState("");
 
     const onSubmit = async (event: FormEvent) => {
         setLoading(true);
         setShowResult(true);
         event.preventDefault();
+        // @ts-ignore
+        const textToRevise = event.target.textToRevise.value
         const data = {
-            // @ts-ignore
-            textToRevise: event.target.textToRevise.value,
+            textToRevise: textToRevise,
             // @ts-ignore
             numberOfRevisions: Number(placeholderDefault(event.target.numberOfRevisions)),
             // @ts-ignore
-            revisionTypes: placeholderDefault(event.target.revisionTypes).split(","),
+            revisionTypes: placeholderDefault(event.target.revisionTypes).split(",").map(value => value.trim()),
             // @ts-ignore
             tone: event.target.tone.value,
             // @ts-ignore
@@ -39,6 +42,7 @@ const TextRevisor = () => {
             .then(data => {
                 setRevisedTextList([...data.revisedTextList]);
                 setRawResponse(data.revisedTextList.join("\n"));
+                setInitialValue(textToRevise);
                 setLoading(false);
             })
     }
@@ -49,7 +53,7 @@ const TextRevisor = () => {
                 <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult}>
                     <Textarea id="textToRevise" name="textToRevise" fullWidth label="Text to revise" form="task-form" />
                     <Input id="numberOfRevisions" name="numberOfRevisions" type="number" fullWidth label="Number of revisions" placeholder="1" />
-                    <Input id="revisionTypes" name="revisionTypes" fullWidth label="Revision types" placeholder="spelling, grammar, stentence structure, word choice, consistency, punctuation" />
+                    <Input id="revisionTypes" name="revisionTypes" fullWidth label="Revision types" placeholder="spelling, grammar, sentence structure, word choice, consistency, punctuation" />
                     <label style={{ display: "block" }} htmlFor="tone">Tone</label>
                     <select id="tone" name="tone">
                         <option value="friendly">friendly</option>
@@ -67,8 +71,8 @@ const TextRevisor = () => {
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform Command" />
                     <ResultBox showResult={showResult} loading={loading} rawResponse={rawResponse} template="text-revisor">
                         {revisedTextList.map((text, index) => <>
-                            <Text h3>{`Revision ${index + 1}`}</Text>
-                            <Markdown>{text}</Markdown>
+                            <Text b>{`Revision ${index + 1}: `}</Text>
+                            <Markdown>{text}</Markdown><ShowDiffBtn oldValue={initialValue} newValue={text}></ShowDiffBtn>
                         </>)}
                     </ResultBox>
                 </Template>

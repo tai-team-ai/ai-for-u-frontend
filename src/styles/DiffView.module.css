@@ -1,0 +1,38 @@
+.added {
+    background-color: #CCFFD8;
+    color: green;
+}
+
+.removed {
+    background-color: #FEDCE0;
+    color: red;
+}
+
+.normal {
+    color: black;
+}
+
+.show-diff-btn {
+    margin-left: 2em;
+    font-size: 10pt;
+    cursor: pointer;
+    color: grey;
+}
+
+.show-diff-btn:hover {
+    color: black;
+}
+
+.diff-pair {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    text-align: left;
+}
+
+.diff-pair > div {
+    padding: 1em;
+}
+
+.diff-pair > div:nth-child(1) {
+    border-right: solid 1px black;
+}
