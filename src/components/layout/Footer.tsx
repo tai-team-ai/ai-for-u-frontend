@@ -4,7 +4,7 @@ const Footer = () => {
     return (
         <React.Fragment>
             <footer className="bg-light border-top py-3 fixed-bottom relative">
-                <Container>
+                <Container css={{textAlign: "center"}}>
                     &copy; AIforU - 2022
                 </Container>
             </footer>
