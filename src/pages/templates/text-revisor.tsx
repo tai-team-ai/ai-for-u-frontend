@@ -1,7 +1,7 @@
 import Template, { ResultBox } from "@/components/layout/template";
 import Layout from "@/components/layout/layout";
 
-import { Input, Textarea, Text } from "@nextui-org/react";
+import { Dropdown, Input, Textarea, Text } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import { uFetch } from "@/utils/http";
 import { useSession } from "next-auth/react";
@@ -10,6 +10,21 @@ import { placeholderDefault } from "@/utils/transform";
 import { ShowDiffBtn } from "@/components/elements/diffview";
 
 
+const toneItems = {
+    'friendly': 'Friendly',
+    'formal': "Formal",
+    'informal': "Informal",
+    'optimistic': "Optimistic",
+    'worried': "Worried",
+    'curious': "Curious",
+    'assertive': "Assertive",
+    'encouraging': "Encouraging",
+    'surprised': "Surprised",
+    'cooperative': "Cooperative",
+};
+
+type validTones = keyof typeof toneItems
+
 const TextRevisor = () => {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
@@ -17,6 +32,7 @@ const TextRevisor = () => {
     const [rawResponse, setRawResponse] = useState("");
     const [revisedTextList, setRevisedTextList] = useState<string[]>([]);
     const [initialValue, setInitialValue] = useState("");
+    const [selectedTone, setSelectedTone] = useState<validTones>("friendly");
 
     const onSubmit = async (event: FormEvent) => {
         setLoading(true);
@@ -31,7 +47,7 @@ const TextRevisor = () => {
             // @ts-ignore
             revisionTypes: placeholderDefault(event.target.revisionTypes).split(",").map(value => value.trim()),
             // @ts-ignore
-            tone: event.target.tone.value,
+            tone: selectedTone,
             // @ts-ignore
             creativity: Number(placeholderDefault(event.target.creativity)),
             // @ts-ignore
@@ -55,18 +71,21 @@ const TextRevisor = () => {
                     <Input id="numberOfRevisions" name="numberOfRevisions" type="number" fullWidth label="Number of revisions" placeholder="1" />
                     <Input id="revisionTypes" name="revisionTypes" fullWidth label="Revision types" placeholder="spelling, grammar, sentence structure, word choice, consistency, punctuation" />
                     <label style={{ display: "block" }} htmlFor="tone">Tone</label>
-                    <select id="tone" name="tone">
-                        <option value="friendly">friendly</option>
-                        <option value="formal">formal</option>
-                        <option value="informal">informal</option>
-                        <option value="optimistic">optimistic</option>
-                        <option value="worried">worried</option>
-                        <option value="curious">curious</option>
-                        <option value="assertive">assertive</option>
-                        <option value="encouraging">encouraging</option>
-                        <option value="surprised">surprised</option>
-                        <option value="cooperative">cooperative</option>
-                    </select>
+                    <Dropdown>
+                        <Dropdown.Button flat id="tone">{toneItems[selectedTone]}</Dropdown.Button>
+                        <Dropdown.Menu
+                            disallowEmptySelection
+                            selectionMode="single"
+                            aria-label="Tone"
+                            selectedKeys={[selectedTone]}
+                            onSelectionChange={(t) => {
+                                setSelectedTone((t as any).currentKey as validTones)
+                        }}>
+                            {Object.entries(toneItems).map(([key, val]) => (
+                                <Dropdown.Item key={key}>{val}</Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
                     <Input id="creativity" name="creativity" type="number" fullWidth label="Creativity" placeholder="50" />
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform Command" />
                     <ResultBox showResult={showResult} loading={loading} rawResponse={rawResponse} template="text-revisor">

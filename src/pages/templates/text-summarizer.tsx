@@ -1,7 +1,7 @@
 import Template, { ResultBox } from "@/components/layout/template";
 import Layout from "@/components/layout/layout";
 
-import { Input, Textarea, Text } from "@nextui-org/react";
+import { Input, Textarea, Text, Checkbox } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import { uFetch } from "@/utils/http";
 import { useSession } from "next-auth/react";
@@ -17,6 +17,7 @@ const TextRevisor = () => {
     const [freeformSection, setFreeformSection] = useState("");
     const [bulletPoints, setBulletPoints] = useState("");
     const [rawResponse, setRawResponse] = useState("");
+    const [includeSummarySentence, setIncludeSummarySentence] = useState(false)
 
 
     const onSubmit = async (event: FormEvent) => {
@@ -53,8 +54,7 @@ const TextRevisor = () => {
             <Layout>
                 <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult}>
                     <Textarea id="textToSummarize" name="textToSummarize" fullWidth label="Text to summarize" form="task-form" />
-                    <input type="checkbox" id="includeSummarySentence" name="includeSummarySentence" />
-                    <label htmlFor="includeSummarySentence" style={{ paddingLeft: "1em" }}>Include summary sentence</label>
+                    <Checkbox size="xs" color="primary" isSelected={includeSummarySentence} onChange={setIncludeSummarySentence}>Include summary sentence</Checkbox>
                     <Input id="numberOfBullets" name="numberOfBullets" type="number" fullWidth label="Number of bullets" />
                     <Input id="numberOfActionItems" name="numberOfActionItems" type="number" fullWidth label="Number of action items" />
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform command" />

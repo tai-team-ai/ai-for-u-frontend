@@ -131,14 +131,14 @@ export default function Template({ isSandbox = false, children = null, exampleUr
         <Grid.Container gap={1} direction="row-reverse">
             <Grid sm={9} xs={12}>
                 <section className={styles["content"]}>
-                    {isSandbox ? null : <Link style={{ float: "right", color: "$colors$primary" }} href={routes.TEMPLATES}><Text span css={{color: "$colors$primary"}}>X</Text></Link>}
+                    {isSandbox ? null : <Link href={routes.TEMPLATES} style={{display: 'inline-block', paddingBottom: '12px'}}><Button bordered>Back to Templates</Button></Link>}
                     <form id="task-form" onReset={(e) => { setShowResult ? setShowResult(false) : null }} onSubmit={(e) => handleSubmit ? handleSubmit(e) : e.preventDefault()}>
                         {children}
 
                         {isSandbox ? null :
                             <>
 
-                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
+                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", padding: '12px 0'}}>
                                     {
                                         formLoading ?
                                             null : <>
@@ -162,7 +162,6 @@ export default function Template({ isSandbox = false, children = null, exampleUr
                                 </div>
                             </>}
                     </form>
-                    {isSandbox ? null : <Link href={routes.TEMPLATES}><Text span css={{color: "$colors$primary"}}>Back to Templates</Text></Link>}
                 </section>
             </Grid>
             <Grid sm={3} xs={12}>
