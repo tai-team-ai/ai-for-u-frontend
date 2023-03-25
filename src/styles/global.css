@@ -11,3 +11,19 @@ code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
         monospace;
 }
+
+html,
+body {
+    height: 100%;
+}
+
+
+.fixed-bottom {
+    position: sticky;
+    top: 100vh;
+}
+
+#__next,
+#__next>div {
+    height: 100%;
+}

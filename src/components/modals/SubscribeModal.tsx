@@ -5,7 +5,7 @@ import { validateEmail } from "@/utils/validation";
 import { uFetch } from "@/utils/http";
 import { useSession } from "next-auth/react";
 
-interface SubscribeModalProps {
+export interface SubscribeModalProps {
     open: boolean
     setOpen: (o: boolean) => void
 }

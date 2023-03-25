@@ -2,9 +2,9 @@
     font-size: 18px;
     padding: 8px;
     margin-right: 4px;
-    position:absolute;
-    bottom: 0;
-    right:0;
+    position: absolute;
+    bottom: 0.75em;
+    right: 0.5em;
     height: 2em;
 }
 
@@ -51,6 +51,7 @@
         transform: translateY(-10%);
         color: grey;
     }
+
     75% {
         transform: translateY(0);
         color: black;
