@@ -1,9 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Modal, Button, Input, Loading, Text } from "@nextui-org/react";
-import { getUserID } from "@/utils/user";
-import { validateEmail } from "@/utils/validation";
-import { uFetch } from "@/utils/http";
 import { useSession } from "next-auth/react";
+import { joinMailingList } from "@/utils/endpoints";
 
 export interface SubscribeModalProps {
     open: boolean
@@ -16,39 +14,20 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
     const [isSubscribed, setIsSubscribed] = useState(false);
     const { data: session } = useSession();
 
-    const submitForm = async () => {
-        if (!userEmail.current) {
-            return;
-        }
-        if (!validateEmail(userEmail.current.value)) {
-            return;// TODO: display error message??
-        }
-
-        setIsSubmitting(true)
-        const email = userEmail.current.value;
-        const response = await uFetch("/api/email-list", {
-            session: session,
-            method: "POST",
-            body: JSON.stringify({ email })
-        });
-        if(response.status === 200) {
-            setIsSubmitting(false);
-            setIsSubscribed(true);
-        }
-        else {
-            setIsSubmitting(false);
-            const {message} = await response.json();
-            console.error(message); // TODO: display error message??
-        }
-    }
-
     return (
         <Modal
             closeButton
             open={open}
             onClose={() => setOpen(false)}
         >
-            <form id="loginForm" onSubmit={submitForm}>
+            <form id="subscribeForm" onSubmit={(e) => {
+                e.preventDefault();
+                if(!userEmail.current) {
+                    return;
+                }
+                const email = userEmail.current.value;
+                joinMailingList({session, email, setIsSubmitting, setIsSubscribed});
+            }}>
                 <Modal.Header>
                     <Text h3>Premium feature coming soon!</Text>
                 </Modal.Header>
@@ -85,7 +64,7 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
                         auto
                         flat
                         color="primary"
-                        onPress={submitForm}
+                        type="submit"
                     >
                         {isSubmitting ? (
                             <Loading type="points" />
