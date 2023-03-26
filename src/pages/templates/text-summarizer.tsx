@@ -64,8 +64,8 @@ const TextSummarizer = () => {
                     <Textarea id="textToSummarize" name="textToSummarize" fullWidth label="Text to summarize" form="task-form" />
                     <input type="checkbox" id="includeSummarySentence" name="includeSummarySentence" />
                     <label htmlFor="includeSummarySentence" style={{ paddingLeft: "1em" }}>Include summary sentence</label>
-                    <Input id="numberOfBullets" name="numberOfBullets" type="number" fullWidth label="Number of bullets" />
-                    <Input id="numberOfActionItems" name="numberOfActionItems" type="number" fullWidth label="Number of action items" />
+                    <Input id="numberOfBullets" name="numberOfBullets" type="number" min={0} fullWidth label="Number of bullets" />
+                    <Input id="numberOfActionItems" name="numberOfActionItems" type="number" min={0} fullWidth label="Number of action items" />
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform command" />
                     <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} template="text-summarizer">
                         <Text h3>Summary Sentence</Text>

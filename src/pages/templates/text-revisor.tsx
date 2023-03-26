@@ -61,7 +61,7 @@ const TextRevisor = () => {
             <Layout>
                 <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult}>
                     <Textarea id="textToRevise" name="textToRevise" fullWidth label="Text to revise" form="task-form" />
-                    <Input id="numberOfRevisions" name="numberOfRevisions" type="number" fullWidth label="Number of revisions" placeholder="1" />
+                    <Input id="numberOfRevisions" name="numberOfRevisions" type="number" min={0} fullWidth label="Number of revisions" placeholder="1" />
                     <Input id="revisionTypes" name="revisionTypes" fullWidth label="Revision types" placeholder="spelling, grammar, sentence structure, word choice, consistency, punctuation" />
                     <label style={{ display: "block" }} htmlFor="tone">Tone</label>
                     <select id="tone" name="tone">
@@ -76,7 +76,7 @@ const TextRevisor = () => {
                         <option value="surprised">surprised</option>
                         <option value="cooperative">cooperative</option>
                     </select>
-                    <Input id="creativity" name="creativity" type="number" fullWidth label="Creativity" placeholder="50" />
+                    <Input id="creativity" name="creativity" type="number" min={0} fullWidth label="Creativity" placeholder="50" />
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform Command" />
                     <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} template="text-revisor">
                         {revisedTextList.map((text, index) => <>
