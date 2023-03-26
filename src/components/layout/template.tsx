@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { Dispatch, FormEventHandler, PropsWithChildren, SetStateAction, useState } from 'react'
 import { getExamples } from '@/utils/user'
-import { RateResponse } from '../modals/FeedbackModal'
+import { RateResponse, ResponseProps } from '../modals/FeedbackModal'
 
 
 
@@ -47,11 +47,11 @@ const Example = ({ example, fillExample, ...props }: PropsWithChildren<ExamplePr
 interface ResultBoxProps {
     showResult: boolean
     loading: boolean
-    rawResponse: string
+    responseProps: ResponseProps
     template: string
 }
 
-export function ResultBox({ showResult, loading, rawResponse, template, children }: PropsWithChildren<ResultBoxProps>) {
+export function ResultBox({ showResult, loading, responseProps, template, children }: PropsWithChildren<ResultBoxProps>) {
     return (
         <>
             {
@@ -70,7 +70,7 @@ export function ResultBox({ showResult, loading, rawResponse, template, children
                                     {children}
                                 </>}
                         </div>
-                        {loading ? null : <RateResponse message={rawResponse} template={template} />}
+                        {loading ? null : <RateResponse {...responseProps} />}
                     </> :
                     null
             }

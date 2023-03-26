@@ -1,17 +1,16 @@
-import React, {useEffect, useRef, useState} from "react";
-import { Modal, Button, Input, Loading, Image, Text, Card } from "@nextui-org/react";
-import EmailIcon from '@mui/icons-material/Email';
-import { signIn, useSession } from "next-auth/react";
-import { validateSignUp } from "@/utils/validation";
+import React, {useState} from "react";
+import { Modal, Button, Input, Loading, Text } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import { uFetch } from "@/utils/http";
 import styles from "@/styles/FeedbackModal.module.css"
 
-interface ResponseProps {
-    message: string
-    template: string
+export interface ResponseProps {
+    aiResponseFeedbackContext: any
+    aiToolEndpointName: string
+    userPromptFeedbackContext: any
 }
 
-export function RateResponse({message, template}: ResponseProps) {
+export function RateResponse({aiResponseFeedbackContext, aiToolEndpointName, userPromptFeedbackContext}: ResponseProps) {
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
     return (
     <>
@@ -26,8 +25,9 @@ export function RateResponse({message, template}: ResponseProps) {
         <FeedbackModal
             open={showFeedbackModal}
             setOpen={setShowFeedbackModal}
-            message={message}
-            template={template}
+            aiResponseFeedbackContext={aiResponseFeedbackContext}
+            aiToolEndpointName={aiToolEndpointName}
+            userPromptFeedbackContext={userPromptFeedbackContext}
         />
     </>)
 }
@@ -35,8 +35,9 @@ export function RateResponse({message, template}: ResponseProps) {
 interface FeedbackModalProps {
     open: boolean
     setOpen: (o: boolean) => void
-    message: string
-    template: string
+    aiResponseFeedbackContext: any
+    aiToolEndpointName: string
+    userPromptFeedbackContext: any
 }
 
 interface StarRatingProps {
@@ -67,10 +68,10 @@ const StarRating = ({rating, setRating}: StarRatingProps) => {
     )
 }
 
-const FeedbackModal = ({open, setOpen, message, template}: FeedbackModalProps) => {
+const FeedbackModal = ({open, setOpen, aiResponseFeedbackContext, aiToolEndpointName, userPromptFeedbackContext}: FeedbackModalProps) => {
     const {data: session} = useSession()
     const [rating, setRating] = useState(5);
-    const [feedback, setFeedback] = useState("");
+    const [writtenFeedback, setWrittenFeedback] = useState("");
     const [loading, setLoading] = useState(false);
 
     const submitFeedback = async () => {
@@ -78,7 +79,7 @@ const FeedbackModal = ({open, setOpen, message, template}: FeedbackModalProps) =
         const response = await uFetch("/api/ai-for-u/feedback", {
             session: session,
             method: "POST",
-            body: JSON.stringify({rating, feedback, message, template})
+            body: JSON.stringify({rating: String(rating), writtenFeedback, aiResponseFeedbackContext, aiToolEndpointName, userPromptFeedbackContext})
         });
         const data = await response.json();
         console.log(data);
@@ -92,13 +93,6 @@ const FeedbackModal = ({open, setOpen, message, template}: FeedbackModalProps) =
             closeButton
             onClose={() => setOpen(false)}
         >
-            {loading ?
-                <><Loading
-                    size="xl"
-                    color="primary"
-                    type="gradient"
-                    css={{paddingBottom: "1em"}}
-                /></> : <>
                 <Modal.Header>
                     <Text h3>
                         How did the AI do?
@@ -109,36 +103,33 @@ const FeedbackModal = ({open, setOpen, message, template}: FeedbackModalProps) =
                             rating={rating}
                             setRating={setRating}
                         />
-                        {
-                            rating < 5 ? <Input
+                            <Input
                             type="text"
-                            label="Tell us how the AI could improve"
-                            onChange={(event) => {setFeedback(event.target.value)}}
-                        /> : null
-                        }
-
+                            label={rating < 5 ? "Tell us how the AI could improve" : "Amazing!🎉 What was great about it?"}
+                            onChange={(event) => {setWrittenFeedback(event.target.value)}}
+                        />
                     </Modal.Body>
                     <Modal.Footer>
+                        <Button
+                            auto
+                            light
+                            color="error"
+                            disabled={loading}
+                            onPress={() => {setOpen(false)}}
+                        >
+                            Close
+                        </Button>
                         <Button
                             auto
                             flat
                             type="submit"
                             color="primary"
+                            disabled={loading}
                             onPress={() => submitFeedback()}
                         >
-                            Submit
+                            {loading ? <Loading type="points"/>  : "Submit"}
                         </Button>
-                        <Button
-                            auto
-                            light
-                            color="error"
-                            onPress={() => {setOpen(false)}}
-                        >
-                            Close
-                        </Button>
-
                     </Modal.Footer>
-            </>}
         </Modal>
     );
 }
