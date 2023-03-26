@@ -93,7 +93,7 @@ export async function addEmailToEmailList(client: DynamoDBDocument, {userId, ema
     await client.put({
         TableName: "user-data",
         Item: {
-            uuid: userId,
+            UUID: userId,
             email: email,
             email_list: true
         }
