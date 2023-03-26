@@ -1,195 +1,201 @@
 import Layout from '@/components/layout/layout'
 import Template from '@/components/layout/template'
 import styles from '@/styles/Sandbox.module.css'
-import { Button, Card, FormElement, Textarea } from '@nextui-org/react';
+import { Button, Card, FormElement, Loading, Textarea, Text, useTheme } from '@nextui-org/react';
 import SendIcon from '@mui/icons-material/Send';
-import { FormEvent, PropsWithChildren, useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { v4 as uuid } from 'uuid';
 import { uFetch } from '@/utils/http';
 import { RateResponse } from '@/components/modals/FeedbackModal';
 import { getInitialChat } from '@/utils/user';
 import { useSession } from 'next-auth/react';
-import { KeyboardEvent } from 'react';
 import Markdown from "markdown-to-jsx"
 
-interface MessageProps {
-    from: 'user'|'ai'
+
+interface RequestBody {
+    conversationUuid: string
+    userMessage: string
 }
 
-function Message({from, children}: PropsWithChildren<MessageProps>) {
-    let message = children;
-    if (typeof children === "undefined" || children === null) {
-        message = "";
-    } else {
-        message = `${children}`;
+
+interface ResponseBody {
+    gptResponse: string
+}
+
+interface MessageBubbleProps {
+    text: string | ReactNode;
+    from: "human" | "ai"
+}
+
+
+const MessageBubble = ({ from, text }: MessageBubbleProps) => {
+    const { theme } = useTheme();
+    let bkgdColor = "rgba(0, 0, 0, 0.15)";
+    if (typeof theme !== "undefined") {
+        bkgdColor = from === "ai" ? theme.colors.gray100.value : theme.colors.primary.value;
     }
+    const textColor = from === "ai" ? "black" : "white";
+    const borderRadius = "12px";
+    const borderEndStartRadius = from === "ai" ? "0" : borderRadius;
+    const borderEndEndRadius = from === "human" ? "0" : borderRadius;
+    const alignItems = from === "ai" ? "flex-start" : "flex-end";
     return (
-        <>
-        <div className={`message ${styles["message"]} ${styles[from]}`}>
-            <Markdown>{`${children}`}</Markdown>
+        <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems }}>
+            <Text
+                span
+                css={{
+                    display: "inline-block",
+                    backgroundColor: bkgdColor,
+                    color: textColor,
+                    padding: "8px",
+                    maxWidth: "80%",
+                    margin: "4px 0",
+                    borderRadius,
+                    borderEndStartRadius,
+                    borderEndEndRadius,
+                }}
+            >
+                {text}
+            </Text>
         </div>
-        {
-            from === 'ai'? <RateResponse message={String(message)} template="chat-sandbox"/> : null
-        }
-        </>
     )
 }
 
-function TypingDots() {
-    return <div  id="typing-dots" className={`${styles["message"]} ${styles["ai"]} ${styles["typing-dots"]}`}>
-        <span>&#x2022;</span><span>&#x2022;</span><span>&#x2022;</span>
+
+interface MessageProps {
+    request: RequestBody;
+    response?: ResponseBody | null;
+}
+
+
+const Message = ({ request, response = null }: MessageProps) => {
+    if (response) {
+        return <div style={{ width: "100%" }}>
+            <MessageBubble text={<Markdown>{response.gptResponse}</Markdown>} from="ai" />
+            <RateResponse aiResponseFeedbackContext={response} userPromptFeedbackContext={request} aiToolEndpointName="sandbox-chatgpt" />
+        </div>
+    }
+    return <div style={{ width: "100%" }}>
+        <MessageBubble text={<Markdown>{request.userMessage}</Markdown>} from="human" />
     </div>
 }
 
-interface ConversationMessage {
-    from: 'user'|'ai'
-    text: string
-}
 
-function Sandbox() {
-    const {data: session} = useSession();
+const getConversationUuid = () => {
     // @ts-ignore
-    if(typeof global._conversationUuid === "undefined") {
+    if (typeof global._conversationUuid === "undefined") {
         // @ts-ignore
         global._conversationUuid = uuid();
     }
     // @ts-ignore
     const conversationUuid = global._conversationUuid;
+    return conversationUuid;
+}
 
-    const url = "/api/ai-for-u/sandbox-chatgpt"
 
-    const [messages, setMessages] = useState<ConversationMessage[]>([]);
-    const [loading, setLoading] = useState(false);
+const ChatGPT = () => {
+    const { data: session } = useSession();
+    const [messages, setMessages] = useState<MessageProps[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
+    const conversationUuid = getConversationUuid();
 
-    const getAIMessage = (message: string) => {
-        if(typeof document === "undefined") {
-            return;
-        }
-        uFetch(url, {
-            session,
-            method: "POST",
-            body: JSON.stringify({
-                conversationUuid,
-                userMessage: message
-            })
-        }).then(async response => {
-            if(response.status >= 200 && response.status < 300) {
-                const body = await response.json();
-                messages.push({
-                    text: body.gptResponse,
-                    from: "ai"
-                });
-                setMessages([...messages]);
-            }
-        }).finally(() => {
-            setLoading(false);
-        })
-    }
-    if(messages.length === 0) {
+    if (messages.length === 0) {
         getInitialChat(session).then(gptResponse => {
-            if(messages.length === 0) {
+            if (messages.length === 0) {
                 messages.push({
-                    text: gptResponse,
-                    from: "ai"
-                });
+                    request: {
+                        conversationUuid: conversationUuid,
+                        userMessage: "",
+                    },
+                    response: {
+                        gptResponse,
+                    }
+                })
                 setMessages([...messages]);
             }
         })
-    }
-
-
-
-    const onSubmit = (event: FormEvent) => {
-        event.preventDefault();
-        // @ts-ignore
-        const userMessage = event.target.userMessage;
-        if(loading || userMessage.value.trim().length === 0) {
-            return;
-        }
-        setLoading(true);
-
-        messages.push({
-            text: userMessage.value,
-            from: 'user'
-        })
-        setMessages([...messages])
-
-        getAIMessage(userMessage.value);
-        userMessage.value = "";
     }
 
     useEffect(() => {
         const els = document.getElementsByClassName('message')
         if (!els || !els.length) return;
-        els[els.length - 1].scrollIntoView({behavior: "smooth"});
+        els[els.length - 1].scrollIntoView({ behavior: "smooth" });
     }, [messages])
 
-    const fillExample = (example: string) => {
-        const userInput: HTMLTextAreaElement|null = document.querySelector("#userMessage");
-        if(userInput) {
-            userInput.value = example;
-        }
-    }
-
-    const [rows, setRows] = useState(1);
-    const onKeyDown = (event: KeyboardEvent<FormElement>) => {
-        if(event.key === "Enter") {
-            if(event.ctrlKey) {
-                (event.target as HTMLTextAreaElement).value = (event.target as HTMLTextAreaElement).value + "\n";
-            }
-            else {
-                event.preventDefault();
-                const form: null|HTMLFormElement = document.querySelector("#task-form")
-                if(form) {
-                    form.requestSubmit();
-                    return;
-                }
-            }
-        }
-    }
-
-    const resizeRows = (event: KeyboardEvent<FormElement>) => {
-        const newRows = (event.target as HTMLTextAreaElement).value.split("\n").length;
-        if(newRows != rows) {
-            setRows(newRows);
-        }
-    }
-
-    return (
+    return (<>
         <Layout>
-            <Template isSandbox={true} exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples" fillExample={fillExample} handleSubmit={onSubmit}>
-                <Card variant="bordered" className={styles["chat-box"]}>
-                <Card.Body className={styles["chat-box-messages"]}>
-                    {
-                        messages.map((m, i) => <Message from={m.from} key={i}>{m.text}</Message>)
+            <Template
+                isSandbox={true}
+                handleSubmit={(e) => {
+                    e.preventDefault();
+                    // @ts-ignore
+                    const userMessage = e.target.userMessage.value;
+                    // @ts-ignore
+                    e.target.userMessage.value = "";
+                    const request = { conversationUuid, userMessage };
+                    messages.push({ request });
+                    setMessages([...messages]);
+                    setLoading(true);
+                    uFetch("/api/ai-for-u/sandbox-chatgpt", {
+                        session, method: "POST", body: JSON.stringify(request)
+                    }).then(response => response.json())
+                        .then(response => {
+                            messages.push({
+                                request,
+                                response,
+                            });
+                            setMessages([...messages]);
+                            setLoading(false);
+                        })
+                }}
+                exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples"
+                fillExample={(e) => {
+                    const textfield: HTMLTextAreaElement | null = document.querySelector("#userMessage");
+                    if (textfield) {
+                        textfield.value = e;
                     }
-                    {loading ? <TypingDots/> : null}
-                </Card.Body>
-                <Card.Footer>
-                    <Textarea
-                        id="userMessage"
-                        name="userMessage"
-                        fullWidth
-                        minRows={1}
-                        maxRows={5}
-                        onKeyDown={onKeyDown}
-                        onKeyUp={resizeRows}
-                        form="task-form"
-                        placeholder="Type your message..."
-                    />
-                    <Button
-                        size="sm"
-                        auto
-                        className={styles['send-button']}
-                        type="submit"
-                    >
-                        <SendIcon shapeRendering='rounded'/>
-                    </Button>
-                </Card.Footer>
+                }}
+            >
+                <Card>
+                    <Card.Body>
+                        {messages.map(((message) => <Message {...message} />))}
+                        {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
+                    </Card.Body>
+                    <Card.Footer>
+                        <Textarea
+                            id="userMessage"
+                            name="userMessage"
+                            minRows={1}
+                            maxRows={4}
+                            fullWidth
+                            form="task-form"
+                            placeholder="Type your message..."
+                            css={{
+                                whiteSpace: "pre-wrap"
+                            }}
+                            onKeyDown={(event) => {
+                                if (!event.shiftKey && event.key === "Enter") {
+                                    event.preventDefault();
+                                    const form: HTMLFormElement | null = document.querySelector("#task-form");
+                                    if (form) {
+                                        form.requestSubmit();
+                                    }
+                                }
+                            }}
+                        />
+                        <Button
+                            size="sm"
+                            auto
+                            className={styles['send-button']}
+                            type="submit"
+                        >
+                            <SendIcon shapeRendering='rounded' />
+                        </Button>
+                    </Card.Footer>
                 </Card>
             </Template>
         </Layout>
-    )
+    </>)
 }
 
-export default Sandbox;
+export default ChatGPT;

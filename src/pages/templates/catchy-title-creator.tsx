@@ -7,20 +7,25 @@ import { uFetch } from "@/utils/http";
 import { useSession } from "next-auth/react";
 import Markdown from 'markdown-to-jsx';
 import { placeholderDefault } from "@/utils/transform";
+import { ResponseProps } from "@/components/modals/FeedbackModal";
 
 
 const TextRevisor = () => {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [showResult, setShowResult] = useState(false);
-    const [rawResponse, setRawResponse] = useState("");
+    const [responseProps, setResponseProps] = useState<ResponseProps>({
+        aiToolEndpointName: "",
+        userPromptFeedbackContext: {},
+        aiResponseFeedbackContext: {},
+    });
     const [titlesList, setTitlesList] = useState<string[]>([]);
 
     const onSubmit = async (event: FormEvent) => {
         setLoading(true);
         setShowResult(true);
         event.preventDefault();
-        const data = {
+        const body = {
             // @ts-ignore
             text: event.target.text.value,
             // @ts-ignore
@@ -39,10 +44,14 @@ const TextRevisor = () => {
             freeformCommand: event.target.freeformCommand.value,
         }
 
-        uFetch("/api/ai-for-u/catchy-title-creator", { session, method: "POST", body: JSON.stringify(data) }).then(response => response.json())
+        uFetch("/api/ai-for-u/catchy-title-creator", { session, method: "POST", body: JSON.stringify(body) }).then(response => response.json())
             .then(data => {
                 setTitlesList([...data.titles]);
-                setRawResponse(data.titles.join("\n"));
+                setResponseProps({
+                    aiResponseFeedbackContext: data,
+                    userPromptFeedbackContext: body,
+                    aiToolEndpointName: "catchy-title-creator"
+                });
                 setLoading(false);
             })
     }
@@ -59,7 +68,7 @@ const TextRevisor = () => {
                     <Input id="numTitles" name="numTitles" type="number" fullWidth label="Number of titles" placeholder="3" />
                     <Input id="creativity" name="creativity" type="number" fullWidth label="Creativity" placeholder="50" />
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform Command" />
-                    <ResultBox showResult={showResult} loading={loading} rawResponse={rawResponse} template="catchy-title-creator-examples">
+                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} template="catchy-title-creator-examples">
                         <Text h3>Titles</Text>
                         <ul>
                             {titlesList.map(title => {

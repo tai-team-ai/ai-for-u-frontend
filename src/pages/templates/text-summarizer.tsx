@@ -6,9 +6,10 @@ import { FormEvent, useState } from "react";
 import { uFetch } from "@/utils/http";
 import { useSession } from "next-auth/react";
 import Markdown from "markdown-to-jsx"
+import { ResponseProps } from "@/components/modals/FeedbackModal"
 
 
-const TextRevisor = () => {
+const TextSummarizer = () => {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [showResult, setShowResult] = useState(false);
@@ -16,7 +17,11 @@ const TextRevisor = () => {
     const [actionItems, setActionItems] = useState("");
     const [freeformSection, setFreeformSection] = useState("");
     const [bulletPoints, setBulletPoints] = useState("");
-    const [rawResponse, setRawResponse] = useState("");
+    const [responseProps, setResponseProps] = useState<ResponseProps>({
+        aiToolEndpointName: "",
+        userPromptFeedbackContext: {},
+        aiResponseFeedbackContext: {},
+    });
 
 
     const onSubmit = async (event: FormEvent) => {
@@ -24,7 +29,7 @@ const TextRevisor = () => {
         setLoading(true);
         event.preventDefault();
 
-        const data = {
+        const body = {
             // @ts-ignore
             textToSummarize: event.target.textToSummarize.value,
             // @ts-ignore
@@ -37,13 +42,17 @@ const TextRevisor = () => {
             freeformCommand: event.target.freeformCommand.value,
         }
 
-        uFetch("/api/ai-for-u/text-summarizer", { session, method: "POST", body: JSON.stringify(data) }).then(response => response.json())
+        uFetch("/api/ai-for-u/text-summarizer", { session, method: "POST", body: JSON.stringify(body) }).then(response => response.json())
             .then(data => {
                 setSummarySentence(data.summarySentence);
                 setBulletPoints(data.bulletPoints)
                 setActionItems(data.actionItems);
                 setFreeformSection(data.freeformSection);
-                setRawResponse([data.summarySentence, data.bulletPoints, data.actionItems, data.freeformSection].join("\n"));
+                setResponseProps({
+                    aiResponseFeedbackContext: data,
+                    userPromptFeedbackContext: body,
+                    aiToolEndpointName: "text-summarizer"
+                });
                 setLoading(false);
             })
     }
@@ -58,7 +67,7 @@ const TextRevisor = () => {
                     <Input id="numberOfBullets" name="numberOfBullets" type="number" fullWidth label="Number of bullets" />
                     <Input id="numberOfActionItems" name="numberOfActionItems" type="number" fullWidth label="Number of action items" />
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform command" />
-                    <ResultBox showResult={showResult} loading={loading} rawResponse={rawResponse} template="text-summarizer">
+                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} template="text-summarizer">
                         <Text h3>Summary Sentence</Text>
                         <Markdown>{summarySentence}</Markdown>
                         <Text h3>Bullet Points</Text>
@@ -74,4 +83,4 @@ const TextRevisor = () => {
     )
 }
 
-export default TextRevisor;
+export default TextSummarizer;
