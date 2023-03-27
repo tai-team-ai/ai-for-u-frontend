@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import Markdown from 'markdown-to-jsx';
 import { placeholderDefault } from "@/utils/transform";
 import { ShowDiffBtn } from "@/components/elements/diffview";
+import { ResponseProps } from "@/components/modals/FeedbackModal";
 
 
 const toneItems = {
@@ -29,10 +30,14 @@ const TextRevisor = () => {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [showResult, setShowResult] = useState(false);
-    const [rawResponse, setRawResponse] = useState("");
     const [revisedTextList, setRevisedTextList] = useState<string[]>([]);
     const [initialValue, setInitialValue] = useState("");
     const [selectedTone, setSelectedTone] = useState<validTones>("friendly");
+    const [responseProps, setResponseProps] = useState<ResponseProps>({
+        aiToolEndpointName: "",
+        userPromptFeedbackContext: {},
+        aiResponseFeedbackContext: {},
+    });
 
     const onSubmit = async (event: FormEvent) => {
         setLoading(true);
@@ -40,7 +45,7 @@ const TextRevisor = () => {
         event.preventDefault();
         // @ts-ignore
         const textToRevise = event.target.textToRevise.value
-        const data = {
+        const body = {
             textToRevise: textToRevise,
             // @ts-ignore
             numberOfRevisions: Number(placeholderDefault(event.target.numberOfRevisions)),
@@ -54,10 +59,14 @@ const TextRevisor = () => {
             freeformCommand: event.target.freeformCommand.value,
         }
 
-        uFetch("/api/ai-for-u/text-revisor", { session, method: "POST", body: JSON.stringify(data) }).then(response => response.json())
+        uFetch("/api/ai-for-u/text-revisor", { session, method: "POST", body: JSON.stringify(body) }).then(response => response.json())
             .then(data => {
                 setRevisedTextList([...data.revisedTextList]);
-                setRawResponse(data.revisedTextList.join("\n"));
+                setResponseProps({
+                    aiResponseFeedbackContext: data,
+                    userPromptFeedbackContext: body,
+                    aiToolEndpointName: "text-revisor"
+                });
                 setInitialValue(textToRevise);
                 setLoading(false);
             })
@@ -68,7 +77,7 @@ const TextRevisor = () => {
             <Layout>
                 <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult}>
                     <Textarea id="textToRevise" name="textToRevise" fullWidth label="Text to revise" form="task-form" />
-                    <Input id="numberOfRevisions" name="numberOfRevisions" type="number" fullWidth label="Number of revisions" placeholder="1" />
+                    <Input id="numberOfRevisions" name="numberOfRevisions" type="number" min={0} fullWidth label="Number of revisions" placeholder="1" />
                     <Input id="revisionTypes" name="revisionTypes" fullWidth label="Revision types" placeholder="spelling, grammar, sentence structure, word choice, consistency, punctuation" />
                     <label style={{ display: "block" }} htmlFor="tone">Tone</label>
                     <Dropdown>
@@ -86,9 +95,9 @@ const TextRevisor = () => {
                             ))}
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Input id="creativity" name="creativity" type="number" fullWidth label="Creativity" placeholder="50" />
+                    <Input id="creativity" name="creativity" type="number" min={0} fullWidth label="Creativity" placeholder="50" />
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform Command" />
-                    <ResultBox showResult={showResult} loading={loading} rawResponse={rawResponse} template="text-revisor">
+                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} template="text-revisor">
                         {revisedTextList.map((text, index) => <>
                             <Text b>{`Revision ${index + 1}: `}</Text>
                             <Markdown>{text}</Markdown><ShowDiffBtn oldValue={initialValue} newValue={text}></ShowDiffBtn>

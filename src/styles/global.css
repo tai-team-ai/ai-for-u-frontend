@@ -18,10 +18,6 @@ body {
 }
 
 
-.fixed-bottom {
-    position: sticky;
-    top: 100vh;
-}
 
 label {
     font-weight: var(--nextui-fontWeights-normal);
