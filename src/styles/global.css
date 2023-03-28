@@ -19,6 +19,18 @@ body {
 
 
 
+label {
+    font-weight: var(--nextui-fontWeights-normal);
+    color: var(--nextui--inputLabelColor);
+    padding: 0 0 0 var(--nextui-space-2);
+    margin-bottom: var(--nextui-space-3);
+    font-size: var(--nextui--inputFontSize);
+    line-height: var(--nextui-lineHeights-md);
+    user-select: none;
+    --nextui--inputFontSize: var(--nextui-fontSizes-sm);
+    --nextui--inputHeightRatio: 2;
+}
+
 #__next,
 #__next>div {
     height: 100%;
