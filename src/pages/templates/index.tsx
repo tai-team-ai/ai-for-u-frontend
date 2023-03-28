@@ -6,6 +6,7 @@ import { Card, Grid, Text, useTheme, styled, Theme, NextUITheme, Container } fro
 import Link from "next/link";
 import styles from "@/styles/Templates.module.css"
 import SubscribeModal from "@/components/modals/SubscribeModal"
+import FancyHoverCard from "@/components/elements/FancyHoverCard";
 
 interface TemplateObj {
     title: string
@@ -51,12 +52,7 @@ const templates: TemplateObj[] = [
 const TemplateCard = ({ href, title, description, comingSoon }: TemplateObj) => {
     const [open, setOpen] = useState(false);
     let actionPhrase = comingSoon ? "Coming soon..." : "Try it out, today!"
-    const StyledHoverCard = styled(Card, {
-        '&:hover': {
-            backgroundColor: "$colors$primaryLight",
-            transition: "background-color 0.2s ease-in-out"
-        },
-    });
+
     return <>
         <Link
             href={href}
@@ -68,34 +64,11 @@ const TemplateCard = ({ href, title, description, comingSoon }: TemplateObj) => 
                 }
             }}
         >
-            <StyledHoverCard
-                isPressable
-                variant="bordered"
-                className={styles["template-card"]}
-                css={{
-                    height: "100%",
-                    display: "grid",
-                    gridTemplateRows: "1fr auto",
-                    backgroundColor: "$colors$secondaryLight",
-                    transition: "0.2s ease-in-out",
-                    padding: "3em"
-                }}
-            >
-                <div>
-                    <Text h3 css={{
-                        color: "$colors$primary",
-                        marginBottom: 0
-                    }}
-                        size={26}
-                    >{title}</Text>
-                    <Text css={{
-                        color: "$colors$primaryLightActive",
-                    }}>{description}</Text>
-                </div>
-                <div className={styles["action-phrase"]} style={{ color: "$colors$primary" }}>
-                    {actionPhrase}
-                </div>
-            </StyledHoverCard>
+            <FancyHoverCard
+                hover={actionPhrase}
+                title={title}
+                description={description}
+            />
         </Link>
         <SubscribeModal open={open} setOpen={setOpen} />
     </>

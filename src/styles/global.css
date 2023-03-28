@@ -1,3 +1,9 @@
+:root {
+    --fancy-card1: 56,36,102;
+    --fancy-card2: 81,17,171;
+    --fancy-card3: 236,142,121;
+  }
+
 body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
