@@ -87,10 +87,11 @@ interface TemplateProps {
     handleSubmit?: FormEventHandler | null
     formLoading?: boolean
     setShowResult?: Dispatch<SetStateAction<boolean>> | null
+    fillMapping?: {[name: string]: (v: any) => void} | null
+    defaults?: [(a: any) => void, any][] | null;
 }
 
-
-export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null }: TemplateProps) {
+export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, fillMapping = null, defaults = null}: TemplateProps) {
     const { data: session } = useSession();
     const [examples, setExamples] = useState<ExampleObject[]>([]);
     const [loading, setLoading] = useState(false);
@@ -123,6 +124,9 @@ export default function Template({ isSandbox = false, children = null, exampleUr
                             target.checked = example[key];
                         }
                     }
+                }
+                if(fillMapping && typeof fillMapping[key] !== "undefined") {
+                    fillMapping[key](example[key]);
                 }
             }
         }
@@ -189,7 +193,6 @@ export default function Template({ isSandbox = false, children = null, exampleUr
                                 </div>
                             </>}
                     </form>
-                    {isSandbox ? null : <Link href={routes.TEMPLATES}><Text span css={{color: "$colors$primary"}}>Back to Templates</Text></Link>}
                 </section>
             </Grid>
             <Grid sm={3} xs={12}>
