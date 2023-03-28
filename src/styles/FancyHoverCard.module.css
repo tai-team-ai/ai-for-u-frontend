@@ -1,0 +1,88 @@
+.fancy-card {
+    position: relative;
+    z-index: 1;
+    filter: var(--nextui-dropShadows-lg);
+    transform: translateY(0);
+    transition: outline 350ms ease, color 350ms ease,
+                transform 250ms ease;
+}
+
+.fancy-card:hover {
+    transform: translateY(-3px);
+    filter: var(--nextui-dropShadows-xl);
+}
+
+.fancy-card:hover:before {
+    background-position: 100% 100%;
+    transform: scale(1.08, 1.03);
+}
+
+.fancy-card .title,
+.fancy-card .description {
+    transition: opacity 350ms ease, color 350ms ease;
+}
+
+.fancy-card:hover .description {
+    opacity: 0;
+}
+
+.fancy-card:hover .title {
+    opacity: 0.5;
+    color: white;
+}
+
+.fancy-card .action-phrase {
+    transition: bottom 350ms ease;
+}
+
+.fancy-card:hover .action-phrase {
+    bottom: 1vmin;
+}
+
+.fancy-card:hover {
+    outline-style: solid;
+    outline-color: rgb(var(--fancy-card2), 0.85);
+    outline-width: 2px;
+}
+
+.fancy-card:before {
+    background: linear-gradient(130deg,
+            transparent 0% 33%,
+            rgb(var(--fancy-card1)) 66%,
+            rgb(var(--fancy-card2)) 83.5%,
+            rgb(var(--fancy-card3)) 100%);
+    background-position: 0% 0%;
+    background-size: 300% 300%;
+    content: "";
+    height: 100%;
+    left: 0px;
+    pointer-events: none;
+    position: absolute;
+    top: 0px;
+    transition: background-position 350ms ease, transform 350ms ease;
+    width: 100%;
+    z-index: 2;
+}
+
+.action-phrase {
+    color: white;
+    position: absolute;
+    bottom: -2em;
+    z-index: 3;
+}
+
+.fancy-card-content {
+    position: relative;
+    background-position: 0% 0%;
+    background-size: 5vmin 5vmin;
+    height: 100%;
+    padding: 3vmin;
+    transition: background-position 350ms ease;
+    width: 100%;
+    z-index: 2;
+    overflow: hidden;
+}
+
+.fancy-card.sm .fancy-card-content {
+    padding: 2vmin;
+}

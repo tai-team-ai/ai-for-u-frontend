@@ -3,7 +3,7 @@ import Layout from '@/components/layout/layout'
 import styles from '@/styles/Templates.module.css'
 import {Grid} from '@nextui-org/react'
 import SubscribeModal from '@/components/modals/SubscribeModal'
-import TemplateCard, { TemplateCards } from '@/components/elements/TemplateCard'
+import TemplateCard, { TemplateCards } from '@/components/elements/FancyHoverCard'
 
 interface TemplatesProps {
 
