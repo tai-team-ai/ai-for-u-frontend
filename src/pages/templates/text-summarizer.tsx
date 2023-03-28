@@ -60,14 +60,8 @@ const TextSummarizer = () => {
     return (
         <>
             <Layout>
-                <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult}>
-                    <Textarea id="textToSummarize" name="textToSummarize" fullWidth label="Text to summarize" form="task-form" />
-                    <input type="checkbox" id="includeSummarySentence" name="includeSummarySentence" />
-                    <label htmlFor="includeSummarySentence" style={{ paddingLeft: "1em" }}>Include summary sentence</label>
-                    <Input id="numberOfBullets" name="numberOfBullets" type="number" min={0} fullWidth label="Number of bullets" />
-                    <Input id="numberOfActionItems" name="numberOfActionItems" type="number" min={0} fullWidth label="Number of action items" />
-                    <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform command" />
-                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} template="text-summarizer">
+                <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult} resultBox={
+                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps}>
                         <Text h3>Summary Sentence</Text>
                         <Markdown>{summarySentence}</Markdown>
                         <Text h3>Bullet Points</Text>
@@ -77,6 +71,13 @@ const TextSummarizer = () => {
                         <Text h3>Freeform Section</Text>
                         <Markdown>{freeformSection}</Markdown>
                     </ResultBox>
+                }>
+                    <Textarea id="textToSummarize" name="textToSummarize" fullWidth label="Text to summarize" form="task-form" />
+                    <input type="checkbox" id="includeSummarySentence" name="includeSummarySentence" />
+                    <label htmlFor="includeSummarySentence" style={{ paddingLeft: "1em" }}>Include summary sentence</label>
+                    <Input id="numberOfBullets" name="numberOfBullets" type="number" min={0} fullWidth label="Number of bullets" />
+                    <Input id="numberOfActionItems" name="numberOfActionItems" type="number" min={0} fullWidth label="Number of action items" />
+                    <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform command" />
                 </Template>
             </Layout>
         </>

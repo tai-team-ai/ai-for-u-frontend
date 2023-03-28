@@ -48,29 +48,18 @@ interface ResultBoxProps {
     showResult: boolean
     loading: boolean
     responseProps: ResponseProps
-    template: string
 }
 
-export function ResultBox({ showResult, loading, responseProps, template, children }: PropsWithChildren<ResultBoxProps>) {
+export function ResultBox({ showResult, loading, responseProps, children }: PropsWithChildren<ResultBoxProps>) {
     return (
         <>
             {
-                showResult ?
+                showResult && !loading ?
                     <>
                         <div className={styles["result-box"]}>
-                            {loading ?
-                                <Loading
-                                    type="gradient"
-                                    css={{
-                                        display: "grid",
-                                        justifyContent: "center"
-                                    }}
-                                /> :
-                                <>
-                                    {children}
-                                </>}
+                            {children}
                         </div>
-                        {loading ? null : <RateResponse {...responseProps} />}
+                        <RateResponse {...responseProps} />
                     </> :
                     null
             }
@@ -87,10 +76,11 @@ interface TemplateProps {
     handleSubmit?: FormEventHandler | null
     formLoading?: boolean
     setShowResult?: Dispatch<SetStateAction<boolean>> | null
+    resultBox?: JSX.Element | null
 }
 
 
-export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null }: TemplateProps) {
+export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, resultBox = null }: TemplateProps) {
     const { data: session } = useSession();
     const [examples, setExamples] = useState<ExampleObject[]>([]);
     const [loading, setLoading] = useState(false);
@@ -138,30 +128,28 @@ export default function Template({ isSandbox = false, children = null, exampleUr
                         {isSandbox ? null :
                             <>
 
-                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
-                                    {
-                                        formLoading ?
-                                            null : <>
-                                                <Button
-                                                    auto
-                                                    light
-                                                    color="error"
-                                                    type="reset"
-                                                >
-                                                    Reset
-                                                </Button>
-                                                <Button
-                                                    auto
-                                                    flat
-                                                    type="submit"
-                                                >
-                                                    Submit
-                                                </Button>
-                                            </>
-                                    }
+                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", marginTop: "1em" }}>
+                                    <Button
+                                        auto
+                                        light
+                                        color="error"
+                                        type="reset"
+                                        disabled={formLoading}
+                                    >
+                                        Reset
+                                    </Button>
+                                    <Button
+                                        auto
+                                        flat
+                                        disabled={formLoading}
+                                        type="submit"
+                                    >
+                                        {formLoading ? <Loading type="points"/> : "Submit"}
+                                    </Button>
                                 </div>
                             </>}
                     </form>
+                    {resultBox}
                     {isSandbox ? null : <Link href={routes.TEMPLATES}><Text span css={{color: "$colors$primary"}}>Back to Templates</Text></Link>}
                 </section>
             </Grid>

@@ -59,16 +59,8 @@ const TextRevisor = () => {
     return (
         <>
             <Layout>
-                <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult}>
-                    <Textarea id="text" name="text" fullWidth label="Text" form="task-form" />
-                    <Input id="textType" name="textType" type="text" fullWidth label="Text type" placeholder="document" />
-                    <Input id="targetAudience" name="targetAudience" type="text" fullWidth label="Target audience" placeholder="public" />
-                    <Input id="expectedTone" name="expectedTone" type="text" fullWidth label="Expected tone" placeholder="informal" />
-                    <Input id="specificKeywordsToInclude" name="specificKeywordsToInclude" type="text" fullWidth label="Specific keywords to include" placeholder="" />
-                    <Input id="numTitles" name="numTitles" type="number" min={0} fullWidth label="Number of titles" placeholder="3" />
-                    <Input id="creativity" name="creativity" type="number" min={0} fullWidth label="Creativity" placeholder="50" />
-                    <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform Command" />
-                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} template="catchy-title-creator-examples">
+                <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult} resultBox={
+                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps}>
                         <Text h3>Titles</Text>
                         <ul>
                             {titlesList.map(title => {
@@ -78,6 +70,15 @@ const TextRevisor = () => {
                             })}
                         </ul>
                     </ResultBox>
+                }>
+                    <Textarea id="text" name="text" fullWidth label="Text" form="task-form" />
+                    <Input id="textType" name="textType" type="text" fullWidth label="Text type" placeholder="document" />
+                    <Input id="targetAudience" name="targetAudience" type="text" fullWidth label="Target audience" placeholder="public" />
+                    <Input id="expectedTone" name="expectedTone" type="text" fullWidth label="Expected tone" placeholder="informal" />
+                    <Input id="specificKeywordsToInclude" name="specificKeywordsToInclude" type="text" fullWidth label="Specific keywords to include" placeholder="" />
+                    <Input id="numTitles" name="numTitles" type="number" min={0} fullWidth label="Number of titles" placeholder="3" />
+                    <Input id="creativity" name="creativity" type="number" min={0} fullWidth label="Creativity" placeholder="50" />
+                    <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform Command" />
                 </Template>
             </Layout>
         </>
