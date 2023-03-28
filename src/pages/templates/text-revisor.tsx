@@ -32,7 +32,8 @@ const TextRevisor = () => {
     const [showResult, setShowResult] = useState(false);
     const [revisedTextList, setRevisedTextList] = useState<string[]>([]);
     const [initialValue, setInitialValue] = useState("");
-    const [selectedTone, setSelectedTone] = useState<validTones>("friendly");
+    const defaultTone = "friendly" as validTones;
+    const [selectedTone, setSelectedTone] = useState<validTones>(defaultTone);
     const [responseProps, setResponseProps] = useState<ResponseProps>({
         aiToolEndpointName: "",
         userPromptFeedbackContext: {},
@@ -72,10 +73,16 @@ const TextRevisor = () => {
             })
     }
     const exampleUrl = `/api/ai-for-u/text-revisor-examples`
+    const fillMapping = {
+        "tone": setSelectedTone
+    };
+    const defaults: [(a: any) => void, any][] = [
+        [setSelectedTone, defaultTone],
+    ]
     return (
         <>
             <Layout>
-                <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult}>
+                <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult} fillMapping={fillMapping} defaults={defaults}>
                     <Textarea id="textToRevise" name="textToRevise" fullWidth label="Text to revise" form="task-form" />
                     <Input id="numberOfRevisions" name="numberOfRevisions" type="number" min={0} fullWidth label="Number of revisions" placeholder="1" />
                     <Input id="revisionTypes" name="revisionTypes" fullWidth label="Revision types" placeholder="spelling, grammar, sentence structure, word choice, consistency, punctuation" />
@@ -95,6 +102,9 @@ const TextRevisor = () => {
                             ))}
                         </Dropdown.Menu>
                     </Dropdown>
+                    <input id="tone" name="tone" type="text" placeholder={defaultTone} hidden value={selectedTone} onChange={e => {
+                        setSelectedTone(e.currentTarget.value as validTones);
+                    }}/>
                     <Input id="creativity" name="creativity" type="number" min={0} fullWidth label="Creativity" placeholder="50" />
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform Command" />
                     <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} template="text-revisor">
