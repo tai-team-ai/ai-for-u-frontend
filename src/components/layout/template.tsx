@@ -3,7 +3,7 @@ import { routes } from '@/utils/constants'
 import { Card, Grid, Text, Loading, Button } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { Dispatch, FormEventHandler, PropsWithChildren, SetStateAction, useState } from 'react'
+import { Dispatch, FormEventHandler, PropsWithChildren, SetStateAction, useEffect, useRef, useState } from 'react'
 import { getExamples } from '@/utils/user'
 import { RateResponse, ResponseProps } from '../modals/FeedbackModal'
 
@@ -94,6 +94,7 @@ export default function Template({ isSandbox = false, children = null, exampleUr
     const { data: session } = useSession();
     const [examples, setExamples] = useState<ExampleObject[]>([]);
     const [loading, setLoading] = useState(false);
+    const sectionRef = useRef<HTMLElement>(null)
 
     if (typeof exampleUrl !== "undefined" && exampleUrl && !loading) {
         setLoading(true)
@@ -127,17 +128,43 @@ export default function Template({ isSandbox = false, children = null, exampleUr
         }
     }
 
+    const resizeChat = () => {
+        if (!isSandbox || !sectionRef.current) return
+
+        sectionRef.current.style.height = '';
+        const chatRect = sectionRef.current!.getBoundingClientRect()
+        const initialHeight = chatRect.height
+        const sectionTop = chatRect.top;
+        const footerTop = document.getElementsByTagName('footer')[0].getBoundingClientRect().top;
+
+        const newHeight = footerTop - sectionTop - 24;
+        if (newHeight > initialHeight) {
+            sectionRef.current.style.height = `${newHeight}px`;
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener('resize', resizeChat)
+
+        return () => {
+            window.removeEventListener('resize', resizeChat)
+        }
+    })
+
+    useEffect(() => {
+        resizeChat()
+    }, [])
+
     return (
-        <Grid.Container gap={1} direction="row-reverse">
+        <Grid.Container gap={1} direction="row-reverse" css={{position: 'relative'}}>
             <Grid sm={9} xs={12}>
-                <section className={styles["content"]}>
+                <section ref={sectionRef} className={`${styles["content"]} ${isSandbox ? styles['sandbox'] : ''}`}>
                     {isSandbox ? null : <Link style={{ float: "right", color: "$colors$primary" }} href={routes.TEMPLATES}><Text span css={{color: "$colors$primary"}}>X</Text></Link>}
-                    <form id="task-form" onReset={(e) => { setShowResult ? setShowResult(false) : null }} onSubmit={(e) => handleSubmit ? handleSubmit(e) : e.preventDefault()}>
+                    <form id="task-form" className={styles['task-form']} onReset={(e) => { setShowResult ? setShowResult(false) : null }} onSubmit={(e) => handleSubmit ? handleSubmit(e) : e.preventDefault()}>
                         {children}
 
                         {isSandbox ? null :
                             <>
-
                                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
                                     {
                                         formLoading ?
