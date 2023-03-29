@@ -185,17 +185,6 @@ const LoginModal = ({open, setOpen, isSignUp = false, error = null}: LoginModalP
                         getContentEmail()
                     ) : ('')}
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button
-                        auto
-                        light
-                        color="error"
-                        onPress={() => {setOpen(false)}}
-                    >
-                        Close
-                    </Button>
-
-                </Modal.Footer>
         </Modal>
     );
 }

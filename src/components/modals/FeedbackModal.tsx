@@ -112,15 +112,6 @@ const FeedbackModal = ({open, setOpen, aiResponseFeedbackContext, aiToolEndpoint
                     <Modal.Footer>
                         <Button
                             auto
-                            light
-                            color="error"
-                            disabled={loading}
-                            onPress={() => {setOpen(false)}}
-                        >
-                            Close
-                        </Button>
-                        <Button
-                            auto
                             flat
                             type="submit"
                             color="primary"
