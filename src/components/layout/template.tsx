@@ -153,7 +153,19 @@ export default function Template({ isSandbox = false, children = null, exampleUr
         <Grid.Container gap={1} direction="row-reverse" css={{position: 'relative'}}>
             <Grid sm={9} xs={12}>
                 <section ref={sectionRef} className={`${styles["content"]} ${isSandbox ? styles['sandbox'] : ''}`}>
-                    <form id="task-form" className={styles['task-form']} onReset={(e) => { setShowResult ? setShowResult(false) : null }} onSubmit={(e) => handleSubmit ? handleSubmit(e) : e.preventDefault()}>
+                    <form
+                        id="task-form"
+                        className={styles['task-form']}
+                        onReset={(e) => {
+                            setShowResult ? setShowResult(false) : null;
+                            if(defaults) {
+                                defaults.forEach(([setValue, value]) => {
+                                    setValue(value);
+                                })
+                            }
+                        }}
+                        onSubmit={(e) => handleSubmit ? handleSubmit(e) : e.preventDefault()}
+                        >
                         {children}
 
                         {isSandbox ? null :
