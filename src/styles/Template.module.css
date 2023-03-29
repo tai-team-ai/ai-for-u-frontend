@@ -15,3 +15,11 @@
     border-radius: 15px;
     margin: 1em;
 }
+
+.sandbox .task-form {
+    height: 100%;
+}
+
+.sandbox .task-form > [role="section"] {
+    height: 100%;
+}

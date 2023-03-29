@@ -6,38 +6,9 @@ import Layout from '@/components/layout/layout'
 import AIForAnimation from '@/components/elements/AIForAnimation'
 import styles from '@/styles/Home.module.css';
 import Image from "next/image";
-import { Card, Col, Container, Row, Spacer, Text, Button, Link, Grid } from "@nextui-org/react";
+import { Container, Row, Spacer, Text, Button, Link, Grid } from "@nextui-org/react";
+import FancyHoverCard from "@/components/elements/FancyHoverCard";
 
-interface TrustBuilderProps {
-    companyName: string
-    src: string
-    size: number
-}
-
-function TrustBuilder(props: TrustBuilderProps) {
-    return (
-        <Card className={styles["trust-builder-card"]}>
-            <Card.Header css={{ position: "absolute", zIndex: 1, top: 5 }}>
-            <Col>
-                <Text size={12} weight="bold" transform="uppercase" color="#ffffff">
-                    Trust Builder
-                </Text>
-                <Text h4 color="white">
-                    {props.companyName}
-                </Text>
-            </Col>
-            </Card.Header>
-            <Card.Image
-                className={styles["trust-builder-image"]}
-                src={props.src}
-                objectFit="cover"
-                width="100%"
-                height={300}
-                alt={props.companyName}
-            />
-        </Card>
-    )
-}
 
 function Home() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -106,16 +77,36 @@ function Home() {
             <section className={styles["trust-builders"]}>
                 <Grid.Container gap={1}>
                     <Grid xs={6} sm={3}>
-                        <TrustBuilder src="/images/trust-builder/1.jpg" size={300} companyName="AIForU" />
+                        <FancyHoverCard
+                            size="sm"
+                            title={"AIForU"}
+                            description={"See what this innovative company is doing!"}
+                            hover="AI for Everyone!"
+                        />
                     </Grid>
                     <Grid xs={6} sm={3}>
-                        <TrustBuilder src="/images/trust-builder/2.jpg" size={300} companyName="Macrosoft" />
+                        <FancyHoverCard
+                            size="sm"
+                            title={"Macrosoft"}
+                            description={"Big products, big solutions!"}
+                            hover="AI for Everyone!"
+                        />
                     </Grid>
                     <Grid xs={6} sm={3}>
-                        <TrustBuilder src="/images/trust-builder/3.jpg" size={300} companyName="Goggle" />
+                        <FancyHoverCard
+                            size="sm"
+                            title={"Goggle"}
+                            description={"Even AI needs protection from those UV rays!"}
+                            hover="AI for Everyone!"
+                        />
                     </Grid>
                     <Grid xs={6} sm={3}>
-                        <TrustBuilder src="/images/trust-builder/4.jpg" size={300} companyName="Whalemart" />
+                        <FancyHoverCard
+                            size="sm"
+                            title={"Whalemart"}
+                            description={"Where else can whales go for their krill?"}
+                            hover="AI for Everyone!"
+                        />
                     </Grid>
                 </Grid.Container>
             </section>

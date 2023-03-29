@@ -3,7 +3,7 @@ import { routes } from '@/utils/constants'
 import { Card, Grid, Text, Loading, Button } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { Dispatch, FormEventHandler, PropsWithChildren, SetStateAction, useState } from 'react'
+import { Dispatch, FormEventHandler, PropsWithChildren, SetStateAction, useEffect, useRef, useState } from 'react'
 import { getExamples } from '@/utils/user'
 import { RateResponse, ResponseProps } from '../modals/FeedbackModal'
 
@@ -77,13 +77,15 @@ interface TemplateProps {
     formLoading?: boolean
     setShowResult?: Dispatch<SetStateAction<boolean>> | null
     resultBox?: JSX.Element | null
+    fillMapping?: {[name: string]: (v: any) => void} | null
+    defaults?: [(a: any) => void, any][] | null;
 }
 
-
-export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, resultBox = null }: TemplateProps) {
+export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, resultBox = null, fillMapping = null, defaults = null}: TemplateProps) {
     const { data: session } = useSession();
     const [examples, setExamples] = useState<ExampleObject[]>([]);
     const [loading, setLoading] = useState(false);
+    const sectionRef = useRef<HTMLElement>(null)
 
     if (typeof exampleUrl !== "undefined" && exampleUrl && !loading) {
         setLoading(true)
@@ -113,21 +115,49 @@ export default function Template({ isSandbox = false, children = null, exampleUr
                         }
                     }
                 }
+                if(fillMapping && typeof fillMapping[key] !== "undefined") {
+                    fillMapping[key](example[key]);
+                }
             }
         }
     }
 
+    const resizeChat = () => {
+        if (!isSandbox || !sectionRef.current) return
+
+        sectionRef.current.style.height = '';
+        const chatRect = sectionRef.current!.getBoundingClientRect()
+        const initialHeight = chatRect.height
+        const sectionTop = chatRect.top;
+        const footerTop = document.getElementsByTagName('footer')[0].getBoundingClientRect().top;
+
+        const newHeight = footerTop - sectionTop - 24;
+        if (newHeight > initialHeight) {
+            sectionRef.current.style.height = `${newHeight}px`;
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener('resize', resizeChat)
+
+        return () => {
+            window.removeEventListener('resize', resizeChat)
+        }
+    })
+
+    useEffect(() => {
+        resizeChat()
+    }, [])
+
     return (
-        <Grid.Container gap={1} direction="row-reverse">
+        <Grid.Container gap={1} direction="row-reverse" css={{position: 'relative'}}>
             <Grid sm={9} xs={12}>
-                <section className={styles["content"]}>
-                    {isSandbox ? null : <Link style={{ float: "right", color: "$colors$primary" }} href={routes.TEMPLATES}><Text span css={{color: "$colors$primary"}}>X</Text></Link>}
-                    <form id="task-form" onReset={(e) => { setShowResult ? setShowResult(false) : null }} onSubmit={(e) => handleSubmit ? handleSubmit(e) : e.preventDefault()}>
+                <section ref={sectionRef} className={`${styles["content"]} ${isSandbox ? styles['sandbox'] : ''}`}>
+                    <form id="task-form" className={styles['task-form']} onReset={(e) => { setShowResult ? setShowResult(false) : null }} onSubmit={(e) => handleSubmit ? handleSubmit(e) : e.preventDefault()}>
                         {children}
 
                         {isSandbox ? null :
                             <>
-
                                 <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", marginTop: "1em" }}>
                                     <Button
                                         auto
@@ -150,7 +180,6 @@ export default function Template({ isSandbox = false, children = null, exampleUr
                             </>}
                     </form>
                     {resultBox}
-                    {isSandbox ? null : <Link href={routes.TEMPLATES}><Text span css={{color: "$colors$primary"}}>Back to Templates</Text></Link>}
                 </section>
             </Grid>
             <Grid sm={3} xs={12}>

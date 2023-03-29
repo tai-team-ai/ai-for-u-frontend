@@ -1,7 +1,7 @@
 import Template, { ResultBox } from "@/components/layout/template";
 import Layout from "@/components/layout/layout";
 
-import { Input, Textarea, Text } from "@nextui-org/react";
+import { Input, Textarea, Text, Checkbox } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import { uFetch } from "@/utils/http";
 import { useSession } from "next-auth/react";
@@ -17,6 +17,7 @@ const TextSummarizer = () => {
     const [actionItems, setActionItems] = useState("");
     const [freeformSection, setFreeformSection] = useState("");
     const [bulletPoints, setBulletPoints] = useState("");
+    const [includeSummarySentence, setIncludeSummarySentence] = useState(false)
     const [responseProps, setResponseProps] = useState<ResponseProps>({
         aiToolEndpointName: "",
         userPromptFeedbackContext: {},
@@ -57,11 +58,30 @@ const TextSummarizer = () => {
             })
     }
     const exampleUrl = `/api/ai-for-u/text-summarizer-examples`
+
+    const fillMapping = {
+        "includeSummarySentence": setIncludeSummarySentence
+    }
+    const defaults = [
+        [setIncludeSummarySentence, false],
+    ]
     return (
         <>
             <Layout>
-                <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult} resultBox={
-                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps}>
+                <Template
+                    exampleUrl={exampleUrl}
+                    formLoading={loading}
+                    handleSubmit={onSubmit}
+                    setShowResult={setShowResult}
+                    fillMapping={fillMapping}
+                    // @ts-ignore
+                    defaults={defaults}>
+                    <Textarea id="textToSummarize" name="textToSummarize" fullWidth label="Text to summarize" form="task-form" />
+                    <Checkbox id="includeSummarySentence" name="includeSummarySentence" size="xs" color="primary" isSelected={includeSummarySentence} onChange={setIncludeSummarySentence} >Include summary sentence</Checkbox>
+                    <Input id="numberOfBullets" name="numberOfBullets" type="number" min={0} fullWidth label="Number of bullets" />
+                    <Input id="numberOfActionItems" name="numberOfActionItems" type="number" min={0} fullWidth label="Number of action items" />
+                    <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform command" />
+                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} template="text-summarizer">
                         <Text h3>Summary Sentence</Text>
                         <Markdown>{summarySentence}</Markdown>
                         <Text h3>Bullet Points</Text>
