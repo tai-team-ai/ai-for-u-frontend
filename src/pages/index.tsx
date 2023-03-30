@@ -31,16 +31,12 @@ function Home() {
             <section className={styles["hero-section"]}>
                 <Grid.Container gap={1} direction="row-reverse">
                     <Grid xs={12} sm={6}>
-                        <div className={styles["hero-graphic"]}>
-                            <AIForAnimation />
-                        </div>
+                        <img src="/images/screen.svg" ></img>
                     </Grid>
                     <Grid xs={12} sm={6}>
                         <Container>
                             <Row justify="center">
-                                <Text h1 className={styles["hero-heading"]}>
-                                    CTA
-                                </Text>
+                                <AIForAnimation />
                             </Row>
                             <Row justify="center">
                                 <p className={styles["hero-paragraph"]}>

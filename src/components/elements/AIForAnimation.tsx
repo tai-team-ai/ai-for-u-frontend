@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
+import { Text } from "@nextui-org/react";
 import styles from '@/styles/AIForAnimation.module.css';
 
 interface AIForAnimationProps {
@@ -37,8 +38,8 @@ export default function AIForAnimation({stepSpeed = 2000}: AIForAnimationProps )
     return (
         <>
             <div className='ai-4-animation'>
-                <span className={styles['container']}>AI for <span ref={rotatorRef} className={styles['rotator']}>
-                    {whoIsAIFor.reverse().map((t, i) => <div style={{transform: `translateY(${heightOffset}px)`}} className={`${styles['element']} ${(whoIsAIFor.length - 1 - i) == activeIdx ? 'active' : 'inactive'}`}>{t}</div>)}
+                <span className={styles['container']}><Text h2>AI for </Text><span ref={rotatorRef} className={styles['rotator']}>
+                    {whoIsAIFor.reverse().map((t, i) => <div style={{transform: `translateY(${heightOffset}px)`}} className={`${styles['element']} ${(whoIsAIFor.length - 1 - i) == activeIdx ? 'active' : 'inactive'}`}><Text h2>{t}</Text></div>)}
                 </span></span>
             </div>
         </>
