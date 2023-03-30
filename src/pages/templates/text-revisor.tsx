@@ -82,7 +82,14 @@ const TextRevisor = () => {
     return (
         <>
             <Layout>
-                <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult} fillMapping={fillMapping} defaults={defaults}>
+                <Template exampleUrl={exampleUrl} formLoading={loading} handleSubmit={onSubmit} setShowResult={setShowResult} fillMapping={fillMapping} defaults={defaults} resultBox={
+                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps}>
+                        {revisedTextList.map((text, index) => <>
+                            <Text b>{`Revision ${index + 1}: `}</Text>
+                            <Markdown>{text}</Markdown><ShowDiffBtn oldValue={initialValue} newValue={text}></ShowDiffBtn>
+                        </>)}
+                    </ResultBox>
+                }>
                     <Textarea id="textToRevise" name="textToRevise" fullWidth label="Text to revise" form="task-form" />
                     <Input id="numberOfRevisions" name="numberOfRevisions" type="number" min={0} fullWidth label="Number of revisions" placeholder="1" />
                     <Input id="revisionTypes" name="revisionTypes" fullWidth label="Revision types" placeholder="spelling, grammar, sentence structure, word choice, consistency, punctuation" />
@@ -107,12 +114,6 @@ const TextRevisor = () => {
                     }}/>
                     <Input id="creativity" name="creativity" type="number" min={0} fullWidth label="Creativity" placeholder="50" />
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform Command" />
-                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} template="text-revisor">
-                        {revisedTextList.map((text, index) => <>
-                            <Text b>{`Revision ${index + 1}: `}</Text>
-                            <Markdown>{text}</Markdown><ShowDiffBtn oldValue={initialValue} newValue={text}></ShowDiffBtn>
-                        </>)}
-                    </ResultBox>
                 </Template>
             </Layout>
         </>

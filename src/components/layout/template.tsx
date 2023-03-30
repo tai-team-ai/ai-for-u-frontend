@@ -48,29 +48,18 @@ interface ResultBoxProps {
     showResult: boolean
     loading: boolean
     responseProps: ResponseProps
-    template: string
 }
 
-export function ResultBox({ showResult, loading, responseProps, template, children }: PropsWithChildren<ResultBoxProps>) {
+export function ResultBox({ showResult, loading, responseProps, children }: PropsWithChildren<ResultBoxProps>) {
     return (
         <>
             {
-                showResult ?
+                showResult && !loading ?
                     <>
                         <div className={styles["result-box"]}>
-                            {loading ?
-                                <Loading
-                                    type="gradient"
-                                    css={{
-                                        display: "grid",
-                                        justifyContent: "center"
-                                    }}
-                                /> :
-                                <>
-                                    {children}
-                                </>}
+                            {children}
                         </div>
-                        {loading ? null : <RateResponse {...responseProps} />}
+                        <RateResponse {...responseProps} />
                     </> :
                     null
             }
@@ -87,11 +76,12 @@ interface TemplateProps {
     handleSubmit?: FormEventHandler | null
     formLoading?: boolean
     setShowResult?: Dispatch<SetStateAction<boolean>> | null
+    resultBox?: JSX.Element | null
     fillMapping?: {[name: string]: (v: any) => void} | null
     defaults?: [(a: any) => void, any][] | null;
 }
 
-export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, fillMapping = null, defaults = null}: TemplateProps) {
+export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, resultBox = null, fillMapping = null, defaults = null}: TemplateProps) {
     const { data: session } = useSession();
     const [examples, setExamples] = useState<ExampleObject[]>([]);
     const [loading, setLoading] = useState(false);
@@ -163,36 +153,45 @@ export default function Template({ isSandbox = false, children = null, exampleUr
         <Grid.Container gap={1} direction="row-reverse" css={{position: 'relative'}}>
             <Grid sm={9} xs={12}>
                 <section ref={sectionRef} className={`${styles["content"]} ${isSandbox ? styles['sandbox'] : ''}`}>
-                    {isSandbox ? null : <Link style={{ float: "right", color: "$colors$primary" }} href={routes.TEMPLATES}><Text span css={{color: "$colors$primary"}}>X</Text></Link>}
-                    <form id="task-form" className={styles['task-form']} onReset={(e) => { setShowResult ? setShowResult(false) : null }} onSubmit={(e) => handleSubmit ? handleSubmit(e) : e.preventDefault()}>
+                    <form
+                        id="task-form"
+                        className={styles['task-form']}
+                        onReset={(e) => {
+                            setShowResult ? setShowResult(false) : null;
+                            if(defaults) {
+                                defaults.forEach(([setValue, value]) => {
+                                    setValue(value);
+                                })
+                            }
+                        }}
+                        onSubmit={(e) => handleSubmit ? handleSubmit(e) : e.preventDefault()}
+                        >
                         {children}
 
                         {isSandbox ? null :
                             <>
-                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end" }}>
-                                    {
-                                        formLoading ?
-                                            null : <>
-                                                <Button
-                                                    auto
-                                                    light
-                                                    color="error"
-                                                    type="reset"
-                                                >
-                                                    Reset
-                                                </Button>
-                                                <Button
-                                                    auto
-                                                    flat
-                                                    type="submit"
-                                                >
-                                                    Submit
-                                                </Button>
-                                            </>
-                                    }
+                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", marginTop: "1em" }}>
+                                    <Button
+                                        auto
+                                        light
+                                        color="error"
+                                        type="reset"
+                                        disabled={formLoading}
+                                    >
+                                        Reset
+                                    </Button>
+                                    <Button
+                                        auto
+                                        flat
+                                        disabled={formLoading}
+                                        type="submit"
+                                    >
+                                        {formLoading ? <Loading type="points"/> : "Submit"}
+                                    </Button>
                                 </div>
                             </>}
                     </form>
+                    {resultBox}
                 </section>
             </Grid>
             <Grid sm={3} xs={12}>

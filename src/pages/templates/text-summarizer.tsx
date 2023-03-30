@@ -75,13 +75,8 @@ const TextSummarizer = () => {
                     setShowResult={setShowResult}
                     fillMapping={fillMapping}
                     // @ts-ignore
-                    defaults={defaults}>
-                    <Textarea id="textToSummarize" name="textToSummarize" fullWidth label="Text to summarize" form="task-form" />
-                    <Checkbox id="includeSummarySentence" name="includeSummarySentence" size="xs" color="primary" isSelected={includeSummarySentence} onChange={setIncludeSummarySentence} >Include summary sentence</Checkbox>
-                    <Input id="numberOfBullets" name="numberOfBullets" type="number" min={0} fullWidth label="Number of bullets" />
-                    <Input id="numberOfActionItems" name="numberOfActionItems" type="number" min={0} fullWidth label="Number of action items" />
-                    <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform command" />
-                    <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} template="text-summarizer">
+                    defaults={defaults}
+                    resultBox={<ResultBox showResult={showResult} loading={loading} responseProps={responseProps}>
                         <Text h3>Summary Sentence</Text>
                         <Markdown>{summarySentence}</Markdown>
                         <Text h3>Bullet Points</Text>
@@ -91,6 +86,14 @@ const TextSummarizer = () => {
                         <Text h3>Freeform Section</Text>
                         <Markdown>{freeformSection}</Markdown>
                     </ResultBox>
+                }>
+
+                    <Textarea id="textToSummarize" name="textToSummarize" fullWidth label="Text to summarize" form="task-form" />
+                    <Checkbox id="includeSummarySentence" name="includeSummarySentence" size="xs" color="primary" isSelected={includeSummarySentence} onChange={setIncludeSummarySentence} >Include summary sentence</Checkbox>
+                    <Input id="numberOfBullets" name="numberOfBullets" type="number" min={0} fullWidth label="Number of bullets" />
+                    <Input id="numberOfActionItems" name="numberOfActionItems" type="number" min={0} fullWidth label="Number of action items" />
+                    <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform command" />
+
                 </Template>
             </Layout>
         </>
