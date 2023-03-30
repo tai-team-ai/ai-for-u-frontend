@@ -49,22 +49,14 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
                     )}
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button
-                        auto
-                        light
-                        color="error"
-                        onPress={() => {setOpen(false)}}
-                    >
-                        Close
-                    </Button>
                     {
-
                     isSubscribed? null :
                     <Button
                         auto
                         flat
                         color="primary"
                         type="submit"
+                        disabled={isSubmitting}
                     >
                         {isSubmitting ? (
                             <Loading type="points" />
