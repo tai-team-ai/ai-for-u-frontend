@@ -161,7 +161,11 @@ const ChatGPT = () => {
                         {messages.map(((message) => <Message {...message} />))}
                         {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
                     </Card.Body>
-                    <Card.Footer>
+                    <Card.Footer
+                        css={{
+                            position: "relative"
+                        }}
+                    >
                         <Textarea
                             id="userMessage"
                             name="userMessage"
@@ -171,7 +175,9 @@ const ChatGPT = () => {
                             form="task-form"
                             placeholder="Type your message..."
                             css={{
-                                whiteSpace: "pre-wrap"
+                                whiteSpace: "pre-wrap",
+                                filter: "drop-shadow(0 0 4px rgba(0, 0, 0, 0.2))",
+                                margin: 0
                             }}
                             onKeyDown={(event) => {
                                 if (!event.shiftKey && event.key === "Enter") {
