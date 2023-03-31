@@ -35,10 +35,10 @@ const templates: TemplateObj[] = [
         comingSoon: false,
     },
     {
-        title: "Cover Letter",
+        title: "Cover Letter Writer",
         description: "Need to land that dream job but they require a cover letter?  Have no fear, AI is here.  Use this wonderful tool to help you craft the perfect cover letter so you can progress in your career.",
-        href: "/templates/catchy-title-creator",
-        comingSoon: true,
+        href: "/templates/cover-letter-writer",
+        comingSoon: false,
     },
     {
         title: "Many More Coming Soon",
