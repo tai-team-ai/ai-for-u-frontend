@@ -209,7 +209,7 @@ export default function Template({ isSandbox = false, children = null, exampleUr
                                             fillExample={fillExample}>
                                             {example.name}
                                         </Example>
-                                    }) : "Examples coming soon..."
+                                    }) : <Text span>Loading Examples <Loading type="points"/></Text>
                             }
                         </Grid.Container>
                     </div>
