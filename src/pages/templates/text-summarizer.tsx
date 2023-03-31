@@ -1,7 +1,8 @@
 import Template, { ResultBox } from "@/components/layout/template";
 import Layout from "@/components/layout/layout";
-
-import { Input, Textarea, Text, Checkbox } from "@nextui-org/react";
+import Input from "@/components/elements/Input";
+import Textarea from "@/components/elements/Textarea";
+import { Text, Checkbox } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import { uFetch } from "@/utils/http";
 import { useSession } from "next-auth/react";
