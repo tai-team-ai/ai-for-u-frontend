@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         `${process.env.API_URL}/ai-for-u/${task}`,
         {
             method: req.method,
-            body: JSON.stringify(req.body),
+            body: req.method === "POST"? JSON.stringify(req.body) : undefined,
             // @ts-ignore
             headers: {
                 ["uuid"]: req.headers["uuid"],

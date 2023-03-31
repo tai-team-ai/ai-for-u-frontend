@@ -2,7 +2,8 @@ import Template, { ResultBox } from "@/components/layout/template";
 import Layout from "@/components/layout/layout";
 import Input from "@/components/elements/Input"
 import Textarea from "@/components/elements/Textarea"
-import { Dropdown, Text } from "@nextui-org/react";
+import ToneDropdown, {ValidTones} from "@/components/elements/ToneDropdown";
+import { Text } from "@nextui-org/react";
 import { FormEvent, useState } from "react";
 import { uFetch } from "@/utils/http";
 import { useSession } from "next-auth/react";
@@ -12,29 +13,14 @@ import { ShowDiffBtn } from "@/components/elements/diffview";
 import { ResponseProps } from "@/components/modals/FeedbackModal";
 
 
-const toneItems = {
-    'friendly': 'Friendly',
-    'formal': "Formal",
-    'informal': "Informal",
-    'optimistic': "Optimistic",
-    'worried': "Worried",
-    'curious': "Curious",
-    'assertive': "Assertive",
-    'encouraging': "Encouraging",
-    'surprised': "Surprised",
-    'cooperative': "Cooperative",
-};
-
-type validTones = keyof typeof toneItems
-
 const TextRevisor = () => {
     const { data: session } = useSession();
     const [loading, setLoading] = useState(false);
     const [showResult, setShowResult] = useState(false);
     const [revisedTextList, setRevisedTextList] = useState<string[]>([]);
     const [initialValue, setInitialValue] = useState("");
-    const defaultTone = "friendly" as validTones;
-    const [selectedTone, setSelectedTone] = useState<validTones>(defaultTone);
+    const defaultTone = "friendly" as ValidTones;
+    const [selectedTone, setSelectedTone] = useState<ValidTones>(defaultTone);
     const [responseProps, setResponseProps] = useState<ResponseProps>({
         aiToolEndpointName: "",
         userPromptFeedbackContext: {},
@@ -94,25 +80,7 @@ const TextRevisor = () => {
                     <Textarea id="textToRevise" name="textToRevise" fullWidth label="Text to revise" form="task-form" />
                     <Input id="numberOfRevisions" name="numberOfRevisions" type="number" min={0} fullWidth label="Number of revisions" placeholder="1" />
                     <Input id="revisionTypes" name="revisionTypes" fullWidth label="Revision types" placeholder="spelling, grammar, sentence structure, word choice, consistency, punctuation" />
-                    <label style={{ display: "block" }} htmlFor="tone">Tone</label>
-                    <Dropdown>
-                        <Dropdown.Button flat id="tone">{toneItems[selectedTone]}</Dropdown.Button>
-                        <Dropdown.Menu
-                            disallowEmptySelection
-                            selectionMode="single"
-                            aria-label="Tone"
-                            selectedKeys={[selectedTone]}
-                            onSelectionChange={(t) => {
-                                setSelectedTone((t as any).currentKey as validTones)
-                        }}>
-                            {Object.entries(toneItems).map(([key, val]) => (
-                                <Dropdown.Item key={key}>{val}</Dropdown.Item>
-                            ))}
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    <input id="tone" name="tone" type="text" placeholder={defaultTone} hidden value={selectedTone} onChange={e => {
-                        setSelectedTone(e.currentTarget.value as validTones);
-                    }}/>
+                    <ToneDropdown selectedTone={selectedTone} setSelectedTone={setSelectedTone}/>
                     <Input id="creativity" name="creativity" type="number" min={0} fullWidth label="Creativity" placeholder="50" />
                     <Input id="freeformCommand" name="freeformCommand" type="text" fullWidth label="Freeform Command" />
                 </Template>
