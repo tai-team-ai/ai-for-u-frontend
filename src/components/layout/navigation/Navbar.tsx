@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from "react";
-import { Navbar, Button, Link, Text } from "@nextui-org/react";
+import { Navbar, Button, Link, Text, useModal } from "@nextui-org/react";
 import { constants, routes, errors } from "../../../utils/constants";
 import LoginModal from "../../modals/LoginModal";
 import { useSession, signOut } from "next-auth/react";
 import styles from '@/styles/Navbar.module.css';
 import { getUserID } from "@/utils/user";
 import { useRouter } from "next/router";
+import GoProModal from "@/components/modals/GoProModal";
 
 interface LoginButtonProps {
     onLogin: () => void
@@ -45,6 +46,7 @@ const NavBar = ({}: NavBarProps) => {
     const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
     const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false)
     const {data: session} = useSession();
+    const {setVisible: setShowGoProModal, bindings: goProBindings} = useModal();
     getUserID(session);
     const [error, setError] = useState("");
     const router = useRouter()
@@ -71,7 +73,7 @@ const NavBar = ({}: NavBarProps) => {
         isActive: templatesActive
     }, {
         text: "Go Pro",
-        href: "#",
+        onPress: () => setShowGoProModal(true),
         isActive: false
     }]
 
@@ -94,9 +96,15 @@ const NavBar = ({}: NavBarProps) => {
                     </Text>
                 </Navbar.Brand>
                 <Navbar.Content hideIn="sm">
-                    {navbarItems.map((nav, idx) => (
-                        <Navbar.Link key={idx} isActive={nav.isActive} href={nav.href}>{nav.text}</Navbar.Link>
-                    ))}
+                    {navbarItems.map((nav, idx) => {
+                            return (
+                                <Navbar.Link
+                                    key={idx}
+                                    isActive={nav.isActive}
+                                    href={nav.href}
+                                    onPress={nav.onPress}
+                                >{nav.text}</Navbar.Link>)
+                    })}
                 </Navbar.Content>
                 <Navbar.Content>
                     {session ? (
@@ -117,6 +125,7 @@ const NavBar = ({}: NavBarProps) => {
                                     minWidth: "100%",
                                 }}
                                 href={nav.href}
+                                onPress={nav.onPress}
                             >
                                 {nav.text}
                             </Link>
@@ -136,6 +145,7 @@ const NavBar = ({}: NavBarProps) => {
                 isSignUp={true}
                 error={error}
             />
+            <GoProModal bindings={goProBindings} />
         </React.Fragment>
     );
 }

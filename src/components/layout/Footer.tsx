@@ -5,6 +5,7 @@ import Link from "next/link";
 import styles from "@/styles/Footer.module.css";
 import { useSession } from "next-auth/react";
 import { joinMailingList } from "@/utils/endpoints";
+import SubscribeField from "../elements/SubscribeField";
 
 
 
@@ -32,32 +33,7 @@ const Footer = () => {
                             </ul>
                         </Grid>
                         <Grid xs={12} sm={12} md={6} lg={4} css={{ textAlign: "center" }}>
-                            {!isSubscribed ?
-                                <form id="subscribeForm" onSubmit={(e) => {
-                                    e.preventDefault();
-                                    if (!userEmail.current) {
-                                        return;
-                                    }
-                                    const email = userEmail.current.value;
-                                    joinMailingList({ session, email, setIsSubmitting, setIsSubscribed });
-                                }}>
-                                    <Input
-                                        id="mailing-email-input"
-                                        placeholder="Join our mailing list!"
-                                        type="email"
-                                        ref={userEmail}
-                                        contentRight={
-                                            <Button
-                                                type="submit"
-                                                auto
-                                                flat
-                                            >
-                                                {!isSubmitting ? "Subscribe" : <Loading type="points"></Loading>}
-                                            </Button>
-                                        } />
-                                </form> : <>
-                                    <Text>Thank you for subscribbing to our mailing list</Text>
-                                </>}
+                            <SubscribeField/>
                         </Grid>
                         <Grid>
                             <Image

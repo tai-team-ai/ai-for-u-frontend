@@ -106,7 +106,7 @@ const FeedbackModal = ({open, setOpen, aiResponseFeedbackContext, aiToolEndpoint
                             <Input
                             type="text"
                             label={rating < 5 ? "Tell us how the AI could improve" : "Amazing!🎉 What was great about it?"}
-                            onChange={(event) => {setWrittenFeedback(event.target.value)}}
+                            onChange={(event: any) => {setWrittenFeedback(event.target.value)}}
                         />
                     </Modal.Body>
                     <Modal.Footer>
