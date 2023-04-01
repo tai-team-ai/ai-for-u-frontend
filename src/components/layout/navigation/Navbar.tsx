@@ -125,6 +125,7 @@ const NavBar = ({}: NavBarProps) => {
                                     minWidth: "100%",
                                 }}
                                 href={nav.href}
+                                onPress={nav.onPress}
                             >
                                 {nav.text}
                             </Link>
