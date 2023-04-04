@@ -3,12 +3,13 @@ import { Props as NextUIInputProps } from "@nextui-org/react/types/input/input-p
 import InfoPopover from "./InfoPopover";
 
 
-declare type InputProps = NextUIInputProps & {
+declare type InputProps = Omit<NextUIInputProps, "label"> & {
     tooltip?: string;
+    label?: string | JSX.Element
 }
 
 
-const Input = ({tooltip="", label, type, ...props}: InputProps) => {
+const Input = ({tooltip="", label, ...props}: InputProps) => {
     const finalLabel = <Text span>{label}<InfoPopover text={tooltip}/></Text>;
     return (
     <NextUIInput fullwidth {...props} label={finalLabel}/>

@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Dispatch, FormEventHandler, PropsWithChildren, SetStateAction, useEffect, useRef, useState } from 'react'
 import { getExamples } from '@/utils/user'
 import { RateResponse, ResponseProps } from '../modals/FeedbackModal'
+import { State} from "@/components/elements/TemplateForm";
 
 
 
@@ -79,9 +80,10 @@ interface TemplateProps {
     resultBox?: JSX.Element | null
     fillMapping?: {[name: string]: (v: any) => void} | null
     defaults?: [(a: any) => void, any][] | null;
+    state?: {[key: string]: State}|null
 }
 
-export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, resultBox = null, fillMapping = null, defaults = null}: TemplateProps) {
+export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, resultBox = null, fillMapping = null, defaults = null, state = null}: TemplateProps) {
     const { data: session } = useSession();
     const [examples, setExamples] = useState<ExampleObject[]>([]);
     const [loading, setLoading] = useState(false);
@@ -118,6 +120,9 @@ export default function Template({ isSandbox = false, children = null, exampleUr
                 if(fillMapping && typeof fillMapping[key] !== "undefined") {
                     fillMapping[key](example[key]);
                 }
+                if(state) {
+                    state[key].setValue(example[key]);
+                }
             }
         }
     }
@@ -153,44 +158,7 @@ export default function Template({ isSandbox = false, children = null, exampleUr
         <Grid.Container gap={1} direction="row-reverse" css={{position: 'relative'}}>
             <Grid sm={9} xs={12}>
                 <section ref={sectionRef} className={`${styles["content"]} ${isSandbox ? styles['sandbox'] : ''}`}>
-                    <form
-                        id="task-form"
-                        className={styles['task-form']}
-                        onReset={(e) => {
-                            setShowResult ? setShowResult(false) : null;
-                            if(defaults) {
-                                defaults.forEach(([setValue, value]) => {
-                                    setValue(value);
-                                })
-                            }
-                        }}
-                        onSubmit={(e) => handleSubmit ? handleSubmit(e) : e.preventDefault()}
-                        >
-                        {children}
-
-                        {isSandbox ? null :
-                            <>
-                                <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", marginTop: "1em" }}>
-                                    <Button
-                                        auto
-                                        light
-                                        color="error"
-                                        type="reset"
-                                        disabled={formLoading}
-                                    >
-                                        Reset
-                                    </Button>
-                                    <Button
-                                        auto
-                                        flat
-                                        disabled={formLoading}
-                                        type="submit"
-                                    >
-                                        {formLoading ? <Loading type="points"/> : "Submit"}
-                                    </Button>
-                                </div>
-                            </>}
-                    </form>
+                    {children}
                     {resultBox}
                 </section>
             </Grid>
