@@ -3,7 +3,6 @@ import Layout from "@/components/layout/layout";
 import Template from "@/components/layout/template";
 
 import TemplateForm, {State, Reset} from "@/components/elements/TemplateForm"
-import { getProps } from "@/utils/props";
 import SwaggerParser from "swagger-parser";
 
 
