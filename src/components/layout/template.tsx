@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { Dispatch, FormEventHandler, PropsWithChildren, SetStateAction, useEffect, useRef, useState } from 'react'
 import { getExamples } from '@/utils/user'
 import { RateResponse, ResponseProps } from '../modals/FeedbackModal'
-import { State} from "@/components/elements/TemplateForm";
+import { Reset, State} from "@/components/elements/TemplateForm";
 
 
 
@@ -80,10 +80,10 @@ interface TemplateProps {
     resultBox?: JSX.Element | null
     fillMapping?: {[name: string]: (v: any) => void} | null
     defaults?: [(a: any) => void, any][] | null;
-    state?: {[key: string]: State}|null
+    resets?: {[key: string]: Reset}|null
 }
 
-export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, resultBox = null, fillMapping = null, defaults = null, state = null}: TemplateProps) {
+export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, resultBox = null, fillMapping = null, defaults = null, resets = null}: TemplateProps) {
     const { data: session } = useSession();
     const [examples, setExamples] = useState<ExampleObject[]>([]);
     const [loading, setLoading] = useState(false);
@@ -108,21 +108,25 @@ export default function Template({ isSandbox = false, children = null, exampleUr
     if (!fillExample) {
         fillExample = (example) => {
             for (const key of Object.keys(example)) {
-                let target: HTMLInputElement | null = document.querySelector(`input[name=${key}],textarea[name=${key}],select[name=${key}]`);
-                if (target) {
-                    if (example.hasOwnProperty(key)) {
-                        target.value = example[key];
-                        if (typeof example[key] === "boolean") {
-                            target.checked = example[key];
-                        }
+                const target: HTMLInputElement|null = document.querySelector(`input#${key},textarea#${key}`);
+                if(target) {
+                    if (target.type === "checkbox" && target.checked !== example[key]) {
+                        target.click();
+                    }
+                    target.value = example[key];
+                }
+
+                if(resets && typeof resets[key] !== "undefined") {
+                    if(typeof example[key] === "string") {
+                        resets[key].setValue([example[key]]);
+                    }
+                    else {
+                        resets[key].setValue(example[key]);
                     }
                 }
-                if(fillMapping && typeof fillMapping[key] !== "undefined") {
-                    fillMapping[key](example[key]);
-                }
-                if(state) {
-                    state[key].setValue(example[key]);
-                }
+                // if(state) {
+                //     state[key].setValue(example[key]);
+                // }
             }
         }
     }

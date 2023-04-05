@@ -126,7 +126,15 @@ const ChatGPT = () => {
         <Layout>
             <Template
                 isSandbox={true}
-                handleSubmit={(e) => {
+                exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples"
+                fillExample={(e) => {
+                    const textfield: HTMLTextAreaElement | null = document.querySelector("#userMessage");
+                    if (textfield) {
+                        textfield.value = e;
+                    }
+                }}
+            >
+                <form id="task-form" onSubmit={(e) => {
                     e.preventDefault();
                     // @ts-ignore
                     const userMessage = e.target.userMessage.value;
@@ -147,15 +155,7 @@ const ChatGPT = () => {
                             setMessages([...messages]);
                             setLoading(false);
                         })
-                }}
-                exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples"
-                fillExample={(e) => {
-                    const textfield: HTMLTextAreaElement | null = document.querySelector("#userMessage");
-                    if (textfield) {
-                        textfield.value = e;
-                    }
-                }}
-            >
+                }}>
                 <Card>
                     <Card.Body>
                         {messages.map(((message) => <Message {...message} />))}
@@ -179,7 +179,7 @@ const ChatGPT = () => {
                                 filter: "drop-shadow(0 0 4px rgba(0, 0, 0, 0.2))",
                                 margin: 0
                             }}
-                            onKeyDown={(event) => {
+                            onKeyDown={(event: any) => {
                                 if (!event.shiftKey && event.key === "Enter") {
                                     event.preventDefault();
                                     const form: HTMLFormElement | null = document.querySelector("#task-form");
@@ -199,6 +199,7 @@ const ChatGPT = () => {
                         </Button>
                     </Card.Footer>
                 </Card>
+                </form>
             </Template>
         </Layout>
     </>)

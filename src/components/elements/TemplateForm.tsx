@@ -1,10 +1,15 @@
 import Input from "./Input";
 import Textarea from "./Textarea";
 import Dropdown from "./Dropdown";
-import { Checkbox, Button } from "@nextui-org/react";
+import { Checkbox, Button, Loading, Text } from "@nextui-org/react";
 
-import { ChangeEvent, useState } from "react";
-
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { uFetch } from "@/utils/http";
+import { useSession } from "next-auth/react";
+import { ResponseProps } from "../modals/FeedbackModal";
+import { ResultBox } from "../layout/template";
+import Markdown from "markdown-to-jsx";
+import { ShowDiffBtn } from "./diffview";
 
 const camelToTitle = (camel: string) => {
     const reuslt = camel.replace(/([A-Z])/g, " $1");
@@ -12,201 +17,223 @@ const camelToTitle = (camel: string) => {
 }
 
 const defaultType = (type: string) => {
-    if( type === "string") {
+    if (type === "string") {
         return "";
     }
-    if( type === "integer") {
+    if (type === "integer") {
         return 0;
     }
     if (type === "array") {
         return [];
     }
-    if(type === "boolean") {
+    if (type === "boolean") {
         return false;
     }
 }
 
 export declare type State = {
-    value: any
-    setValue: (v:any) => void;
-    defaultValue: any
-    initialValue: any
+    setValue: (v: any) => void;
 }
 
 declare type TemplateFormProps = {
+    task: string;
     properties: any;
     requiredList: string[];
-    state: {[key: string]: State}
+    resets: { [key: string]: Reset }
+    dataToChildren?: ((v: any) => JSX.Element) | null;
 }
 
-const TemplateForm = ({properties, requiredList, state}: TemplateFormProps) => {
-    return (
-        <>
-        {Object.entries(properties).map(([title, property]: any) => {
-        const required = requiredList.includes(title);
-        const labelValue = camelToTitle(title);
-        const label = <>
-            <span>{labelValue}<span style={{color: "red"}}>{required ? "*" : ""}</span></span>
-        </>;
-        let placeholder = "";
-        if(typeof property.default !== "undefined") {
-            placeholder = property.default;
-        }
-        if(Array.isArray(placeholder)) {
-            placeholder = placeholder.join(", ");
-        }
+declare type ResultChildrenProps = {
+    task: string;
+    data: any;
+    body: any;
+}
 
-        const defaultValue = defaultType(property.type);
+const ResultChildren = ({ task, data, body }: ResultChildrenProps) => {
+    if (task === "text-revisor") {
+        return <>
+            {data.revisedTextList.map((text: string, index: number) => <>
+                <Text b>{`Revision ${index + 1}: `}</Text>
+                <Markdown>{text}</Markdown>
+                <ShowDiffBtn oldValue={body.textToRevise} newValue={text} />
+            </>)}
+        </>
+    }
+    else if (task === "catchy-title-creator") {
+        return <>
+            <Text h3>Titles</Text>
+            <ul>
+                {data.titles.map((title: string) => {
+                    return <>
+                        <li><Markdown>{title}</Markdown></li>
+                    </>
+                })}
+            </ul>
+        </>
+    }
+    else if(task === "cover-letter-writer") {
+        return <>
+            <Markdown>{data.coverLetter}</Markdown>
+        </>
+    }
+    else {
+        return <>
+            <Markdown>{JSON.stringify(data)}</Markdown>
+        </>
+    }
+}
 
-        const [value, setValue] = useState(placeholder);
-        const initialValue = placeholder;
-        state[title] = {value, setValue, defaultValue, initialValue};
-        const handleChange = function(e: ChangeEvent|boolean, cast: (v:any)=>void=String) {
-            if(typeof e === "boolean") {
-                state[title].setValue(e);
-            }
-            else {
-                // @ts-ignore
-                state[title].setValue(cast(e.target.value));
-            }
-        }
+const jsonTypeToInputType = (jsonType: string) => {
+    if(jsonType === "string") {
+        return "text";
+    }
+    else if(jsonType === "integer") {
+        return "number";
+    }
+    return undefined;
+}
 
-        if (typeof property.allOf !== "undefined") {
-            const validSelection = Object.fromEntries(property.allOf[0].enum.map((value: string) => {
-                return [value, value.charAt(0).toUpperCase() + value.slice(1)];
-            }));
+export declare type Reset = {
+    value: any;
+    setValue: (v: any) => void;
+    default: any;
+}
 
-            return <Dropdown
-                selectionMode="single"
-                value={state[title].value}
-                setValue={state[title].setValue}
-                validSelections={validSelection}
-                id={title}
-                label={label}
-                placeholder={placeholder as string}
-            />
-        }
-        if (property.type === "string") {
-            if(typeof property.maxLength === "undefined" || property.maxLength > 200) {
-                return (
-                <Textarea
-                    id={title}
-                    name={title}
-                    fullWidth
-                    maxLength={property.maxLength}
-                    label={label}
-                    required={required}
-                    placeholder={placeholder}
-                    onChange={handleChange}
-                />)
-            }
-            else {
-                return (
-                <Input
-                    fullWidth
-                    id={title}
-                    name={title}
-                    maxLength={property.maxLength}
-                    label={label}
-                    required={required}
-                    placeholder={placeholder}
-                    onChange={handleChange}
-                />);
-            }
-        }
-        if(property.type === "integer") {
-            const min = typeof property.minimum === "undefined" ? 0 : property.minimum;
-            return (
-                <Input
-                    fullWidth
-                    id={title}
-                    name={title}
-                    type="number"
-                    min={min}
-                    max={property.maximum}
-                    required={required}
-                    label={label}
-                    placeholder={placeholder}
-                    onChange={(e: ChangeEvent) => handleChange(e, Number)}
-                />
-            )
-        }
-        if(property.type === "boolean") {
-            return (
-                <Checkbox
-                    id={title}
-                    name={title}
-                    size="xs"
-                    color="primary"
-                    // @ts-ignore
-                    label={label}
-                    onChange={(e: boolean) => handleChange(e, Boolean)}
-                />
-            )
-        }
-        if(property.type === "array") {
-            if(typeof property.items.enum === "undefined") {
-                return (
-                <Input
-                    fullWidth
-                    id={title}
-                    name={title}
-                    maxLength={property.maxLength}
-                    label={label}
-                    required={required}
-                    placeholder={placeholder}
-                    onChange={handleChange}
-                />);
-            }
-            else {
-                const validSelection = Object.fromEntries(property.items.enum.map((value: string) => {
-                    return [value, value.charAt(0).toUpperCase() + value.slice(1)];
-                }));
-                return <Dropdown
-                    selectionMode="multiple"
-                    value={state[title].value}
-                    setValue={state[title].setValue}
-                    validSelections={validSelection}
-                    id={title}
-                    label={label}
-                    placeholder={placeholder as string}
-                />;
-            }
-        }
-    })}
-    <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", marginTop: "1em" }}>
-        <Button
-            light
-            color="error"
-            onPress={(e) => {
-                Object.entries(state).forEach(([key, {value, setValue, defaultValue, initialValue}]) => {
-                    setValue(initialValue);
-                    const element: HTMLInputElement|null = document.querySelector(`input#${key},textarea#${key}`);
-                    if(element) {
-                        element.value = defaultValue;
+const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormProps) => {
 
-                        if (element.type === "checkbox") {
-                            setValue(defaultValue);
+    const { data: session } = useSession();
+    const [loading, setLoading] = useState<boolean>(false);
+    const [showResult, setShowResult] = useState<boolean>(false);
+    const [responseProps, setResponseProps] = useState<ResponseProps>({
+        aiToolEndpointName: "",
+        userPromptFeedbackContext: {},
+        aiResponseFeedbackContext: {},
+    });
+    const [children, setChildren] = useState<JSX.Element>(<></>)
+
+
+    const transforms: {[key: string]: (v: any) => any} = {};
+
+    return (<>
+        <form
+            onSubmit={
+                (e) => {
+                    e.preventDefault();
+                    setLoading(true);
+                    const formData = new FormData(e.target as HTMLFormElement);
+                    const body = Object.fromEntries(Array.from(formData.entries()).map(([key, val]: any) => [key, transforms[key](val)]))
+
+                    uFetch(
+                        `/api/ai-for-u/${task}`,
+                        {
+                            session,
+                            method: "POST",
+                            body: JSON.stringify(body)
                         }
-
-                        if(element.checked !== defaultValue) {
-                            element.click();
+                    ).then(async response => {
+                        if(response.status === 200) {
+                            return response.json();
                         }
+                        else {
+                            throw await response.text()
+                        }
+                    }).then(data => {
+                        setResponseProps({aiResponseFeedbackContext: data,aiToolEndpointName: task, userPromptFeedbackContext: body})
+                        setChildren(<ResultChildren body={body} data={data} task={task}/>)
+                        setLoading(false);
+                        setShowResult(true);
+                    }).catch(reason => {
+                        setLoading(false);
+                        setShowResult(true);
+                    })
+                }
+            }
+            onReset={
+                (e) => {
+                    const checkboxes: NodeListOf<HTMLInputElement> = e.currentTarget.querySelectorAll("input[type=checkbox]");
+                    checkboxes.forEach((box) => {
+                        if(box.checked) {
+                            box.click();
+                        }
+                    })
+                    for(const reset of Object.values(resets)) {
+                        reset.setValue(reset.default);
                     }
-                });
-            }}
-        >Reset</Button>
-        <Button
-            flat
-            onPress={(e) => {
-                const body = Object.fromEntries(Object.entries(state).map(([key, {value, setValue, defaultValue}]) => {
-                    return [key, value];
-                }));
-                alert(JSON.stringify(body));
-            }}>Submit
-        </Button>
-    </div>
-    </>);
+                    setShowResult(false);
+                }
+            }
+        >
+            {
+                Object.entries(properties).map(([title, property]: any) => {
+                    const required = requiredList.includes(title);
+                    const labelValue = camelToTitle(title);
+                    const label = <>
+                        <span>{labelValue}<span style={{ color: "red" }}>{required ? "*" : ""}</span></span>
+                    </>;
+                    const inputProps = {
+                        required:required,
+                        name:title,
+                        id: title,
+                        type:jsonTypeToInputType(property.type),
+                        fullWidth: true,
+                        minLength:property.minLength,
+                        maxLength:property.maxLength,
+                        min:property.minimum | 0,
+                        max:property.maximum,
+                        label:label,
+                    }
+                    if(property.type === "string") {
+                        transforms[title] = String;
+                        if(typeof property.maxLength != "undefined" && property.maxLength <= 200) {
+                            return <Input  {...inputProps}/>
+                        }
+                        return <Textarea {...inputProps}/>
+                    }
+                    if(property.type === "integer") {
+                        transforms[title] = Number;
+                        return <Input {...inputProps}/>
+                    }
+                    if(property.type === "boolean") {
+                        transforms[title] = Boolean;
+                        // @ts-ignore
+                        return <Checkbox size="sm" {...inputProps}/>
+                    }
+                    const dropdownProps = {
+                        id:title,
+                        name:title,
+                        label:label,
+                    }
+                    if(typeof property.allOf !== "undefined") {
+                        transforms[title] = String;
+                        const [selected, setSelected] = useState([property.default]);
+                        resets[title] = {value: selected, setValue: setSelected, default: [property.default]}
+                        return <Dropdown {...dropdownProps} validSelections={property.allOf[0].enum} selectionMode="single" selected={selected} setSelected={setSelected}/>
+                    }
+                    if(property.type === "array" && typeof property.items.enum !== "undefined") {
+                        transforms[title] = v => v.split(", ");
+                        const [selected, setSelected] = useState(property.default);
+                        resets[title] = {value: selected, setValue: setSelected, default: property.default}
+                        return <Dropdown {...dropdownProps} validSelections={property.items.enum} selectionMode="multiple" selected={selected} setSelected={setSelected}/>
+                    }
+                })
+            }
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "flex-end", marginTop: "1em" }}>
+                <Button
+                    light
+                    color="error"
+                    type="reset"
+                >Reset</Button>
+                <Button
+                    flat
+                    type="submit"
+                    disabled={loading}
+                >{loading ? <Loading type="points" /> : "Submit"}
+                </Button>
+            </div>
+            <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} >
+                {children}
+            </ResultBox>
+        </form></>);
 }
 
 export default TemplateForm
