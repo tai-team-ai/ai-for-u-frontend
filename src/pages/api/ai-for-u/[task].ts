@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { getToken } from "next-auth/jwt";
 
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -7,17 +8,21 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return;
     }
     const {task} = req.query;
+    const token = await getToken({req, raw: true});
     const response = await fetch(
         `${process.env.API_URL}/ai-for-u/${task}`,
         {
             method: req.method,
-            body: req.method === "POST"? JSON.stringify(req.body) : undefined,
-            // @ts-ignore
+            body: req.method === "POST" ? JSON.stringify(req.body) : undefined,
+            //@ts-ignore
             headers: {
-                ["uuid"]: req.headers["uuid"],
+                ["token"]: token ? token : undefined,
                 ["Content-Type"]: "application/json",
-                ["Token"]: req.cookies["next-auth.csrf-token"],
-            }})
-    const body = await response.json();
+                ["uuid"]: req.headers["uuid"],
+            }
+        }
+    );
+    const body = await response.text();
+    console.log(body)
     res.status(response.status).json(body);
 }
