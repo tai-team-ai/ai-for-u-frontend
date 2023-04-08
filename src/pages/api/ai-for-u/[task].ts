@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { getToken } from "next-auth/jwt";
 
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
@@ -6,13 +7,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(500);
         return;
     }
-    const {task} = req.query;
+    const { task } = req.query;
     let statusCode = 200;
     fetch(
         `${process.env.API_URL}/ai-for-u/${task}`,
         {
             method: req.method,
-            body: req.method==="POST" ? JSON.stringify(req.body) : undefined,
+            body: req.method === "POST" ? JSON.stringify(req.body) : undefined,
             // @ts-ignore
             headers: {
                 ["uuid"]: req.headers["uuid"],
@@ -21,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
     ).then(async response => {
         statusCode = response.status;
-        if(response.status === 200) {
+        if (response.status === 200) {
             return response.json();
         }
         throw await response.text();
@@ -29,6 +30,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(statusCode).json(data);
     }).catch((reason) => {
         console.log(reason);
-        res.status(statusCode).json({message: reason});
+        res.status(statusCode).json({ message: reason });
     });
 }

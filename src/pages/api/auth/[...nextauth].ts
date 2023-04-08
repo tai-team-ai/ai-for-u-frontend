@@ -1,33 +1,33 @@
 import NextAuth, { AuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
+import { DynamoDB, DynamoDBClientConfig } from "@aws-sdk/client-dynamodb"
+import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb"
 
-import useDynamoDBClient, { authorizeUser, getUserByEmail, putNewUser } from '@/adapters/dynamodb'
 import { DynamoDBAdapter } from '@next-auth/dynamodb-adapter'
 import { NextApiRequest, NextApiResponse } from 'next'
+import bcrypt from 'bcrypt'
+import { useDynamoDBAdapter } from '@/adapters/dynamodb'
 
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+    const adapter = useDynamoDBAdapter();
     const authOptions: AuthOptions = {
-        adapter: DynamoDBAdapter(useDynamoDBClient()),
+        adapter: adapter,
         session: {
             strategy: "jwt"
         },
-        callbacks: {
-            session: async ({ session, token }) => {
-                if (typeof session.user !== "undefined" && typeof token.sub !== "undefined") {
-                    session.user.id = token.sub;
-                }
-                return session;
-            },
+        events: {
+            signIn(message) {
+                console.log("#### SIGN IN @@@@@");
+                console.log(message)
+            }
         },
         providers: [
             // OAuth authentication providers...
             GoogleProvider({
-                // @ts-ignore
-                clientId: process.env.GOOGLE_ID,
-                // @ts-ignore
-                clientSecret: process.env.GOOGLE_SECRET,
+                clientId: process.env.GOOGLE_ID as string,
+                clientSecret: process.env.GOOGLE_SECRET as string,
             }),
             CredentialsProvider({
                 name: "Credentials",
@@ -39,7 +39,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     if (typeof credentials === "undefined") {
                         return null;
                     }
-                    return authorizeUser(credentials);
+                    const {email, password} = credentials;
+                    const user: any = await adapter.getUserByEmail(email);
+                    if(user) {
+                        if(bcrypt.compareSync(password, user.password)) {
+                            return { id: user.id, name: email, email: email };
+                        }
+                    }
+                    return null;
                 }
             }),
         ],
@@ -49,6 +56,3 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     return NextAuth(req, res, authOptions);
 }
-
-
-// export default NextAuth(authOptions);

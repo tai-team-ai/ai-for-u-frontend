@@ -152,29 +152,29 @@ const ChatGPT = () => {
                         uFetch("/api/ai-for-u/sandbox-chatgpt", {
                             session, method: "POST", body: JSON.stringify(request)
                         }).then(response => {
-                            if(response.status === 200) {
+                            if (response.status === 200) {
                                 return response.json()
                             }
                             throw "There was an error processing your request.";
                         })
-                        .then(response => {
-                            messages.push({
-                                request,
-                                response,
-                            });
-                            setMessages([...messages]);
-                            setLoading(false);
-                        }).catch(reason => {
-                            messages.push({
-                                request,
-                                response: {gptResponse: reason},
+                            .then(response => {
+                                messages.push({
+                                    request,
+                                    response,
+                                });
+                                setMessages([...messages]);
+                                setLoading(false);
+                            }).catch(reason => {
+                                messages.push({
+                                    request,
+                                    response: { gptResponse: reason },
+                                })
+                                setMessages([...messages]);
+                                setLoading(false);
                             })
-                            setMessages([...messages]);
-                            setLoading(false);
-                        })
                     }}
                 >
-                    <Card css={{height: "100%"}}>
+                    <Card css={{ height: "100%" }}>
                         <Card.Body>
                             {messages.map(((message) => <Message {...message} />))}
                             {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
