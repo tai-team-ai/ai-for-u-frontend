@@ -179,7 +179,7 @@ const ChatGPT = () => {
                                 filter: "drop-shadow(0 0 4px rgba(0, 0, 0, 0.2))",
                                 margin: 0
                             }}
-                            onKeyDown={(event) => {
+                            onKeyDown={(event: KeyboardEvent) => {
                                 if (!event.shiftKey && event.key === "Enter") {
                                     event.preventDefault();
                                     const form: HTMLFormElement | null = document.querySelector("#task-form");
