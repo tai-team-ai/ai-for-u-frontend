@@ -7,22 +7,29 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(500);
         return;
     }
-    const {task} = req.query;
-    const token = await getToken({req, raw: true});
-    const response = await fetch(
+    const { task } = req.query;
+    let statusCode = 200;
+    fetch(
         `${process.env.API_URL}/ai-for-u/${task}`,
         {
             method: req.method,
             body: req.method === "POST" ? JSON.stringify(req.body) : undefined,
-            //@ts-ignore
+            // @ts-ignore
             headers: {
-                ["token"]: token ? token : undefined,
-                ["Content-Type"]: "application/json",
                 ["uuid"]: req.headers["uuid"],
+                ["Content-Type"]: "application/json"
             }
         }
-    );
-    const body = await response.text();
-    console.log(body)
-    res.status(response.status).json(body);
+    ).then(async response => {
+        statusCode = response.status;
+        if (response.status === 200) {
+            return response.json();
+        }
+        throw await response.text();
+    }).then(data => {
+        res.status(statusCode).json(data);
+    }).catch((reason) => {
+        console.log(reason);
+        res.status(statusCode).json({ message: reason });
+    });
 }

@@ -126,28 +126,6 @@ const ChatGPT = () => {
         <Layout>
             <Template
                 isSandbox={true}
-                handleSubmit={(e) => {
-                    e.preventDefault();
-                    // @ts-ignore
-                    const userMessage = e.target.userMessage.value;
-                    // @ts-ignore
-                    e.target.userMessage.value = "";
-                    const request = { conversationUuid, userMessage };
-                    messages.push({ request });
-                    setMessages([...messages]);
-                    setLoading(true);
-                    uFetch("/api/ai-for-u/sandbox-chatgpt", {
-                        session, method: "POST", body: JSON.stringify(request)
-                    }).then(response => response.json())
-                        .then(response => {
-                            messages.push({
-                                request,
-                                response,
-                            });
-                            setMessages([...messages]);
-                            setLoading(false);
-                        })
-                }}
                 exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples"
                 fillExample={(e) => {
                     const textfield: HTMLTextAreaElement | null = document.querySelector("#userMessage");
@@ -156,49 +134,90 @@ const ChatGPT = () => {
                     }
                 }}
             >
-                <Card>
-                    <Card.Body>
-                        {messages.map(((message) => <Message {...message} />))}
-                        {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
-                    </Card.Body>
-                    <Card.Footer
-                        css={{
-                            position: "relative"
-                        }}
-                    >
-                        <Textarea
-                            id="userMessage"
-                            name="userMessage"
-                            minRows={1}
-                            maxRows={4}
-                            fullWidth
-                            form="task-form"
-                            placeholder="Type your message..."
+                <form
+                    id="task-form"
+                    style={{
+                        height: "100%"
+                    }}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        // @ts-ignore
+                        const userMessage = e.target.userMessage.value;
+                        // @ts-ignore
+                        e.target.userMessage.value = "";
+                        const request = { conversationUuid, userMessage };
+                        messages.push({ request });
+                        setMessages([...messages]);
+                        setLoading(true);
+                        uFetch("/api/ai-for-u/sandbox-chatgpt", {
+                            session, method: "POST", body: JSON.stringify(request)
+                        }).then(response => {
+                            if (response.status === 200) {
+                                return response.json()
+                            }
+                            throw "There was an error processing your request.";
+                        })
+                            .then(response => {
+                                messages.push({
+                                    request,
+                                    response,
+                                });
+                                setMessages([...messages]);
+                                setLoading(false);
+                            }).catch(reason => {
+                                messages.push({
+                                    request,
+                                    response: { gptResponse: reason },
+                                })
+                                setMessages([...messages]);
+                                setLoading(false);
+                            })
+                    }}
+                >
+                    <Card css={{ height: "100%" }}>
+                        <Card.Body>
+                            {messages.map(((message) => <Message {...message} />))}
+                            {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
+                        </Card.Body>
+                        <Card.Footer
                             css={{
-                                whiteSpace: "pre-wrap",
-                                filter: "drop-shadow(0 0 4px rgba(0, 0, 0, 0.2))",
-                                margin: 0
+                                position: "relative"
                             }}
-                            onKeyDown={(event: KeyboardEvent) => {
-                                if (!event.shiftKey && event.key === "Enter") {
-                                    event.preventDefault();
-                                    const form: HTMLFormElement | null = document.querySelector("#task-form");
-                                    if (form) {
-                                        form.requestSubmit();
-                                    }
-                                }
-                            }}
-                        />
-                        <Button
-                            size="sm"
-                            auto
-                            className={styles['send-button']}
-                            type="submit"
                         >
-                            <SendIcon shapeRendering='rounded' />
-                        </Button>
-                    </Card.Footer>
-                </Card>
+                            <Textarea
+                                id="userMessage"
+                                name="userMessage"
+                                minRows={1}
+                                maxRows={4}
+                                fullWidth
+                                form="task-form"
+                                placeholder="Type your message..."
+                                css={{
+                                    whiteSpace: "pre-wrap",
+                                    filter: "drop-shadow(0 0 4px rgba(0, 0, 0, 0.2))",
+                                    margin: 0
+                                }}
+                                onKeyDown={(event: any) => {
+                                    if (!event.shiftKey && event.key === "Enter") {
+                                        event.preventDefault();
+                                        const form: HTMLFormElement | null = document.querySelector("#task-form");
+                                        if (form) {
+                                            form.requestSubmit();
+                                        }
+                                    }
+                                }}
+                            />
+                            <Button
+                                size="sm"
+                                auto
+                                className={styles['send-button']}
+                                type="submit"
+                            >
+                                <SendIcon shapeRendering='rounded' />
+                            </Button>
+                        </Card.Footer>
+                    </Card>
+                </form>
             </Template>
         </Layout>
     </>)
