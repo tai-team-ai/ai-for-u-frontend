@@ -10,6 +10,7 @@ import { RateResponse } from '@/components/modals/FeedbackModal';
 import { getInitialChat } from '@/utils/user';
 import { useSession } from 'next-auth/react';
 import Markdown from "markdown-to-jsx"
+import { showSnackbar } from '@/components/elements/Snackbar';
 
 
 interface RequestBody {
@@ -99,22 +100,26 @@ const ChatGPT = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const conversationUuid = getConversationUuid();
 
-    if (messages.length === 0) {
-        getInitialChat(session).then(gptResponse => {
-            if (messages.length === 0) {
-                messages.push({
-                    request: {
-                        conversationUuid: conversationUuid,
-                        userMessage: "",
-                    },
-                    response: {
-                        gptResponse,
-                    }
-                })
-                setMessages([...messages]);
-            }
-        })
-    }
+    useEffect(() => {
+        if (messages.length === 0) {
+            setLoading(true);
+            getInitialChat(session).then(gptResponse => {
+                if (messages.length === 0) {
+                    messages.push({
+                        request: {
+                            conversationUuid: conversationUuid,
+                            userMessage: "",
+                        },
+                        response: {
+                            gptResponse,
+                        }
+                    })
+                    setMessages([...messages]);
+                    setLoading(false);
+                }
+            })
+        }
+    })
 
     useEffect(() => {
         const els = document.getElementsByClassName('message')
@@ -139,7 +144,7 @@ const ChatGPT = () => {
                     style={{
                         height: "100%"
                     }}
-                    onSubmit={(e) => {
+                    onSubmit={async (e) => {
                         e.preventDefault();
                         // @ts-ignore
                         const userMessage = e.target.userMessage.value;
@@ -149,29 +154,26 @@ const ChatGPT = () => {
                         messages.push({ request });
                         setMessages([...messages]);
                         setLoading(true);
-                        uFetch("/api/ai-for-u/sandbox-chatgpt", {
-                            session, method: "POST", body: JSON.stringify(request)
-                        }).then(response => {
-                            if (response.status === 200) {
-                                return response.json()
-                            }
-                            throw "There was an error processing your request.";
-                        })
-                            .then(response => {
-                                messages.push({
-                                    request,
-                                    response,
-                                });
-                                setMessages([...messages]);
-                                setLoading(false);
-                            }).catch(reason => {
-                                messages.push({
-                                    request,
-                                    response: { gptResponse: reason },
-                                })
-                                setMessages([...messages]);
-                                setLoading(false);
-                            })
+                        const response = await uFetch("/api/ai-for-u/sandbox-chatgpt", { session, method: "POST", body: JSON.stringify(request) });
+                        if (response.status === 200) {
+                            const data = await response.json();
+                            messages.push({
+                                request,
+                                response: data
+                            });
+                            setMessages([...messages]);
+                            setLoading(false);
+                        }
+                        else if (response.status === 429) {
+                            const data = await response.json();
+                            showSnackbar(data.message);
+                            setLoading(false);
+                        }
+                        else {
+                            const data = await response.text();
+                            showSnackbar(data);
+                            setLoading(false);
+                        }
                     }}
                 >
                     <Card css={{ height: "100%" }}>
