@@ -10,6 +10,7 @@ import { ResponseProps } from "../modals/FeedbackModal";
 import { ResultBox } from "../layout/template";
 import Markdown from "markdown-to-jsx";
 import { ShowDiffBtn } from "./diffview";
+import { showSnackbar } from "./Snackbar";
 
 const camelToTitle = (camel: string) => {
     const reuslt = camel.replace(/([A-Z])/g, " $1");
@@ -122,35 +123,30 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
     return (<>
         <form
             onSubmit={
-                (e) => {
+                async (e) => {
                     e.preventDefault();
                     setLoading(true);
                     const formData = new FormData(e.target as HTMLFormElement);
                     const body = Object.fromEntries(Array.from(formData.entries()).map(([key, val]: any) => [key, transforms[key](val)]))
 
-                    uFetch(
-                        `/api/ai-for-u/${task}`,
-                        {
-                            session,
-                            method: "POST",
-                            body: JSON.stringify(body)
-                        }
-                    ).then(async response => {
-                        if (response.status === 200) {
-                            return response.json();
-                        }
-                        else {
-                            throw await response.text()
-                        }
-                    }).then(data => {
-                        setResponseProps({ aiResponseFeedbackContext: data, aiToolEndpointName: task, userPromptFeedbackContext: body })
-                        setChildren(<ResultChildren body={body} data={data} task={task} />)
+                    const response = await uFetch(`/api/ai-for-u/${task}`, { session, method: "POST", body: JSON.stringify(body) });
+                    if (response.status === 200) {
+                        const data = await response.json();
+                        setResponseProps({ aiResponseFeedbackContext: data, aiToolEndpointName: task, userPromptFeedbackContext: body });
+                        setChildren(<ResultChildren body={body} data={data} task={task} />);
                         setLoading(false);
                         setShowResult(true);
-                    }).catch(reason => {
+                    }
+                    else if (response.status === 429) {
+                        const message = await response.json();
+                        showSnackbar(message.message);
                         setLoading(false);
-                        setShowResult(true);
-                    })
+                    }
+                    else {
+                        const message = await response.text();
+                        showSnackbar(message);
+                        setLoading(false);
+                    }
                 }
             }
             onReset={
