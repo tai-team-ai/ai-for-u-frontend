@@ -32,7 +32,7 @@ const MessageBubble = ({ from, text }: MessageBubbleProps) => {
     const { theme } = useTheme();
     let bkgdColor = "rgba(0, 0, 0, 0.15)";
     if (typeof theme !== "undefined") {
-        bkgdColor = from === "ai" ? theme.colors.gray100.value : theme.colors.primary.value;
+        bkgdColor = from === "ai" ? theme.colors.gray100.value : "$colors$primary";
     }
     const textColor = from === "ai" ? "black" : "white";
     const borderRadius = "12px";
