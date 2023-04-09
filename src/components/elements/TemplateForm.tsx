@@ -77,6 +77,11 @@ const ResultChildren = ({ task, data, body }: ResultChildrenProps) => {
             <Markdown>{data.coverLetter}</Markdown>
         </>
     }
+    else if (task === "text-summarizer") {
+        return <>
+            <Markdown>{data.summary}</Markdown>
+        </>
+    }
     else {
         return <>
             <Markdown>{JSON.stringify(data)}</Markdown>
