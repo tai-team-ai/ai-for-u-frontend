@@ -1,12 +1,12 @@
 import styles from '@/styles/Template.module.css'
 import { routes } from '@/utils/constants'
-import { Card, Grid, Text, Loading, Button } from '@nextui-org/react'
+import { Card, Grid, Text, Loading, Button, Dropdown } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { Dispatch, FormEventHandler, PropsWithChildren, SetStateAction, useEffect, useRef, useState } from 'react'
 import { getExamples } from '@/utils/user'
 import { RateResponse, ResponseProps } from '../modals/FeedbackModal'
-import { Reset, State} from "@/components/elements/TemplateForm";
+import { Reset, State } from "@/components/elements/TemplateForm";
 
 
 
@@ -68,6 +68,53 @@ export function ResultBox({ showResult, loading, responseProps, children }: Prop
     )
 }
 
+declare type ExamplesProps = {
+    examples: ExampleObject[];
+    fillExample: (e: any) => void;
+}
+
+
+const Examples = ({ examples, fillExample }: ExamplesProps) => {
+    return (
+        <section className={styles["example-section"]}>
+            <Text h2 className={styles["example-header"]}>
+                Examples
+            </Text>
+            <div className={styles["examples"]}>
+                <Grid.Container gap={1} justify='flex-start'>
+                    {
+                        examples.length > 0 ?
+                            examples.map((example) => {
+                                return <Example
+                                    example={example.example}
+                                    fillExample={fillExample}>
+                                    {example.name}
+                                </Example>
+                            }) : <Text span>Loading Examples <Loading type="points" /></Text>
+                    }
+                </Grid.Container>
+            </div>
+        </section>
+    )
+}
+
+const ExampleDropdown = ({ examples, fillExample }: ExamplesProps) => {
+    return (
+        <Dropdown>
+            <Dropdown.Button css={{ width: "100%" }} >Examples</Dropdown.Button>
+            <Dropdown.Menu
+                onAction={(key) => {
+                    fillExample(examples[key as number].example);
+                }}
+            >
+                {examples.map((example, index) => {
+                    return <Dropdown.Item key={index} variant="flat" color="primary">{example.name}</Dropdown.Item>
+                })}
+            </Dropdown.Menu>
+        </Dropdown>
+    )
+}
+
 
 interface TemplateProps {
     isSandbox?: boolean
@@ -78,12 +125,12 @@ interface TemplateProps {
     formLoading?: boolean
     setShowResult?: Dispatch<SetStateAction<boolean>> | null
     resultBox?: JSX.Element | null
-    fillMapping?: {[name: string]: (v: any) => void} | null
+    fillMapping?: { [name: string]: (v: any) => void } | null
     defaults?: [(a: any) => void, any][] | null;
-    resets?: {[key: string]: Reset}|null
+    resets?: { [key: string]: Reset } | null
 }
 
-export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, resultBox = null, fillMapping = null, defaults = null, resets = null}: TemplateProps) {
+export default function Template({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, handleSubmit = null, formLoading = false, setShowResult = null, resultBox = null, fillMapping = null, defaults = null, resets = null }: TemplateProps) {
     const { data: session } = useSession();
     const [examples, setExamples] = useState<ExampleObject[]>([]);
     const [loading, setLoading] = useState(false);
@@ -108,16 +155,16 @@ export default function Template({ isSandbox = false, children = null, exampleUr
     if (!fillExample) {
         fillExample = (example) => {
             for (const key of Object.keys(example)) {
-                const target: HTMLInputElement|null = document.querySelector(`input#${key},textarea#${key}`);
-                if(target) {
+                const target: HTMLInputElement | null = document.querySelector(`input#${key},textarea#${key}`);
+                if (target) {
                     if (target.type === "checkbox" && target.checked !== example[key]) {
                         target.click();
                     }
                     target.value = example[key];
                 }
 
-                if(resets && typeof resets[key] !== "undefined") {
-                    if(typeof example[key] === "string") {
+                if (resets && typeof resets[key] !== "undefined") {
+                    if (typeof example[key] === "string") {
                         resets[key].setValue([example[key]]);
                     }
                     else {
@@ -159,33 +206,19 @@ export default function Template({ isSandbox = false, children = null, exampleUr
     }, [])
 
     return (
-        <Grid.Container gap={1} direction="row-reverse" css={{position: 'relative'}}>
+        <Grid.Container gap={1} direction="row-reverse" css={{ position: 'relative' }}>
+            <Grid sm={0} xs={12} >
+                <ExampleDropdown examples={examples} fillExample={fillExample}></ExampleDropdown>
+                {/* {<Examples examples={examples} fillExample={fillExample}></Examples>} */}
+            </Grid>
             <Grid sm={9} xs={12}>
                 <section ref={sectionRef} className={`${styles["content"]} ${isSandbox ? styles['sandbox'] : ''}`}>
                     {children}
                     {resultBox}
                 </section>
             </Grid>
-            <Grid sm={3} xs={12}>
-                <section className={styles["example-section"]}>
-                    <Text h2 className={styles["example-header"]}>
-                        Examples
-                    </Text>
-                    <div className={styles["examples"]}>
-                        <Grid.Container gap={1} justify='flex-start'>
-                            {
-                                examples.length > 0 ?
-                                    examples.map((example) => {
-                                        return <Example
-                                            example={example.example}
-                                            fillExample={fillExample}>
-                                            {example.name}
-                                        </Example>
-                                    }) : <Text span>Loading Examples <Loading type="points"/></Text>
-                            }
-                        </Grid.Container>
-                    </div>
-                </section>
+            <Grid sm={3} xs={0}>
+                {<Examples examples={examples} fillExample={fillExample}></Examples>}
             </Grid>
 
         </Grid.Container>

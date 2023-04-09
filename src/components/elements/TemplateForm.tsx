@@ -71,9 +71,14 @@ const ResultChildren = ({ task, data, body }: ResultChildrenProps) => {
             </ul>
         </>
     }
-    else if(task === "cover-letter-writer") {
+    else if (task === "cover-letter-writer") {
         return <>
             <Markdown>{data.coverLetter}</Markdown>
+        </>
+    }
+    else if (task === "text-summarizer") {
+        return <>
+            <Markdown>{data.summary}</Markdown>
         </>
     }
     else {
@@ -84,10 +89,10 @@ const ResultChildren = ({ task, data, body }: ResultChildrenProps) => {
 }
 
 const jsonTypeToInputType = (jsonType: string) => {
-    if(jsonType === "string") {
+    if (jsonType === "string") {
         return "text";
     }
-    else if(jsonType === "integer") {
+    else if (jsonType === "integer") {
         return "number";
     }
     return undefined;
@@ -112,7 +117,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
     const [children, setChildren] = useState<JSX.Element>(<></>)
 
 
-    const transforms: {[key: string]: (v: any) => any} = {};
+    const transforms: { [key: string]: (v: any) => any } = {};
 
     return (<>
         <form
@@ -131,15 +136,15 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                             body: JSON.stringify(body)
                         }
                     ).then(async response => {
-                        if(response.status === 200) {
+                        if (response.status === 200) {
                             return response.json();
                         }
                         else {
                             throw await response.text()
                         }
                     }).then(data => {
-                        setResponseProps({aiResponseFeedbackContext: data,aiToolEndpointName: task, userPromptFeedbackContext: body})
-                        setChildren(<ResultChildren body={body} data={data} task={task}/>)
+                        setResponseProps({ aiResponseFeedbackContext: data, aiToolEndpointName: task, userPromptFeedbackContext: body })
+                        setChildren(<ResultChildren body={body} data={data} task={task} />)
                         setLoading(false);
                         setShowResult(true);
                     }).catch(reason => {
@@ -152,11 +157,11 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                 (e) => {
                     const checkboxes: NodeListOf<HTMLInputElement> = e.currentTarget.querySelectorAll("input[type=checkbox]");
                     checkboxes.forEach((box) => {
-                        if(box.checked) {
+                        if (box.checked) {
                             box.click();
                         }
                     })
-                    for(const reset of Object.values(resets)) {
+                    for (const reset of Object.values(resets)) {
                         reset.setValue(reset.default);
                     }
                     setShowResult(false);
@@ -171,49 +176,49 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                         <span>{labelValue}<span style={{ color: "red" }}>{required ? "*" : ""}</span></span>
                     </>;
                     const inputProps = {
-                        required:required,
-                        name:title,
+                        required: required,
+                        name: title,
                         id: title,
-                        type:jsonTypeToInputType(property.type),
+                        type: jsonTypeToInputType(property.type),
                         fullWidth: true,
-                        minLength:property.minLength,
-                        maxLength:property.maxLength,
-                        min:property.minimum | 0,
-                        max:property.maximum,
-                        label:label,
+                        minLength: property.minLength,
+                        maxLength: property.maxLength,
+                        min: property.minimum | 0,
+                        max: property.maximum,
+                        label: label,
                     }
-                    if(property.type === "string") {
+                    if (property.type === "string") {
                         transforms[title] = String;
-                        if(typeof property.maxLength != "undefined" && property.maxLength <= 200) {
-                            return <Input  {...inputProps}/>
+                        if (typeof property.maxLength != "undefined" && property.maxLength <= 200) {
+                            return <Input  {...inputProps} />
                         }
-                        return <Textarea {...inputProps}/>
+                        return <Textarea {...inputProps} />
                     }
-                    if(property.type === "integer") {
+                    if (property.type === "integer") {
                         transforms[title] = Number;
-                        return <Input {...inputProps}/>
+                        return <Input {...inputProps} />
                     }
-                    if(property.type === "boolean") {
+                    if (property.type === "boolean") {
                         transforms[title] = Boolean;
                         // @ts-ignore
-                        return <Checkbox size="sm" {...inputProps}/>
+                        return <Checkbox size="sm" {...inputProps} />
                     }
                     const dropdownProps = {
-                        id:title,
-                        name:title,
-                        label:label,
+                        id: title,
+                        name: title,
+                        label: label,
                     }
-                    if(typeof property.allOf !== "undefined") {
+                    if (typeof property.allOf !== "undefined") {
                         transforms[title] = String;
                         const [selected, setSelected] = useState([property.default]);
-                        resets[title] = {value: selected, setValue: setSelected, default: [property.default]}
-                        return <Dropdown {...dropdownProps} validSelections={property.allOf[0].enum} selectionMode="single" selected={selected} setSelected={setSelected}/>
+                        resets[title] = { value: selected, setValue: setSelected, default: [property.default] }
+                        return <Dropdown {...dropdownProps} validSelections={property.allOf[0].enum} selectionMode="single" selected={selected} setSelected={setSelected} />
                     }
-                    if(property.type === "array" && typeof property.items.enum !== "undefined") {
+                    if (property.type === "array" && typeof property.items.enum !== "undefined") {
                         transforms[title] = v => v.split(", ");
                         const [selected, setSelected] = useState(property.default);
-                        resets[title] = {value: selected, setValue: setSelected, default: property.default}
-                        return <Dropdown {...dropdownProps} validSelections={property.items.enum} selectionMode="multiple" selected={selected} setSelected={setSelected}/>
+                        resets[title] = { value: selected, setValue: setSelected, default: property.default }
+                        return <Dropdown {...dropdownProps} validSelections={property.items.enum} selectionMode="multiple" selected={selected} setSelected={setSelected} />
                     }
                 })
             }
