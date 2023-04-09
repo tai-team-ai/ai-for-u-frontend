@@ -9,6 +9,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     const { task } = req.query;
     let statusCode = 200;
+    const token = getToken({ req });
     fetch(
         `${process.env.API_URL}/ai-for-u/${task}`,
         {
@@ -17,7 +18,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             // @ts-ignore
             headers: {
                 ["uuid"]: req.headers["uuid"],
-                ["Content-Type"]: "application/json"
+                ["Content-Type"]: "application/json",
+                ["Token"]: token,
             }
         }
     ).then(async response => {

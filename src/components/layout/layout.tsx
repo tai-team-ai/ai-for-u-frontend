@@ -2,13 +2,14 @@ import PageNavbar from '@/components/layout/navigation/Navbar';
 import Footer from '@/components/layout/Footer';
 import { Container, Spacer, NextUIProvider, createTheme } from '@nextui-org/react'
 import { SSRProvider } from 'react-bootstrap';
+import Snackbar from '../elements/Snackbar';
 
 
 interface LayoutProps {
     children: any;
 }
 
-function Layout({children}: LayoutProps) {
+function Layout({ children }: LayoutProps) {
     const theme = createTheme({
         type: "light", // it could be "light" or "dark"
         theme: {
@@ -32,12 +33,13 @@ function Layout({children}: LayoutProps) {
     return (
         <SSRProvider>
             <NextUIProvider theme={theme}>
-                <PageNavbar/>
+                <PageNavbar />
                 <Spacer y={1} />
                 <Container>
                     {children}
                 </Container>
-                <Footer/>
+                <Footer />
+                <Snackbar />
             </NextUIProvider>
         </SSRProvider>
     )
