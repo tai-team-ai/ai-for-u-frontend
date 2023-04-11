@@ -1,21 +1,14 @@
-import React, { useRef, useState } from "react";
-import { Button, Container, Grid, Input, Text, useTheme, Loading, Image } from "@nextui-org/react";
+import React from "react";
+import { Container, Grid, Text, useTheme, Image } from "@nextui-org/react";
 import { routes } from "@/utils/constants";
 import Link from "next/link";
 import styles from "@/styles/Footer.module.css";
-import { useSession } from "next-auth/react";
-import { joinMailingList } from "@/utils/endpoints";
 import SubscribeField from "../elements/SubscribeField";
 
 
 
 const Footer = () => {
     const { theme } = useTheme();
-    const userEmail = useRef<HTMLInputElement>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSubscribed, setIsSubscribed] = useState(false);
-    const { data: session } = useSession();
-
 
     return (
         <React.Fragment>
@@ -33,7 +26,7 @@ const Footer = () => {
                             </ul>
                         </Grid>
                         <Grid xs={12} sm={12} md={6} lg={4} css={{ textAlign: "center" }}>
-                            <SubscribeField/>
+                            <SubscribeField />
                         </Grid>
                         <Grid>
                             <Image

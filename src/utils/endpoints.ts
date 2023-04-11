@@ -9,14 +9,14 @@ interface JoinMailingListProps {
     setIsSubscribed: (v: boolean) => void;
 }
 
-const joinMailingList = async ({session, email, setIsSubmitting, setIsSubscribed}: JoinMailingListProps) => {
+const joinMailingList = async ({ session, email, setIsSubmitting, setIsSubscribed }: JoinMailingListProps) => {
     setIsSubmitting(true)
-    const response = await uFetch("/api/email-list", {
+    const response = await uFetch("/api/ai-for-u/subscription", {
         session: session,
         method: "POST",
         body: JSON.stringify({ email })
     });
-    if(response.status === 200) {
+    if (response.status === 200) {
         setIsSubmitting(false);
         setIsSubscribed(true);
     }
@@ -25,4 +25,4 @@ const joinMailingList = async ({session, email, setIsSubmitting, setIsSubscribed
     }
 }
 
-export {joinMailingList};
+export { joinMailingList };
