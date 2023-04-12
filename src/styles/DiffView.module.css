@@ -29,10 +29,10 @@
     text-align: left;
 }
 
-.diff-pair > div {
+.diff-pair>div {
     padding: 1em;
 }
 
-.diff-pair > div:nth-child(1) {
+.diff-pair>div:nth-child(1) {
     border-right: solid 1px black;
 }

@@ -1,75 +1,73 @@
-import axios from "axios";
-import { useState } from "react";
-import { constants } from "../../utils/constants";
-import { Button, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
-
+import axios from 'axios'
+import { useState } from 'react'
+import { constants } from '../../utils/constants'
+import { Button, Checkbox, FormControl, FormControlLabel, Grid, InputLabel, MenuItem, Select, TextField, Typography } from '@mui/material'
 
 export default function (props: {
-    setGeneratedText: React.Dispatch<React.SetStateAction<string>>,
-    setLoadingState: React.Dispatch<React.SetStateAction<boolean>>
-}) {
-    const [summarizer, setSummarizer] = useState({
-        textToSummarize: "",
-        numberOfBullets: 0,
-        numberOfActionItems: 0
-    });
-    const [includeSummarySentence, setIncludeSummarySentence] = useState(false);
-    
-    const resetForm = () => {
-        setSummarizer({
-            textToSummarize: "",
-            numberOfBullets: 0,
-            numberOfActionItems: 0,
-        });
-        setIncludeSummarySentence(false);
-    }
+  setGeneratedText: React.Dispatch<React.SetStateAction<string>>
+  setLoadingState: React.Dispatch<React.SetStateAction<boolean>>
+}): JSX.Element {
+  const [summarizer, setSummarizer] = useState({
+    textToSummarize: '',
+    numberOfBullets: 0,
+    numberOfActionItems: 0
+  })
+  const [includeSummarySentence, setIncludeSummarySentence] = useState(false)
 
-    const handlesummarizerChange = (event: any) => {
-        setSummarizer({ ...summarizer, [event.target.name]: event.target.value });
-    };
+  const resetForm = (): void => {
+    setSummarizer({
+      textToSummarize: '',
+      numberOfBullets: 0,
+      numberOfActionItems: 0
+    })
+    setIncludeSummarySentence(false)
+  }
 
-    const handleSubmit = (event: any) => {
-        event.preventDefault();
-        props.setGeneratedText("Generating summary...");
-        props.setLoadingState(true);
-        console.log(`Sending request ${JSON.stringify(summarizer)} to ${constants.API_URL}${constants.OPEN_AI_NOTES_API_PREFIX}`)
-        axios.post(`${constants.API_URL}${constants.OPEN_AI_NOTES_API_PREFIX}`, {
-            notesToSummarize: summarizer.textToSummarize,
-            numberOfBullets: summarizer.numberOfBullets,
-            numberOfActionItems: summarizer.numberOfActionItems,
-            includeSummarySentence: includeSummarySentence
-        })
-        .then((response) => {
-            console.log(response)
-            let summary: string = ""
-            if (includeSummarySentence) {
-                summary += response.data["summarySentence"] + "\n\n";
-            }
-            if (summarizer.numberOfBullets > 0) {
-                summary += "Bullet Points:\n" + response.data["bulletPoints"] + "\n\n";
-            }
-            if (summarizer.numberOfActionItems > 0) {
-                summary += "Action Items:\n" + response.data["actionItems"] + "\n\n";
-            }
-            props.setGeneratedText(summary);
-        })
-        .catch((error) => {
-            console.log(error);
-            props.setGeneratedText("Error generating summary. Please try again.");
-        })
-        .finally(() => {
-            props.setLoadingState(false);
-        });
-    };
+  const handlesummarizerChange = (event: any): void => {
+    setSummarizer({ ...summarizer, [event.target.name]: event.target.value })
+  }
 
+  const handleSubmit = (event: any): void => {
+    event.preventDefault()
+    props.setGeneratedText('Generating summary...')
+    props.setLoadingState(true)
+    console.log(`Sending request ${JSON.stringify(summarizer)} to ${constants.API_URL}${constants.OPEN_AI_NOTES_API_PREFIX}`)
+    axios.post(`${constants.API_URL}${constants.OPEN_AI_NOTES_API_PREFIX}`, {
+      notesToSummarize: summarizer.textToSummarize,
+      numberOfBullets: summarizer.numberOfBullets,
+      numberOfActionItems: summarizer.numberOfActionItems,
+      includeSummarySentence
+    })
+      .then((response) => {
+        console.log(response)
+        let summary: string = ''
+        if (includeSummarySentence) {
+          summary += (response.data.summarySentence as string) + '\n\n'
+        }
+        if (summarizer.numberOfBullets > 0) {
+          summary += 'Bullet Points:\n' + (response.data.bulletPoints as string) + '\n\n'
+        }
+        if (summarizer.numberOfActionItems > 0) {
+          summary += 'Action Items:\n' + (response.data.actionItems as string) + '\n\n'
+        }
+        props.setGeneratedText(summary)
+      })
+      .catch((error) => {
+        console.log(error)
+        props.setGeneratedText('Error generating summary. Please try again.')
+      })
+      .finally(() => {
+        props.setLoadingState(false)
+      })
+  }
 
-    return (
+  return (
         <div>
             <Typography variant="h5" component="h2" gutterBottom>
                Text Summarizer
             </Typography>
             <form onSubmit={handleSubmit}>
-                <Grid container direction={"column"} spacing={5}>
+                <Grid container direction={'column'} spacing={5}>
                     <Grid item>
                         <FormControl fullWidth>
                             <TextField
@@ -90,7 +88,7 @@ export default function (props: {
                             <FormControlLabel control= {
                                 <Checkbox
                                     checked={includeSummarySentence}
-                                    onChange={(event) => setIncludeSummarySentence(event.target.checked)}
+                                    onChange={(event) => { setIncludeSummarySentence(event.target.checked) }}
                                     inputProps={{ 'aria-label': 'controlled' }}
                                 />
                             }
@@ -101,7 +99,7 @@ export default function (props: {
                     <Grid item>
                         <FormControl fullWidth>
                             <InputLabel id="revision-type">Number of Bullets</InputLabel>
-                            <Select 
+                            <Select
                                 id="numberOfBullets"
                                 label="Number of Bullets"
                                 variant="outlined"
@@ -155,5 +153,5 @@ export default function (props: {
                 </Grid>
             </form>
         </div>
-    );
+  )
 }

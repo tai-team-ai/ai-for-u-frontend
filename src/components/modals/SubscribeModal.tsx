@@ -1,38 +1,39 @@
-import React, { useState, useRef } from "react";
-import { Modal, Button, Input, Loading, Text } from "@nextui-org/react";
-import { useSession } from "next-auth/react";
-import { joinMailingList } from "@/utils/endpoints";
+import React, { useState, useRef } from 'react'
+import { Modal, Button, Input, Loading, Text } from '@nextui-org/react'
+import { useSession } from 'next-auth/react'
+import { joinMailingList } from '@/utils/endpoints'
 
 export interface SubscribeModalProps {
-    open: boolean
-    setOpen: (o: boolean) => void
+  open: boolean
+  setOpen: (o: boolean) => void
 }
 
-export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
-    const userEmail = useRef<HTMLInputElement>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSubscribed, setIsSubscribed] = useState(false);
-    const { data: session } = useSession();
+export default function SubscribeModal ({ open, setOpen }: SubscribeModalProps): JSX.Element {
+  const userEmail = useRef<HTMLInputElement>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubscribed, setIsSubscribed] = useState(false)
+  const { data: session } = useSession()
 
-    return (
+  return (
         <Modal
             closeButton
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={() => { setOpen(false) }}
         >
             <form id="subscribeForm" onSubmit={(e) => {
-                e.preventDefault();
-                if(!userEmail.current) {
-                    return;
-                }
-                const email = userEmail.current.value;
-                joinMailingList({session, email, setIsSubmitting, setIsSubscribed});
+              e.preventDefault()
+              if (userEmail.current == null) {
+                return
+              }
+              const email = userEmail.current.value
+              void joinMailingList({ session, email, setIsSubmitting, setIsSubscribed })
             }}>
                 <Modal.Header>
                     <Text h3>Premium feature coming soon!</Text>
                 </Modal.Header>
                 <Modal.Body>
-                    {!isSubscribed ? (
+                    {!isSubscribed
+                      ? (
                         <>
                             <Text>Join our mailing list</Text>
                             <Input
@@ -44,30 +45,34 @@ export default function SubscribeModal({open, setOpen}: SubscribeModalProps) {
                                 ref={userEmail}
                             />
                         </>
-                    ) : (
+                        )
+                      : (
                         <Text>Thanks for joining our mailing list.</Text>
-                    )}
+                        )}
                 </Modal.Body>
                 <Modal.Footer>
                     {
-                    isSubscribed? null :
-                    <Button
+                    isSubscribed
+                      ? null
+                      : <Button
                         auto
                         flat
                         color="primary"
                         type="submit"
                         disabled={isSubmitting}
                     >
-                        {isSubmitting ? (
+                        {isSubmitting
+                          ? (
                             <Loading type="points" />
-                        ) : (
-                            "Subscribe"
-                        )}
+                            )
+                          : (
+                              'Subscribe'
+                            )}
                     </Button>
                     }
                 </Modal.Footer>
             </form>
 
         </Modal>
-    )
+  )
 }

@@ -1,9 +1,8 @@
 import { CssBaseline } from '@nextui-org/react'
 import { Html, Head, Main, NextScript } from 'next/document'
 
-
-export default function Document() {
-    return (
+export default function Document (): JSX.Element {
+  return (
             <Html>
                 <Head>{CssBaseline.flush()}</Head>
                 <body>
@@ -11,5 +10,5 @@ export default function Document() {
                     <NextScript />
                 </body>
             </Html>
-    )
+  )
 }

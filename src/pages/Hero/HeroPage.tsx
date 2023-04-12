@@ -1,16 +1,15 @@
 import React from 'react'
-import { CssBaseline } from '@nextui-org/react';
-import { routes } from '../../utils/constants';
+import { CssBaseline } from '@nextui-org/react'
 import Navbar from '../../components/layout/navigation/Navbar'
 
-export default function HeroPage() {
-    return (
+export default function HeroPage (): JSX.Element {
+  return (
         <html lang="en">
             <head>{CssBaseline.flush()}</head>
-            <body> 
+            <body>
                 {/** todo: this should actually read from the session data */}
-                <Navbar isLoggedIn={false} />
+                <Navbar />
             </body>
         </html>
-    )
+  )
 }

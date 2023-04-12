@@ -4,7 +4,7 @@
     filter: var(--nextui-dropShadows-lg);
     transform: translateY(0);
     transition: outline 350ms ease, color 350ms ease,
-                transform 250ms ease;
+        transform 250ms ease;
 }
 
 .fancy-card:hover {

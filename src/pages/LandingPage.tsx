@@ -4,16 +4,16 @@ This page contains the Header and PromptPanel components. The Header component i
 The PromptPanel component is used to display the forms that are available to the user.
 */
 
-import React from "react";
-import { Container } from "react-bootstrap";
-import PromptPanel from "../components/layout/PromptPanel";
+import React from 'react'
+import { Container } from 'react-bootstrap'
+import PromptPanel from '../components/layout/PromptPanel'
 
-export default function LandingPage() {
-    return (
+export default function LandingPage (): JSX.Element {
+  return (
         <React.Fragment>
             <Container className='py-5'>
                 <PromptPanel />
             </Container>
         </React.Fragment>
-    )
+  )
 }

@@ -1,13 +1,12 @@
-import { Button, Grid, Modal, Spacer, Text, useModal } from "@nextui-org/react";
-import SubscribeField from "../elements/SubscribeField";
+import { Grid, Modal, Text } from '@nextui-org/react'
+import SubscribeField from '../elements/SubscribeField'
 
-declare type GoProModalProps = {
-    bindings: {open: boolean, onClose: () => void}
+declare interface GoProModalProps {
+  bindings: { open: boolean, onClose: () => void }
 }
 
-
-const GoProModal = ({bindings}: GoProModalProps) => {
-    return (
+const GoProModal = ({ bindings }: GoProModalProps): JSX.Element => {
+  return (
         <Modal
             closeButton
             {...bindings}
@@ -21,7 +20,7 @@ const GoProModal = ({bindings}: GoProModalProps) => {
                     <Grid sm={6}>
                         <div>
                             <Text h4>Feature set 1</Text>
-                            <ul style={{listStyleType: "circle"}}>
+                            <ul style={{ listStyleType: 'circle' }}>
                                 <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
                                 <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
                                 <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
@@ -33,7 +32,7 @@ const GoProModal = ({bindings}: GoProModalProps) => {
                     <Grid sm={6}>
                         <div>
                             <Text h4>Feature set 1</Text>
-                            <ul style={{listStyleType: "circle"}}>
+                            <ul style={{ listStyleType: 'circle' }}>
                                 <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
                                 <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
                                 <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
@@ -47,7 +46,7 @@ const GoProModal = ({bindings}: GoProModalProps) => {
                 <SubscribeField/>
             </Modal.Footer>
         </Modal>
-    )
+  )
 }
 
-export default GoProModal;
+export default GoProModal

@@ -1,67 +1,63 @@
-import Layout from "@/components/layout/layout";
-import { uFetch } from "@/utils/http";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { Card, Grid, Text, useTheme, styled, Theme, NextUITheme, Container } from "@nextui-org/react"
-import Link from "next/link";
-import styles from "@/styles/Templates.module.css"
-import SubscribeModal from "@/components/modals/SubscribeModal"
-import FancyHoverCard from "@/components/elements/FancyHoverCard";
+import Layout from '@/components/layout/layout'
+import { useState } from 'react'
+import { Grid, Text, Container } from '@nextui-org/react'
+import Link from 'next/link'
+import SubscribeModal from '@/components/modals/SubscribeModal'
+import FancyHoverCard from '@/components/elements/FancyHoverCard'
 
 interface TemplateObj {
-    title: string
-    description: string
-    href: string
-    comingSoon: boolean
+  title: string
+  description: string
+  href: string
+  comingSoon: boolean
 }
 
 const templates: TemplateObj[] = [
-    {
-        title: "Text Summarizer",
-        description: "Is it difficult to summarize all that notes you've taken for your meetings or classes?  Try this text summarizer to quickly condense all the important points of any note you've taken.",
-        href: "/templates/text-summarizer",
-        comingSoon: false,
-    },
-    {
-        title: "Text Revisor",
-        description: "Grammar and spelling used to be very difficult but with the power of AI, you can check your content for mistakes.  Check out this AI tool for revising text!",
-        href: "/templates/text-revisor",
-        comingSoon: false,
-    },
-    {
-        title: "Catchy Title Creator",
-        description: "One of the most difficult parts of creating art is coming up with a good title that will resonate with people.  Use this catchy title creator to always peek viewers' interest in your finest work.",
-        href: "/templates/catchy-title-creator",
-        comingSoon: false,
-    },
-    {
-        title: "Cover Letter Writer",
-        description: "Need to land that dream job but they require a cover letter?  Have no fear, AI is here.  Use this wonderful tool to help you craft the perfect cover letter so you can progress in your career.",
-        href: "/templates/cover-letter-writer",
-        comingSoon: false,
-    },
-    {
-        title: "Many More Coming Soon",
-        description: "We are constantly coming up with new amazing features to help you with your AI needs.  Subscribe to our mailing list to get notified of new features.",
-        href: "",
-        comingSoon: true
-    }
+  {
+    title: 'Text Summarizer',
+    description: "Is it difficult to summarize all that notes you've taken for your meetings or classes?  Try this text summarizer to quickly condense all the important points of any note you've taken.",
+    href: '/templates/text-summarizer',
+    comingSoon: false
+  },
+  {
+    title: 'Text Revisor',
+    description: 'Grammar and spelling used to be very difficult but with the power of AI, you can check your content for mistakes.  Check out this AI tool for revising text!',
+    href: '/templates/text-revisor',
+    comingSoon: false
+  },
+  {
+    title: 'Catchy Title Creator',
+    description: "One of the most difficult parts of creating art is coming up with a good title that will resonate with people.  Use this catchy title creator to always peek viewers' interest in your finest work.",
+    href: '/templates/catchy-title-creator',
+    comingSoon: false
+  },
+  {
+    title: 'Cover Letter Writer',
+    description: 'Need to land that dream job but they require a cover letter?  Have no fear, AI is here.  Use this wonderful tool to help you craft the perfect cover letter so you can progress in your career.',
+    href: '/templates/cover-letter-writer',
+    comingSoon: false
+  },
+  {
+    title: 'Many More Coming Soon',
+    description: 'We are constantly coming up with new amazing features to help you with your AI needs.  Subscribe to our mailing list to get notified of new features.',
+    href: '',
+    comingSoon: true
+  }
 ]
 
+const TemplateCard = ({ href, title, description, comingSoon }: TemplateObj): JSX.Element => {
+  const [open, setOpen] = useState(false)
+  const actionPhrase = comingSoon ? 'Coming soon...' : 'Try it out, today!'
 
-const TemplateCard = ({ href, title, description, comingSoon }: TemplateObj) => {
-    const [open, setOpen] = useState(false);
-    let actionPhrase = comingSoon ? "Coming soon..." : "Try it out, today!"
-
-    return <>
+  return <>
         <Link
             href={href}
-            style={{ height: "100%", width: "100%" }}
+            style={{ height: '100%', width: '100%' }}
             onClick={(e) => {
-                if (comingSoon) {
-                    e.preventDefault();
-                    setOpen(true);
-                }
+              if (comingSoon) {
+                e.preventDefault()
+                setOpen(true)
+              }
             }}
         >
             <FancyHoverCard
@@ -74,16 +70,15 @@ const TemplateCard = ({ href, title, description, comingSoon }: TemplateObj) => 
     </>
 }
 
-
-const Index = () => {
-    return (
+const Index = (): JSX.Element => {
+  return (
         <Layout>
             <Container>
-                <Grid xs={12} sm={6} md={6} css={{ paddingLeft: "1em" }}>
+                <Grid xs={12} sm={6} md={6} css={{ paddingLeft: '1em' }}>
                     <Text
                         h1
                         css={{
-                            color: "$colors$primary"
+                          color: '$colors$primary'
                         }}>Check out our new and upcoming AI templates,<br /> just for you!</Text>
                 </Grid>
                 <Grid.Container gap={3}>
@@ -95,7 +90,7 @@ const Index = () => {
                 </Grid.Container>
             </Container>
         </Layout>
-    )
+  )
 }
 
-export default Index;
+export default Index

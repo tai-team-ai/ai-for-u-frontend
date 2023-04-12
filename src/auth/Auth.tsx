@@ -1,13 +1,12 @@
-import React from "react";
-import Navbar from "@/components/layout/navigation/Navbar";
+import React from 'react'
+import Navbar from '@/components/layout/navigation/Navbar'
 
-
-const Auth = (props: any) => {
-    return (
-        <React.Fragment>
-            <Navbar/>
-            {props.children}
-        </React.Fragment>
-    );
+const Auth = (props: any): JSX.Element => {
+  return (
+    <React.Fragment>
+      <Navbar />
+      {props.children}
+    </React.Fragment>
+  )
 }
-export default Auth;
+export default Auth
