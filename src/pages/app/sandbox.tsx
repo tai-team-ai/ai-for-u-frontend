@@ -1,189 +1,185 @@
 import Layout from '@/components/layout/layout'
 import Template from '@/components/layout/template'
 import styles from '@/styles/Sandbox.module.css'
-import { Button, Card, FormElement, Loading, Textarea, Text, useTheme } from '@nextui-org/react';
-import SendIcon from '@mui/icons-material/Send';
-import { ReactNode, useEffect, useState } from 'react';
-import { v4 as uuid } from 'uuid';
-import { uFetch } from '@/utils/http';
-import { RateResponse } from '@/components/modals/FeedbackModal';
-import { getInitialChat } from '@/utils/user';
-import { useSession } from 'next-auth/react';
-import Markdown from "markdown-to-jsx"
-import { showSnackbar } from '@/components/elements/Snackbar';
-
+import { Button, Card, Loading, Textarea, Text, useTheme } from '@nextui-org/react'
+import SendIcon from '@mui/icons-material/Send'
+import { type ReactNode, useEffect, useState } from 'react'
+import { v4 as uuid } from 'uuid'
+import { uFetch } from '@/utils/http'
+import { RateResponse } from '@/components/modals/FeedbackModal'
+import { getInitialChat } from '@/utils/user'
+import { useSession } from 'next-auth/react'
+import Markdown from 'markdown-to-jsx'
+import { showSnackbar } from '@/components/elements/Snackbar'
 
 interface RequestBody {
-    conversationUuid: string
-    userMessage: string
+  conversationUuid: string
+  userMessage: string
 }
 
-
 interface ResponseBody {
-    gptResponse: string
+  gptResponse: string
 }
 
 interface MessageBubbleProps {
-    text: string | ReactNode;
-    from: "human" | "ai"
+  text: string | ReactNode
+  from: 'human' | 'ai'
 }
 
-
-const MessageBubble = ({ from, text }: MessageBubbleProps) => {
-    const { theme } = useTheme();
-    let bkgdColor = "rgba(0, 0, 0, 0.15)";
-    if (typeof theme !== "undefined") {
-        bkgdColor = from === "ai" ? theme.colors.gray100.value : "$colors$primary";
-    }
-    const textColor = from === "ai" ? "black" : "white";
-    const borderRadius = "12px";
-    const borderEndStartRadius = from === "ai" ? "0" : borderRadius;
-    const borderEndEndRadius = from === "human" ? "0" : borderRadius;
-    const alignItems = from === "ai" ? "flex-start" : "flex-end";
-    return (
-        <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems }}>
+const MessageBubble = ({ from, text }: MessageBubbleProps): JSX.Element => {
+  const { theme } = useTheme()
+  let bkgdColor = 'rgba(0, 0, 0, 0.15)'
+  if (typeof theme !== 'undefined') {
+    bkgdColor = from === 'ai' ? theme.colors.gray100.value : '$colors$primary'
+  }
+  const textColor = from === 'ai' ? 'black' : 'white'
+  const borderRadius = '12px'
+  const borderEndStartRadius = from === 'ai' ? '0' : borderRadius
+  const borderEndEndRadius = from === 'human' ? '0' : borderRadius
+  const alignItems = from === 'ai' ? 'flex-start' : 'flex-end'
+  return (
+        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems }}>
             <Text
                 span
                 css={{
-                    display: "inline-block",
-                    backgroundColor: bkgdColor,
-                    color: textColor,
-                    padding: "8px",
-                    maxWidth: "80%",
-                    margin: "4px 0",
-                    borderRadius,
-                    borderEndStartRadius,
-                    borderEndEndRadius,
+                  display: 'inline-block',
+                  backgroundColor: bkgdColor,
+                  color: textColor,
+                  padding: '8px',
+                  maxWidth: '80%',
+                  margin: '4px 0',
+                  borderRadius,
+                  borderEndStartRadius,
+                  borderEndEndRadius
                 }}
             >
                 {text}
             </Text>
         </div>
-    )
+  )
 }
-
 
 interface MessageProps {
-    request: RequestBody;
-    response?: ResponseBody | null;
+  request: RequestBody
+  response?: ResponseBody | null
 }
 
-
-const Message = ({ request, response = null }: MessageProps) => {
-    if (response) {
-        return <div style={{ width: "100%" }}>
+const Message = ({ request, response = null }: MessageProps): JSX.Element => {
+  if (response != null) {
+    return <div style={{ width: '100%' }}>
             <MessageBubble text={<Markdown>{response.gptResponse}</Markdown>} from="ai" />
             <RateResponse aiResponseFeedbackContext={response} userPromptFeedbackContext={request} aiToolEndpointName="sandbox-chatgpt" />
         </div>
-    }
-    return <div style={{ width: "100%" }}>
+  }
+  return <div style={{ width: '100%' }}>
         <MessageBubble text={<Markdown>{request.userMessage}</Markdown>} from="human" />
     </div>
 }
 
-
-const getConversationUuid = () => {
-    // @ts-ignore
-    if (typeof global._conversationUuid === "undefined") {
-        // @ts-ignore
-        global._conversationUuid = uuid();
-    }
-    // @ts-ignore
-    const conversationUuid = global._conversationUuid;
-    return conversationUuid;
+const getConversationUuid = (): string => {
+  // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
+  if (typeof global._conversationUuid === 'undefined') {
+    // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
+    global._conversationUuid = uuid()
+  }
+  // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
+  const conversationUuid = global._conversationUuid
+  return conversationUuid
 }
 
+const ChatGPT = (): JSX.Element => {
+  const { data: session } = useSession()
+  const [messages, setMessages] = useState<MessageProps[]>([])
+  const [loading, setLoading] = useState<boolean>(false)
+  const conversationUuid = getConversationUuid()
 
-const ChatGPT = () => {
-    const { data: session } = useSession();
-    const [messages, setMessages] = useState<MessageProps[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-    const conversationUuid = getConversationUuid();
-
-    useEffect(() => {
+  useEffect(() => {
+    if (messages.length === 0) {
+      setLoading(true)
+      void getInitialChat(session).then(gptResponse => {
         if (messages.length === 0) {
-            setLoading(true);
-            getInitialChat(session).then(gptResponse => {
-                if (messages.length === 0) {
-                    messages.push({
-                        request: {
-                            conversationUuid: conversationUuid,
-                            userMessage: "",
-                        },
-                        response: {
-                            gptResponse,
-                        }
-                    })
-                    setMessages([...messages]);
-                    setLoading(false);
-                }
-            })
+          messages.push({
+            request: {
+              conversationUuid,
+              userMessage: ''
+            },
+            response: {
+              gptResponse
+            }
+          })
+          setMessages([...messages])
+          setLoading(false)
         }
-    })
+      })
+    }
+  })
 
-    useEffect(() => {
-        const els = document.getElementsByClassName('message')
-        if (!els || !els.length) return;
-        els[els.length - 1].scrollIntoView({ behavior: "smooth" });
-    }, [messages])
+  useEffect(() => {
+    const els = document.getElementsByClassName('message')
+    if ((els?.length) === 0) return
+    els[els.length - 1].scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
 
-    return (<>
+  return (<>
         <Layout>
             <Template
                 isSandbox={true}
                 exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples"
                 fillExample={(e) => {
-                    const textfield: HTMLTextAreaElement | null = document.querySelector("#userMessage");
-                    if (textfield) {
-                        textfield.value = e;
-                    }
+                  const textfield: HTMLTextAreaElement | null = document.querySelector('#userMessage')
+                  if (textfield != null) {
+                    textfield.value = e
+                  }
                 }}
             >
                 <form
                     id="task-form"
                     style={{
-                        height: "100%"
+                      height: '100%'
                     }}
-                    onSubmit={async (e) => {
-                        e.preventDefault();
-                        // @ts-ignore
-                        const userMessage = e.target.userMessage.value;
-                        // @ts-ignore
-                        e.target.userMessage.value = "";
-                        const request = { conversationUuid, userMessage };
-                        messages.push({ request });
-                        setMessages([...messages]);
-                        setLoading(true);
-                        const response = await uFetch("/api/ai-for-u/sandbox-chatgpt", { session, method: "POST", body: JSON.stringify(request) });
-                        if (response.status === 200) {
-                            const data = await response.json();
-                            messages.push({
+                    onSubmit={(e) => {
+                      e.preventDefault()
+                      // @ts-expect-error the eventTarget could be anything but we know it's a form with custom types that arent' resolved at type checkig time.
+                      const userMessage = e.target.userMessage.value
+                      // @ts-expect-error the eventTarget could be anything but we know it's a form with custom types that arent' resolved at type checkig time.
+                      e.target.userMessage.value = ''
+                      const request = { conversationUuid, userMessage }
+                      messages.push({ request })
+                      setMessages([...messages])
+                      setLoading(true)
+                      void uFetch('/api/ai-for-u/sandbox-chatgpt', { session, method: 'POST', body: JSON.stringify(request) })
+                        .then(response => {
+                          if (response.status === 200) {
+                            void response.json().then(data => {
+                              messages.push({
                                 request,
                                 response: data
-                            });
-                            setMessages([...messages]);
-                            setLoading(false);
-                        }
-                        else if (response.status === 429) {
-                            const data = await response.json();
-                            showSnackbar(data.message);
-                            setLoading(false);
-                        }
-                        else {
-                            const data = await response.text();
-                            showSnackbar(data);
-                            setLoading(false);
-                        }
+                              })
+                              setMessages([...messages])
+                              setLoading(false)
+                            })
+                          } else if (response.status === 429) {
+                            void response.json().then(data => {
+                              showSnackbar(data.message)
+                              setLoading(false)
+                            })
+                          } else {
+                            void response.text().then(data => {
+                              showSnackbar(data)
+                              setLoading(false)
+                            })
+                          }
+                        })
                     }}
                 >
-                    <Card css={{ height: "100%" }}>
+                    <Card css={{ height: '100%' }}>
                         <Card.Body>
-                            {messages.map(((message) => <Message {...message} />))}
+                            {messages.map((message) => <Message {...message} />)}
                             {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
                         </Card.Body>
                         <Card.Footer
                             css={{
-                                position: "relative"
+                              position: 'relative'
                             }}
                         >
                             <Textarea
@@ -195,18 +191,18 @@ const ChatGPT = () => {
                                 form="task-form"
                                 placeholder="Type your message..."
                                 css={{
-                                    whiteSpace: "pre-wrap",
-                                    filter: "drop-shadow(0 0 4px rgba(0, 0, 0, 0.2))",
-                                    margin: 0
+                                  whiteSpace: 'pre-wrap',
+                                  filter: 'drop-shadow(0 0 4px rgba(0, 0, 0, 0.2))',
+                                  margin: 0
                                 }}
                                 onKeyDown={(event: any) => {
-                                    if (!event.shiftKey && event.key === "Enter") {
-                                        event.preventDefault();
-                                        const form: HTMLFormElement | null = document.querySelector("#task-form");
-                                        if (form) {
-                                            form.requestSubmit();
-                                        }
+                                  if (!(event.shiftKey as boolean) && event.key === 'Enter') {
+                                    event.preventDefault()
+                                    const form: HTMLFormElement | null = document.querySelector('#task-form')
+                                    if (form != null) {
+                                      form.requestSubmit()
                                     }
+                                  }
                                 }}
                             />
                             <Button
@@ -225,4 +221,4 @@ const ChatGPT = () => {
     </>)
 }
 
-export default ChatGPT;
+export default ChatGPT

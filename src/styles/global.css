@@ -1,8 +1,8 @@
 :root {
-    --fancy-card1: 56,36,102;
-    --fancy-card2: 81,17,171;
-    --fancy-card3: 236,142,121;
-  }
+    --fancy-card1: 56, 36, 102;
+    --fancy-card2: 81, 17, 171;
+    --fancy-card3: 236, 142, 121;
+}
 
 body {
     margin: 0;
@@ -46,7 +46,8 @@ pre {
     background-color: #2e2e2e;
     color: #d6d6d6;
 }
-pre > code {
+
+pre>code {
     background-color: transparent;
     color: #d6d6d6;
 }
