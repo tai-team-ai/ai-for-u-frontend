@@ -11,3 +11,6 @@ unit-test:
 
 update-openapi:
 	wget ${API_URL}/ai-for-u/openapi.json
+
+open-swagger:
+	open ${API_URL}/ai-for-u/docs
