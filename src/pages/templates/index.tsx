@@ -48,7 +48,7 @@ const templates: TemplateObj[] = [
     callToAction: 'Let\'s get Writing!'
   },
   {
-    title: '🚀 Many More Coming Soon!',
+    title: '🚀 More Coming Soon!',
     description: 'Stay ahead of the game with our upcoming AI-powered features. Subscribe to our mailing list to be the first to know when our latest features are released!',
     href: '',
     callToAction: MAILING_LIST_CALL_TO_ACTION
