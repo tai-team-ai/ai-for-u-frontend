@@ -23,6 +23,7 @@ const TemplateTask = ({ task, properties, requiredList, resets }: TemplateTaskPr
 }
 
 const getServerSideProps: GetServerSideProps = async (context) => {
+  console.log('getServerSideProps!')
   const { task } = context.query
   // @ts-expect-error The SwaggerParser was written for vanilla js so it's types are weird.
   const openapi = await new SwaggerParser().dereference('./openapi.json')
