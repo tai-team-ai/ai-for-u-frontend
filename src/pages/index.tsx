@@ -10,9 +10,12 @@ import FancyHoverCard from '@/components/elements/FancyHoverCard'
 import { type GetServerSideProps } from 'next'
 
 const getServerSideProps: GetServerSideProps = async (context) => {
+  console.log('ENVIRONMENT_VARIABLES:')
   Object.keys(process.env).forEach((value) => { console.log(value) })
   return {
-    props: {}
+    props: {
+      env: process.env
+    }
   }
 }
 
