@@ -168,7 +168,7 @@ export default function Template ({ isSandbox = false, children = null, exampleU
   const resizeChat = (): void => {
     if (!isSandbox || (sectionRef.current == null)) return
 
-    sectionRef.current.style.height = ''
+    sectionRef.current.style.height = '0px'
     const chatRect = sectionRef.current.getBoundingClientRect()
     const initialHeight = chatRect.height
     const sectionTop = chatRect.top

@@ -1,13 +1,38 @@
 .send-button {
     font-size: 18px;
     padding: 8px;
-    margin-right: 4px;
     position: absolute;
     border-radius: var(--nextui-radii-md);
-    margin: var(--nextui-space-sm);
-    top: 0;
-    right: 0;
-    height: 2em;
+    right: 12px;
+    bottom: 12px;
+    height: calc(2em + 1px);
+}
+
+.user-message-textarea {
+    white-space: pre-wrap;
+    transition: filter .3s ease-in-out;
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.2));
+    width: initial;
+}
+
+.sandbox-footer {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    min-height: 56px;
+    max-height: 56px;
+}
+
+.sandbox-footer>div {
+    padding-top: 12px;
+    padding-bottom: 18px;
+    padding-left: 12px;
+    padding-right: 12px;
+    height: 100%;
+}
+
+.user-message-textarea label {
+    margin-bottom: 0;
 }
 
 .user-input-form {

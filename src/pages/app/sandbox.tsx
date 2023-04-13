@@ -178,11 +178,10 @@ const ChatGPT = (): JSX.Element => {
                             {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
                         </Card.Body>
                         <Card.Footer
-                            css={{
-                              position: 'relative'
-                            }}
+                            className={styles['sandbox-footer']}
                         >
                             <Textarea
+                                animated={false}
                                 id="userMessage"
                                 name="userMessage"
                                 minRows={1}
@@ -190,11 +189,7 @@ const ChatGPT = (): JSX.Element => {
                                 fullWidth
                                 form="task-form"
                                 placeholder="Type your message..."
-                                css={{
-                                  whiteSpace: 'pre-wrap',
-                                  filter: 'drop-shadow(0 0 4px rgba(0, 0, 0, 0.2))',
-                                  margin: 0
-                                }}
+                                className={styles['user-message-textarea']}
                                 onKeyDown={(event: any) => {
                                   if (!(event.shiftKey as boolean) && event.key === 'Enter') {
                                     event.preventDefault()
