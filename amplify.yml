@@ -6,12 +6,12 @@ frontend:
         - npm ci
     build:
       commands:
-        - npm run build
         - echo "NEXTAUTH_URL=$NEXTAUTH_URL" > .env
         - echo "GOOGLE_ID=$GOOGLE_ID" >> .env
         - echo "GOOGLE_SECRET=$GOOGLE_SECRET" >> .env
         - echo "API_URL=$API_URL" >> .env
         - echo "NEXTAUTH_SECRET=$NEXTAUTH_SECRET" >> .env
+        - npm run build
   artifacts:
     baseDirectory: .next
     files:
