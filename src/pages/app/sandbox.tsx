@@ -38,7 +38,7 @@ const MessageBubble = ({ from, text }: MessageBubbleProps): JSX.Element => {
   const borderEndEndRadius = from === 'human' ? '0' : borderRadius
   const alignItems = from === 'ai' ? 'flex-start' : 'flex-end'
   return (
-        <div style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems }}>
+        <div className='message' style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems }}>
             <Text
                 span
                 css={{
