@@ -13,6 +13,7 @@ declare interface TemplateTaskProps {
 }
 
 const TemplateTask = ({ task, properties, requiredList, resets }: TemplateTaskProps): JSX.Element => {
+  console.log('MADE IT TO THE CLIENT!')
   return (
         <Layout>
             <Template exampleUrl={`/api/ai-for-u/${task}-examples`} resets={resets}>
@@ -26,7 +27,7 @@ const getServerSideProps: GetServerSideProps = async (context) => {
   console.log('getServerSideProps!')
   const { task } = context.query
   // @ts-expect-error The SwaggerParser was written for vanilla js so it's types are weird.
-  const openapi = await new SwaggerParser().dereference('./openapi.json')
+  const openapi = await new SwaggerParser().dereference(`${process.cwd()}/openapi.json`)
   const path = openapi.paths[`/ai-for-u/${task as string}`]
   const schema = path.post.requestBody.content['application/json'].schema
   const properties = schema.properties
