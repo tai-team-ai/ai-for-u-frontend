@@ -7,8 +7,17 @@ import styles from '@/styles/Home.module.css'
 import Image from 'next/image'
 import { Container, Row, Spacer, Button, Link, Grid } from '@nextui-org/react'
 import FancyHoverCard from '@/components/elements/FancyHoverCard'
+import { type GetServerSideProps } from 'next'
 
-function Home (): JSX.Element {
+const getServerSideProps: GetServerSideProps = async (context) => {
+  Object.keys(process.env).forEach((value) => { console.log(value) })
+  return {
+    props: {}
+  }
+}
+
+function Home (props: GetServerSideProps): JSX.Element {
+  console.log(props)
   return (
         <Layout>
             <section className={styles['hero-section']}>
@@ -106,3 +115,4 @@ function Home (): JSX.Element {
   )
 }
 export default Home
+export { getServerSideProps }
