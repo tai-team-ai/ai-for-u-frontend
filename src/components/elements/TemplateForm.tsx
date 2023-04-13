@@ -198,6 +198,10 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     resets[title] = { value: selected, setValue: setSelected, default: property.default }
                     return <Dropdown {...dropdownProps} validSelections={property.items.enum} selectionMode="multiple" selected={selected} setSelected={setSelected} />
                   }
+                  if (property.type === 'array') {
+                    transforms[title] = v => v.split(',').map((v: string) => v.trim())
+                    return <Input {...inputProps}/>
+                  }
                   return null
                 })
             }

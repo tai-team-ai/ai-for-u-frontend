@@ -1,47 +1,36 @@
-import { type GetServerSideProps } from 'next'
 import Layout from '@/components/layout/layout'
 import Template from '@/components/layout/template'
 
 import TemplateForm, { type Reset } from '@/components/elements/TemplateForm'
-import SwaggerParser from 'swagger-parser'
+import SwaggerParser from '@apidevtools/swagger-parser'
+import { useSession } from 'next-auth/react'
+import { uFetch } from '@/utils/http'
+import { useRouter } from 'next/router'
+import useSWR from 'swr'
 
-declare interface TemplateTaskProps {
-  task: string
-  properties: any
-  requiredList: string[]
-  resets: Record<string, Reset>
-}
+const TemplateTask = (): JSX.Element => {
+  const { data: session } = useSession()
 
-const TemplateTask = ({ task, properties, requiredList, resets }: TemplateTaskProps): JSX.Element => {
-  console.log('MADE IT TO THE CLIENT!')
-  return (
-        <Layout>
-            <Template exampleUrl={`/api/ai-for-u/${task}-examples`} resets={resets}>
-                <TemplateForm task={task} properties={properties} requiredList={requiredList} resets={resets}/>
-            </Template>
-        </Layout>
-  )
-}
+  const fetcher = async (url: string): Promise<any> => await uFetch(url, { session }).then(async res => await SwaggerParser.dereference(await res.json()))
+  const { data, error, isLoading } = useSWR('/api/ai-for-u/openapi.json', fetcher)
 
-const getServerSideProps: GetServerSideProps = async (context) => {
-  console.log('getServerSideProps!')
-  const { task } = context.query
-  // @ts-expect-error The SwaggerParser was written for vanilla js so it's types are weird.
-  const openapi = await new SwaggerParser().dereference(`${process.cwd()}/openapi.json`)
-  const path = openapi.paths[`/ai-for-u/${task as string}`]
+  if (error != null) return <Layout><h1>{JSON.stringify(error)}</h1></Layout>
+  if (isLoading) return <Layout><h1>Loading...</h1></Layout>
+  const router = useRouter()
+  const { task } = router.query
+  const path = data.paths[`/ai-for-u/${task as string}`]
   const schema = path.post.requestBody.content['application/json'].schema
   const properties = schema.properties
   const requiredList = schema.required
   const resets: Record<string, Reset> = {}
-  return {
-    props: {
-      task,
-      properties,
-      requiredList,
-      resets
-    }
-  }
+
+  return (
+        <Layout>
+          <Template exampleUrl={`/api/ai-for-u/${task as string}-examples`} resets={resets}>
+            <TemplateForm task={task as string} properties={properties} requiredList={requiredList} resets={resets}/>
+          </Template>
+        </Layout>
+  )
 }
 
 export default TemplateTask
-export { getServerSideProps }
