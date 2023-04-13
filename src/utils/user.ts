@@ -15,7 +15,7 @@ const prefetchExample = async (session: Session | null, route: string): Promise<
       }
       return await response.json()
     }).then(data => {
-      window.localStorage.setItem(route, JSON.stringify(data))
+      sessionStorage.setItem(route, JSON.stringify(data))
       return data
     }).catch(reason => {
       return {
@@ -86,10 +86,10 @@ export function getUserID (session: Session | null): string | undefined {
 
 export async function getExamples (session: Session | null, route: string): Promise<any> {
   const mtExamples = { exampleNames: [], examples: [] }
-  if (typeof localStorage === 'undefined') {
+  if (typeof sessionStorage === 'undefined') {
     return mtExamples
   }
-  const storageItem = localStorage.getItem(route)
+  const storageItem = sessionStorage.getItem(route)
   if (storageItem == null) {
     return await prefetchExample(session, route)
   }
