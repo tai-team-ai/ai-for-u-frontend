@@ -47,7 +47,8 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<any> =
     ],
     pages: {
       signIn: '/'
-    }
+    },
+    secret: process.env.NEXTAUTH_SECRET
   }
   return NextAuth(req, res, authOptions)
 }
