@@ -19,7 +19,7 @@ export default function FancyHoverCard (props: FancyHoverCardProps): JSX.Element
 
             variant="bordered"
             className={`${styles['fancy-card']} ${styles[size]}`}
-            css={{ $$cardColor: '$colors$primaryLight', height: '100%', boxSizing: 'border-box', boxShadow: '1px 1px 5px 0 rgba(0, 0, 0, 0.1), -1px -1px 5px 0 rgba(0, 0, 0, 0.1)' }}
+            css={{ $$cardColor: '$colors$primaryLight', height: '100%', boxSizing: 'border-box', boxShadow: '1px 1px 3px 0 rgba(0, 0, 0, 0.1), -1px -1px 3px 0 rgba(0, 0, 0, 0.1)' }}
             >
                 <Card.Body className={styles['fancy-card-content']}>
                     <Text

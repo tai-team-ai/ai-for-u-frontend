@@ -42,7 +42,7 @@ const templates: TemplateObj[] = [
     callToAction: 'Let\'s get Creating!'
   },
   {
-    title: '📈 Cover Letter Maker',
+    title: '📈 Cover Letter Writer',
     description: 'Land your dream job with our AI-powered Cover Letter Maker. Perfect for anyone looking to advance their career, our tool takes the stress out of crafting the perfect cover letter!',
     href: '/templates/cover-letter-writer',
     callToAction: 'Let\'s get Writing!'
@@ -84,7 +84,7 @@ const Index = (): JSX.Element => {
   return (
         <Layout>
             <Container>
-                <Grid xs={12} sm={12} md={12} css={{ paddingLeft: '1em' }}>
+                <Grid css={{ paddingLeft: '1em' }}>
                 <Text
                     h1
                     css={{
