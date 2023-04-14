@@ -34,7 +34,11 @@ function Layout ({ children }: LayoutProps): JSX.Element {
             <NextUIProvider theme={theme}>
                 <PageNavbar />
                 <Spacer y={1} />
-                <Container>
+                <Container css={{
+                  '@media screen and (min-width: 1280px)': {
+                    maxWidth: '1430px'
+                  }
+                }}>
                     {children}
                 </Container>
                 <Footer />
