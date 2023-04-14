@@ -1,60 +1,70 @@
+import React, { useState } from 'react'
 import Layout from '@/components/layout/layout'
-import { useState } from 'react'
 import { Grid, Text, Container } from '@nextui-org/react'
 import Link from 'next/link'
 import SubscribeModal from '@/components/modals/SubscribeModal'
 import FancyHoverCard from '@/components/elements/FancyHoverCard'
 
+const TEMPLATE_PAGE_HEADER: JSX.Element = (
+  <>
+    <span style={{ whiteSpace: 'nowrap' }}>AI Templates</span>
+    <span style={{ wordBreak: 'break-word' }}>&nbsp;</span>
+    <span style={{ whiteSpace: 'nowrap' }}>for U 🥳</span>
+  </>
+)
+
+const MAILING_LIST_CALL_TO_ACTION: string = 'Subscribe for Updates!'
+
 interface TemplateObj {
   title: string
   description: string
   href: string
-  comingSoon: boolean
+  callToAction: string
 }
 
 const templates: TemplateObj[] = [
   {
-    title: 'Text Summarizer',
-    description: "Is it difficult to summarize all that notes you've taken for your meetings or classes?  Try this text summarizer to quickly condense all the important points of any note you've taken.",
+    title: '📄 Note Summarizer',
+    description: 'Struggling to keep up with note-taking during meetings or lectures? Say goodbye to the stress of sifting through endless notes and hello to more efficient work and study habits!',
     href: '/templates/text-summarizer',
-    comingSoon: false
+    callToAction: 'Let\'s get Summarizing!'
   },
   {
-    title: 'Text Revisor',
-    description: 'Grammar and spelling used to be very difficult but with the power of AI, you can check your content for mistakes.  Check out this AI tool for revising text!',
+    title: '📝 Text Revisor',
+    description: 'Improve your writing quality with our AI-powered text revisor! Whether you\'re a student or a professional, our AI text revisor can help you achieve your writing goals!',
     href: '/templates/text-revisor',
-    comingSoon: false
+    callToAction: 'Let\'s get Revising!'
   },
   {
-    title: 'Catchy Title Creator',
-    description: "One of the most difficult parts of creating art is coming up with a good title that will resonate with people.  Use this catchy title creator to always peek viewers' interest in your finest work.",
+    title: '✨ Catchy Title Creator',
+    description: 'Struggling to come up with a catchy title for your content? Our AI-powered catchy title creator can help you come up with the perfect title for your next blog post, article, or video!',
     href: '/templates/catchy-title-creator',
-    comingSoon: false
+    callToAction: 'Let\'s get Creating!'
   },
   {
-    title: 'Cover Letter Writer',
-    description: 'Need to land that dream job but they require a cover letter?  Have no fear, AI is here.  Use this wonderful tool to help you craft the perfect cover letter so you can progress in your career.',
+    title: '📈 Cover Letter Writer',
+    description: 'Land your dream job with our AI-powered Cover Letter Maker. Perfect for anyone looking to advance their career, our tool takes the stress out of crafting the perfect cover letter!',
     href: '/templates/cover-letter-writer',
-    comingSoon: false
+    callToAction: 'Let\'s get Writing!'
   },
   {
-    title: 'Many More Coming Soon',
-    description: 'We are constantly coming up with new amazing features to help you with your AI needs.  Subscribe to our mailing list to get notified of new features.',
+    title: '🚀 More Coming Soon!',
+    description: 'Stay ahead of the game with our upcoming AI-powered features. Subscribe to our mailing list to be the first to know when our latest features are released!',
     href: '',
-    comingSoon: true
+    callToAction: MAILING_LIST_CALL_TO_ACTION
   }
 ]
 
-const TemplateCard = ({ href, title, description, comingSoon }: TemplateObj): JSX.Element => {
+const TemplateCard = ({ href, title, description, callToAction }: TemplateObj): JSX.Element => {
   const [open, setOpen] = useState(false)
-  const actionPhrase = comingSoon ? 'Coming soon...' : 'Try it out, today!'
+  const actionPhrase = callToAction
 
   return <>
         <Link
             href={href}
             style={{ height: '100%', width: '100%' }}
             onClick={(e) => {
-              if (comingSoon) {
+              if (callToAction === MAILING_LIST_CALL_TO_ACTION) {
                 e.preventDefault()
                 setOpen(true)
               }
@@ -74,14 +84,20 @@ const Index = (): JSX.Element => {
   return (
         <Layout>
             <Container>
-                <Grid xs={12} sm={6} md={6} css={{ paddingLeft: '1em' }}>
-                    <Text
-                        h1
-                        css={{
-                          color: '$colors$primary'
-                        }}>Check out our new and upcoming AI templates,<br /> just for you!</Text>
+                <Grid css={{ paddingLeft: '1em' }}>
+                <Text
+                    h1
+                    css={{
+                      color: '$colors$primary',
+                      '@media screen and (max-width: 768px)': {
+                        fontSize: '$3xl'
+                      }
+                    }}
+                >
+                    {TEMPLATE_PAGE_HEADER}
+                </Text>
                 </Grid>
-                <Grid.Container gap={3}>
+                <Grid.Container gap={2} css={{ marginLeft: '-1em', marginRight: '-1em' }}>
                     {templates.map(template =>
                         <Grid xs={12} sm={6} md={4}>
                             <TemplateCard {...template}></TemplateCard>
