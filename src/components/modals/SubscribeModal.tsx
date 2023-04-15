@@ -19,6 +19,7 @@ export default function SubscribeModal ({ open, setOpen }: SubscribeModalProps):
             closeButton
             open={open}
             onClose={() => { setOpen(false) }}
+            css={{ marginLeft: '5vw', marginRight: '5vw' }}
         >
             <form id="subscribeForm" onSubmit={(e) => {
               e.preventDefault()
