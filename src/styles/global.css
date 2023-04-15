@@ -2,6 +2,7 @@
     --fancy-card1: 56, 36, 102;
     --fancy-card2: 81, 17, 171;
     --fancy-card3: 236, 142, 121;
+    --sandbox-entry-transition: filter .3s ease-in-out, transform .3s ease-in-out;
 }
 
 body {
