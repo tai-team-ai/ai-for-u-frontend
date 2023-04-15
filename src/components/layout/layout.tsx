@@ -37,7 +37,8 @@ function Layout ({ children }: LayoutProps): JSX.Element {
                 <Container css={{
                   '@media screen and (min-width: 1280px)': {
                     maxWidth: '1430px'
-                  }
+                  },
+                  marginBottom: '40vh'
                 }}>
                     {children}
                 </Container>

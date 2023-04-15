@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react'
 
 export const useViewport = (): { width: number, height: number } => {
   const [viewport, setViewport] = useState({
-    width: typeof window !== 'undefined' ? window.innerWidth : 0,
-    height: typeof window !== 'undefined' ? window.innerHeight : 0
+    width: 0,
+    height: 0
   })
 
   useEffect(() => {
@@ -13,6 +13,8 @@ export const useViewport = (): { width: number, height: number } => {
         height: window.innerHeight
       })
     }
+
+    handleResize()
 
     window.addEventListener('resize', handleResize)
 
