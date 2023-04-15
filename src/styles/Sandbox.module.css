@@ -7,26 +7,26 @@
     bottom: .8rem;
     height: calc(2em + 1px);
     transition: var(--sandbox-entry-transition);
-    filter: drop-shadow(2px 0 3px rgba(0, 0, 0, 0.1)) drop-shadow(-2px 0 3px rgba(0, 0, 0, 0.1));
+    filter: var(--shadow);
 }
 
 .send-button:hover {
-    filter: drop-shadow(4px 0 5px rgba(0, 0, 0, 0.15)) drop-shadow(-4px 0 5px rgba(0, 0, 0, 0.15));
-    transform: translateY(-4px);
+    filter: var(--hover-shadow);
+    transform: var(--hover-translate)
 }
 
 .user-message-textarea {
     white-space: pre-wrap;
     margin-bottom: .3rem;
     transition: var(--sandbox-entry-transition);
-    filter: drop-shadow(2px 0 3px rgba(0, 0, 0, 0.1)) drop-shadow(-2px 0 3px rgba(0, 0, 0, 0.1)); 
+    filter: var(--shadow);
     width: initial;
     margin-right: 45px;
 }
 
 .user-message-textarea:hover {
-    filter: drop-shadow(4px 0 5px rgba(0, 0, 0, 0.15)) drop-shadow(-4px 0 5px rgba(0, 0, 0, 0.15));
-    transform: translateY(-4px);
+    filter: var(--hover-shadow);
+    transform: var(--hover-translate)
 }
 
 .sandbox-footer {
@@ -58,19 +58,12 @@
 
 .chat-box-messages {
     display: inline-block;
-    padding: 8px;
-    max-width: 80%;
-    margin: 4px 0;
-}
-
-.message {
-    display: inline-block;
     max-width: 80%;
     padding: 8px;
     margin: 4px 0;
     border-radius: 12px;
-    filter: drop-shadow(2px 0 3px rgba(0, 0, 0, 0.1)) drop-shadow(-2px 0 3px rgba(0, 0, 0, 0.1));
-} 
+    filter: var(--shadows);
+}
 
 .message.user {
     color: white;
