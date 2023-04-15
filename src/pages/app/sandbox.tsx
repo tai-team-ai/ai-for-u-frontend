@@ -181,30 +181,30 @@ const ChatGPT = (): JSX.Element => {
                             className={styles['sandbox-footer']}
                         >
                             <Textarea
-                                animated={false}
-                                id="userMessage"
-                                name="userMessage"
-                                minRows={1}
-                                maxRows={4}
-                                fullWidth
-                                form="task-form"
-                                placeholder="Type your message..."
-                                className={styles['user-message-textarea']}
-                                onKeyDown={(event: any) => {
-                                  if (!(event.shiftKey as boolean) && event.key === 'Enter') {
-                                    event.preventDefault()
-                                    const form: HTMLFormElement | null = document.querySelector('#task-form')
-                                    if (form != null) {
-                                      form.requestSubmit()
-                                    }
+                              animated={false}
+                              id="userMessage"
+                              name="userMessage"
+                              minRows={1}
+                              maxRows={4}
+                              fullWidth
+                              form="task-form"
+                              placeholder="Type your message..."
+                              className={`${styles['user-message-textarea']} ${styles['user-message-textarea-hover']}`}
+                              onKeyDown={(event: any) => {
+                                if (!(event.shiftKey as boolean) && event.key === 'Enter') {
+                                  event.preventDefault()
+                                  const form: HTMLFormElement | null = document.querySelector('#task-form')
+                                  if (form != null) {
+                                    form.requestSubmit()
                                   }
-                                }}
+                                }
+                              }}
                             />
                             <Button
-                                size="sm"
-                                auto
-                                className={styles['send-button']}
-                                type="submit"
+                              size="sm"
+                              auto
+                              className={`${styles['send-button']} ${styles['send-button-hover']}`}
+                              type="submit"
                             >
                                 <SendIcon shapeRendering='rounded' />
                             </Button>
