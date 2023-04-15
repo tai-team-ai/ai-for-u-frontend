@@ -1,8 +1,9 @@
 import Input from './Input'
 import Textarea from './Textarea'
 import Dropdown from './Dropdown'
-import { Checkbox, Button, Loading, Text } from '@nextui-org/react'
-
+import { Checkbox, Button, Loading, Text, useModal } from '@nextui-org/react'
+import LoginModal from '../modals/LoginModal'
+import GoProModal from '../modals/GoProModal'
 import { useState } from 'react'
 import { uFetch } from '@/utils/http'
 import { useSession } from 'next-auth/react'
@@ -94,6 +95,9 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
     userPromptFeedbackContext: {},
     aiResponseFeedbackContext: {}
   })
+  const [showLogin, setShowLogin] = useState<boolean>(false)
+  const [loginMessage, setLoginMessage] = useState<string>('')
+  const { bindings: goProBindings } = useModal()
   const [children, setChildren] = useState<JSX.Element>(<></>)
 
   const transforms: Record<string, (v: any) => any> = {}
@@ -118,7 +122,8 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                         })
                       } else if (response.status === 429) {
                         void response.json().then(message => {
-                          showSnackbar(message.message)
+                          setLoginMessage(message.message)
+                          setShowLogin(true)
                           setLoading(false)
                         })
                       } else {
@@ -221,7 +226,22 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
             <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} >
                 {children}
             </ResultBox>
-        </form></>)
+        </form>
+        {session !== null
+          ? <GoProModal
+          bindings={{
+            open: showLogin,
+            onClose: goProBindings.onClose
+          }}
+          />
+          : <LoginModal
+          open={showLogin}
+          setOpen={setShowLogin}
+          isSignUp={true}
+          message={loginMessage}
+        />
+        }
+        </>)
 }
 
 export default TemplateForm

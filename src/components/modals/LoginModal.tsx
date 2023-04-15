@@ -10,9 +10,10 @@ interface LoginModalProps {
   setOpen: (o: boolean) => void
   isSignUp: boolean
   error?: string | null
+  message?: string | null
 }
 
-const LoginModal = ({ open, setOpen, isSignUp = false, error = null }: LoginModalProps): JSX.Element => {
+const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = null }: LoginModalProps): JSX.Element => {
   const [loggingIn, setLoggingIn] = React.useState(false)
   const loginForm = useRef<HTMLFormElement>(null)
 
@@ -164,6 +165,7 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null }: LoginModa
                     </Text>
                 </Modal.Header>
                 <Modal.Body>
+                  <Text css={{ textAlign: 'center' }}>{message}</Text>
                 <Card
                     variant="bordered"
                     css={{
