@@ -92,6 +92,7 @@ const FeedbackModal = ({ open, setOpen, aiResponseFeedbackContext, aiToolEndpoin
             open={open}
             closeButton
             onClose={() => { setOpen(false) }}
+            css={{ marginLeft: '5vw', marginRight: '5vw' }}
         >
                 <Modal.Header>
                     <Text h3>

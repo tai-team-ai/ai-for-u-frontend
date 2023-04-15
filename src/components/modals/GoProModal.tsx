@@ -11,6 +11,7 @@ const GoProModal = ({ bindings }: GoProModalProps): JSX.Element => {
             closeButton
             {...bindings}
             width="600px"
+            css={{ marginLeft: '5vw', marginRight: '5vw' }}
         >
             <Modal.Header>
                 <Text h3>Go Pro to unlock all the features.</Text>
@@ -42,8 +43,8 @@ const GoProModal = ({ bindings }: GoProModalProps): JSX.Element => {
                     </Grid>
                 </Grid.Container>
             </Modal.Body>
-            <Modal.Footer justify="center">
-                <SubscribeField/>
+            <Modal.Footer justify="flex-end">
+                <SubscribeField style={{ marginRight: '4rem' }} />
             </Modal.Footer>
         </Modal>
   )

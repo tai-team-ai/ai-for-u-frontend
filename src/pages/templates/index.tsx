@@ -83,8 +83,8 @@ const TemplateCard = ({ href, title, description, callToAction }: TemplateObj): 
 const Index = (): JSX.Element => {
   return (
         <Layout>
-            <Container>
-                <Grid css={{ paddingLeft: '1em' }}>
+            <Container css={{ padding: '0', margin: '0 -24px', maxWidth: 'calc(100% + 48px)', marginLeft: 'auto', marginRight: 'auto' }}>
+                <Grid css={{ paddingLeft: '1rem' }}>
                 <Text
                     h1
                     css={{
@@ -97,7 +97,7 @@ const Index = (): JSX.Element => {
                     {TEMPLATE_PAGE_HEADER}
                 </Text>
                 </Grid>
-                <Grid.Container gap={2} css={{ marginLeft: '-1em', marginRight: '-1em' }}>
+                <Grid.Container gap={2}>
                     {templates.map(template =>
                         <Grid xs={12} sm={6} md={4}>
                             <TemplateCard {...template}></TemplateCard>
