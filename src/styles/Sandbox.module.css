@@ -62,7 +62,7 @@
     padding: 8px;
     margin: 4px 0;
     border-radius: 12px;
-    filter: var(--shadows);
+    filter: var(--shadow);
 }
 
 .message.user {
