@@ -43,13 +43,13 @@ const templates: TemplateObj[] = [
   },
   {
     title: '📈 Cover Letter Writer',
-    description: 'Land your dream job with our AI-powered Cover Letter Maker. Perfect for anyone looking to advance their career, our tool takes the stress out of crafting the perfect cover letter!',
+    description: 'Land your dream job with our AI-powered Cover Letter Maker! Perfect for anyone looking to advance their career, our tool takes the stress out of crafting the perfect cover letter!',
     href: '/templates/cover-letter-writer',
     callToAction: 'Let\'s get Writing!'
   },
   {
     title: '🚀 More Coming Soon!',
-    description: 'Stay ahead of the game with our upcoming AI-powered features. Subscribe to our mailing list to be the first to know when our latest features are released!',
+    description: 'Stay ahead of the game with our upcoming AI-powered features! Subscribe to our mailing list to be the first to know when our latest features are released!',
     href: '',
     callToAction: MAILING_LIST_CALL_TO_ACTION
   }
