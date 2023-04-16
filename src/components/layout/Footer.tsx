@@ -1,19 +1,18 @@
 import React from 'react'
 import { Container, Grid, Text, Image, Link, useModal } from '@nextui-org/react'
 import { routes } from '@/utils/constants'
-import { useViewport } from '@/utils/hooks'
+import { isMobile } from '@/utils/hooks'
 import styles from '@/styles/Footer.module.css'
 import SubscribeField from '../elements/SubscribeField'
 import GoProModal from '@/components/modals/GoProModal'
 
 const Footer = (): JSX.Element => {
   const { setVisible: setShowGoProModal, bindings: goProBindings } = useModal()
-  const viewport = useViewport()
-  const isMobile = viewport.width <= 640
+  const isMobileDevice = isMobile()
 
   return (
     <>
-        {isMobile
+        {isMobileDevice
           ? (
             <React.Fragment>
                 <footer className={styles.footer}>

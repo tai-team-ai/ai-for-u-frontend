@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-export const useViewport = (): { width: number, height: number } => {
+function useViewport (): { width: number, height: number } {
   const [viewport, setViewport] = useState({
     width: 0,
     height: 0
@@ -25,3 +25,10 @@ export const useViewport = (): { width: number, height: number } => {
 
   return viewport
 }
+
+function isMobile (): boolean {
+  const { width } = useViewport()
+  return width < 768
+}
+
+export { isMobile }

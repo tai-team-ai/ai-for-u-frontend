@@ -11,6 +11,7 @@ import { getInitialChat } from '@/utils/user'
 import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
+import { isMobile } from '@/utils/hooks'
 
 interface RequestBody {
   conversationUuid: string
@@ -85,6 +86,8 @@ const getConversationUuid = (): string => {
 }
 
 const ChatGPT = (): JSX.Element => {
+  const isMobileDevice = isMobile()
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const { data: session } = useSession()
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [loading, setLoading] = useState<boolean>(false)
@@ -117,6 +120,18 @@ const ChatGPT = (): JSX.Element => {
       chatBoxRef.current.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
     }
   }, [messages])
+
+  const handleClick = (): void => {
+    if (isMobileDevice) {
+      const windowHeight = window.innerHeight
+      const halfwayPosition = windowHeight / 2
+      const currentScrollPosition =
+        window.pageYOffset ?? document.documentElement.scrollTop ?? 0
+      if (Math.abs(currentScrollPosition - halfwayPosition) > 10) {
+        window.scrollTo({ top: halfwayPosition, behavior: 'smooth' })
+      }
+    }
+  }
 
   return (<>
         <Layout>
@@ -167,7 +182,7 @@ const ChatGPT = (): JSX.Element => {
                         })
                     }}
                 >
-                    <Card css={{ height: '800px', display: 'flex', flexDirection: 'column' }} className={styles['sandbox-card']}>
+                    <Card css={{ height: '80vh', display: 'flex', flexDirection: 'column' }} className={styles['sandbox-card']}>
                       <Card.Body ref={chatBoxRef} className={styles['chat-box']}>
                             {messages.map((message) => <Message {...message} />)}
                             {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
@@ -175,26 +190,28 @@ const ChatGPT = (): JSX.Element => {
                         <Card.Footer
                             className={styles['sandbox-footer']}
                         >
-                            <Textarea
-                              animated={false}
-                              id="userMessage"
-                              name="userMessage"
-                              minRows={1}
-                              maxRows={5}
-                              fullWidth
-                              form="task-form"
-                              placeholder="Type your message..."
-                              className={`${styles['user-message-textarea']} ${styles['user-message-textarea-hover']}`}
-                              onKeyDown={(event: any) => {
-                                if (!(event.shiftKey as boolean) && event.key === 'Enter') {
-                                  event.preventDefault()
-                                  const form: HTMLFormElement | null = document.querySelector('#task-form')
-                                  if (form != null) {
-                                    form.requestSubmit()
-                                  }
+                          <Textarea
+                            animated={false}
+                            id="userMessage"
+                            name="userMessage"
+                            minRows={1}
+                            maxRows={5}
+                            fullWidth
+                            form="task-form"
+                            placeholder="Type your message..."
+                            className={`${styles['user-message-textarea']} ${styles['user-message-textarea-hover']}`}
+                            onKeyDown={(event: any) => {
+                              if (!(event.shiftKey as boolean) && event.key === 'Enter') {
+                                event.preventDefault()
+                                const form: HTMLFormElement | null = document.querySelector('#task-form')
+                                if (form != null) {
+                                  form.requestSubmit()
                                 }
-                              }}
-                            />
+                              }
+                            }}
+                            onClick={handleClick} // Add click event listener
+                            ref={textAreaRef} // Set a ref to the text area element
+                          />
                             <Button
                               size="sm"
                               auto
