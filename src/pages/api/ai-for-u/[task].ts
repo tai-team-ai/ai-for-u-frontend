@@ -8,7 +8,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
   }
   const { task } = req.query
   let statusCode = 200
-  const token = getToken({ req })
+  const token = await getToken({ req, raw: true })
   fetch(
         `${process.env.API_URL}/ai-for-u/${task as string}`,
         {
@@ -18,7 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
           headers: {
             uuid: req.headers.uuid,
             'Content-Type': 'application/json',
-            Token: token
+            JWT: token
           }
         }
   ).then(async response => {
