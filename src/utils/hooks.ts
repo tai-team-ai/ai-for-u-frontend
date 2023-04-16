@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 function useViewport (): { width: number, height: number } {
   const [viewport, setViewport] = useState({
@@ -31,14 +31,18 @@ function isMobile (): boolean {
   return width < 768
 }
 
-function isMobileKeyboardVisible (): boolean {
+function isMobileKeyboardVisible(): boolean {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
   const { height: windowHeight } = useViewport()
+  const windowHeightRef = useRef(windowHeight)
+
+  useEffect(() => {
+    windowHeightRef.current = windowHeight
+  }, [windowHeight])
 
   useEffect(() => {
     const handleResize = (): void => {
-      // Check if the window height has decreased (keyboard is visible)
-      if (window.innerHeight < windowHeight) {
+      if (window.innerHeight < windowHeightRef.current) {
         setIsKeyboardVisible(true)
       } else {
         setIsKeyboardVisible(false)
@@ -54,7 +58,7 @@ function isMobileKeyboardVisible (): boolean {
     return () => {
       window.removeEventListener('resize', handleResize)
     }
-  }, [windowHeight])
+  }, [])
 
   return isKeyboardVisible
 }
