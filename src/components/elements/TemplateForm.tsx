@@ -1,7 +1,7 @@
 import Input from './Input'
 import Textarea from './Textarea'
 import Dropdown from './Dropdown'
-import { Checkbox, Button, Loading, Text, useModal } from '@nextui-org/react'
+import { Checkbox, Button, Loading, Text } from '@nextui-org/react'
 import LoginModal from '../modals/LoginModal'
 import GoProModal from '../modals/GoProModal'
 import { useState } from 'react'
@@ -97,7 +97,6 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
   })
   const [showLogin, setShowLogin] = useState<boolean>(false)
   const [loginMessage, setLoginMessage] = useState<string>('')
-  const { bindings: goProBindings } = useModal()
   const [children, setChildren] = useState<JSX.Element>(<></>)
 
   const transforms: Record<string, (v: any) => any> = {}
@@ -231,7 +230,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
           ? <GoProModal
           bindings={{
             open: showLogin,
-            onClose: goProBindings.onClose
+            onClose: () => { setShowLogin(false) }
           }}
           />
           : <LoginModal
