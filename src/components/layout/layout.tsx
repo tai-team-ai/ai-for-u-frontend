@@ -30,22 +30,23 @@ function Layout ({ children }: LayoutProps): JSX.Element {
     }
   })
   return (
-        <SSRProvider>
-            <NextUIProvider theme={theme}>
-                <PageNavbar />
-                <Spacer y={1} />
-                <Container css={{
-                  '@media screen and (min-width: 1280px)': {
-                    maxWidth: '1430px'
-                  },
-                  marginBottom: '40vh'
-                }}>
-                    {children}
-                </Container>
-                <Footer />
-                <Snackbar />
-            </NextUIProvider>
-        </SSRProvider>
+    <SSRProvider>
+      <NextUIProvider theme={theme}>
+          <PageNavbar />
+          <Spacer y={1} />
+          <Container css={{
+            '@media screen and (min-width: 1280px)': {
+              maxWidth: '1430px'
+            },
+            paddingBottom: '5rem', // This will create space at the bottom of the container for the footer.
+            minHeight: '100%' // This will make the container grow with its contents.
+          }}>
+            {children}
+          </Container>
+          <Footer />
+        <Snackbar />
+      </NextUIProvider>
+    </SSRProvider>
   )
 }
 export default Layout
