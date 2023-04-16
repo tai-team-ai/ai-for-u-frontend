@@ -10,8 +10,12 @@ const GoProModal = ({ bindings }: GoProModalProps): JSX.Element => {
         <Modal
             closeButton
             {...bindings}
-            width="600px"
-            css={{ marginLeft: '5vw', marginRight: '5vw' }}
+            width="50rem"
+            css={{
+              maxWidth: '90vw',
+              marginLeft: 'auto',
+              marginRight: 'auto'
+            }}
         >
             <Modal.Header>
                 <Text h3>Go Pro to unlock all the features.</Text>

@@ -19,7 +19,11 @@ export default function SubscribeModal ({ open, setOpen }: SubscribeModalProps):
             closeButton
             open={open}
             onClose={() => { setOpen(false) }}
-            css={{ marginLeft: '5vw', marginRight: '5vw' }}
+            css={{
+              maxWidth: '90vw',
+              marginLeft: 'auto',
+              marginRight: 'auto'
+            }}
         >
             <form id="subscribeForm" onSubmit={(e) => {
               e.preventDefault()
@@ -30,7 +34,7 @@ export default function SubscribeModal ({ open, setOpen }: SubscribeModalProps):
               void joinMailingList({ session, email, setIsSubmitting, setIsSubscribed })
             }}>
                 <Modal.Header>
-                    <Text h3>Premium feature coming soon!</Text>
+                    <Text h3>More feature coming soon!</Text>
                 </Modal.Header>
                 <Modal.Body>
                     {!isSubscribed
