@@ -6,6 +6,16 @@
     --shadow: drop-shadow(2px 0 3px rgba(0, 0, 0, 0.1)) drop-shadow(-2px 0 3px rgba(0, 0, 0, 0.1));
     --hover-shadow: drop-shadow(4px 0 5px rgba(0, 0, 0, 0.15)) drop-shadow(-4px 0 5px rgba(0, 0, 0, 0.15));
     --hover-translate: translateY(-4px);
+    --primary-light: #CAB1EF; /* originally $blue200 */
+    --primary-light-hover: #9D7FD1; /* originally $blue300 */
+    --primary-light-active: #6E54A3; /* originally $blue400 */
+    --primary-light-contrast: #2B1A57; /* originally $blue600 */
+    --primary: #2B1A57; /* originally $blue600 */
+    --primary-border: #382466; /* originally $blue500 */
+    --primary-border-hover: #2B1A57; /* originally $blue600 */
+    --primary-solid-hover: #1F1249; /* originally $blue700 */
+    --primary-solid-contrast: #fff; /* originally $white */
+    --primary-shadow: #382466; /* originally $blue500 */
 }
 
 body {
