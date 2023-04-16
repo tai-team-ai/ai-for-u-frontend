@@ -15,7 +15,7 @@
     right: 4px;
     bottom: -.4rem;
     max-height: 7.7rem;
-    min-height: 2.5rem;
+    min-height: 2.4rem;
     height: calc(180% - 5.9rem);
     transition: var(--sandbox-entry-transition);
     filter: var(--shadow);
@@ -39,6 +39,18 @@
 .user-message-textarea:hover {
     filter: var(--hover-shadow);
     transform: var(--hover-translate)
+}
+
+@media (max-width: 767px) {
+    .send-button:hover {
+      filter: var(--shadow); /* keep the shadow effect */
+      transform: none; /* disable the hover effect */
+    }
+    
+    .user-message-textarea:hover {
+      filter: var(--shadow); /* keep the shadow effect */
+      transform: none; /* disable the hover effect */
+    }
 }
 
 @media (max-width: 991px) {

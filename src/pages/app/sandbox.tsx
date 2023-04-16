@@ -1,7 +1,8 @@
 import Layout from '@/components/layout/layout'
 import Template from '@/components/layout/template'
 import styles from '@/styles/Sandbox.module.css'
-import { Card, Loading, Textarea, Text, useTheme } from '@nextui-org/react'
+import { Button, Card, Loading, Textarea, Text, useTheme } from '@nextui-org/react'
+import SendIcon from '@mui/icons-material/Send'
 import { type ReactNode, useEffect, useState, useRef } from 'react'
 import { v4 as uuid } from 'uuid'
 import { uFetch } from '@/utils/http'
@@ -117,25 +118,6 @@ const ChatGPT = (): JSX.Element => {
     }
   }, [messages])
 
-  function isMobile(): boolean {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  }
-
-  if (isMobile()) {
-    document.querySelectorAll('.send-button, .user-message-textarea').forEach((element) => {
-      element.addEventListener('touchstart', () => {
-        element.classList.add('hovered')
-        setTimeout(() => {
-          element.classList.remove('hovered')
-        }, 1000)
-      })
-
-      element.addEventListener('touchend', () => {
-        element.classList.remove('hovered')
-      })
-    })
-  }
-
   return (<>
         <Layout>
         <Template
@@ -213,6 +195,14 @@ const ChatGPT = (): JSX.Element => {
                                 }
                               }}
                             />
+                            <Button
+                              size="sm"
+                              auto
+                              className={`${styles['send-button']} ${styles['send-button-hover']}`}
+                              type="submit"
+                            >
+                                <SendIcon shapeRendering='rounded' />
+                            </Button>
                         </Card.Footer>
                     </Card>
                 </form>
