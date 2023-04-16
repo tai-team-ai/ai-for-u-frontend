@@ -40,7 +40,7 @@ function Layout ({ children }: LayoutProps): JSX.Element {
             display: 'flex',
             flexDirection: 'column',
             marginBottom: '7rem', // This will create space at the bottom of the container for the footer.
-            minHeight: '75vh' // This will make the container grow with its contents.
+            minHeight: '90vh' // This will make the container grow with its contents.
           }}>
             {children}
           </Container>
