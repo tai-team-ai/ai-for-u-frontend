@@ -1,0 +1,12 @@
+.sliderInput {
+  width: 100%;
+  background-color: transparent;
+  appearance: none;
+  cursor: pointer;
+}
+
+.sliderInput::-webkit-slider-runnable-track,
+.sliderInput::-moz-range-track {
+  background: var(--nextui-colors-primaryLight);
+  height: 0.5rem;
+}

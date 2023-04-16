@@ -11,6 +11,7 @@ import { ResultBox } from '../layout/template'
 import Markdown from 'markdown-to-jsx'
 import { ShowDiffBtn } from './diffview'
 import { showSnackbar } from './Snackbar'
+import Slider from './Slider'
 
 const camelToTitle = (camel: string): string => {
   const reuslt = camel.replace(/([A-Z])/g, ' $1')
@@ -163,6 +164,10 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     min: property.minimum | 0,
                     max: property.maximum,
                     label
+                  }
+                  if (title === 'creativity') {
+                    transforms[title] = Number
+                    return <Slider required={required} name={title} label={label} min={property.minimum | 0} max={property.maximum} defaultValue={property.default} />
                   }
                   if (property.type === 'string') {
                     transforms[title] = String
