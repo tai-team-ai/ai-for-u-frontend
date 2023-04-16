@@ -167,7 +167,7 @@ const ChatGPT = (): JSX.Element => {
                         })
                     }}
                 >
-                    <Card css={{ height: '80vh', display: 'flex', flexDirection: 'column' }} className={styles['sandbox-card']}>
+                    <Card css={{ height: '800px', display: 'flex', flexDirection: 'column' }} className={styles['sandbox-card']}>
                       <Card.Body ref={chatBoxRef} className={styles['chat-box']}>
                             {messages.map((message) => <Message {...message} />)}
                             {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
