@@ -11,7 +11,7 @@ import { getInitialChat } from '@/utils/user'
 import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
-import { isMobile, isMobileKeyboardVisible } from '@/utils/hooks'
+import { isMobileKeyboardVisible } from '@/utils/hooks'
 
 interface RequestBody {
   conversationUuid: string
@@ -86,7 +86,6 @@ const getConversationUuid = (): string => {
 }
 
 const ChatGPT = (): JSX.Element => {
-  const isMobileDevice = isMobile()
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const { data: session } = useSession()
   const [messages, setMessages] = useState<MessageProps[]>([])
@@ -121,22 +120,6 @@ const ChatGPT = (): JSX.Element => {
       chatBoxRef.current.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
     }
   }, [messages])
-
-  const handleClick = (): void => {
-    if (isMobileDevice) {
-      if (isKeyboardVisible) {
-        setTimeout(() => {
-          const elementTop = textAreaRef.current?.getBoundingClientRect().top
-          const halfwayPosition = elementTop != null ? elementTop - window.innerHeight / 2 : 0
-          window.scrollTo({ top: halfwayPosition, behavior: 'smooth' })
-        }, 2000)
-      } else {
-        const elementTop = textAreaRef.current?.getBoundingClientRect().top
-        const halfwayPosition = elementTop != null ? elementTop - window.innerHeight / 2 : 0
-        window.scrollTo({ top: halfwayPosition, behavior: 'smooth' })
-      }
-    }
-  }
 
   return (<>
         <Layout>
@@ -187,7 +170,7 @@ const ChatGPT = (): JSX.Element => {
                         })
                     }}
                 >
-                    <Card css={{ height: '80vh', display: 'flex', flexDirection: 'column' }} className={styles['sandbox-card']}>
+                    <Card css={{ height: isKeyboardVisible ? '20vh' : '80vh', display: 'flex', flexDirection: 'column' }} className={styles['sandbox-card']}>
                       <Card.Body ref={chatBoxRef} className={styles['chat-box']}>
                             {messages.map((message) => <Message {...message} />)}
                             {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
@@ -214,7 +197,6 @@ const ChatGPT = (): JSX.Element => {
                                 }
                               }
                             }}
-                            onClick={handleClick} // Add click event listener
                             ref={textAreaRef} // Set a ref to the text area element
                           />
                             <Button
