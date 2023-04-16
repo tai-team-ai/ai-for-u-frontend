@@ -14,7 +14,7 @@ export function RateResponse ({ aiResponseFeedbackContext, aiToolEndpointName, u
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
   return (
     <>
-        <div>
+        <div style={{ marginTop: '-.4rem', marginBottom: '-.4rem' }}>
             <span
                 className={styles['rate-btn']}
                 onClick={() => { setShowFeedbackModal(true) }}
@@ -92,6 +92,7 @@ const FeedbackModal = ({ open, setOpen, aiResponseFeedbackContext, aiToolEndpoin
             open={open}
             closeButton
             onClose={() => { setOpen(false) }}
+            css={{ marginLeft: '5vw', marginRight: '5vw' }}
         >
                 <Modal.Header>
                     <Text h3>

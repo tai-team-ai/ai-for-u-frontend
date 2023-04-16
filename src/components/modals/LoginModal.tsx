@@ -157,6 +157,11 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null }: LoginModa
                 window.location.replace(window.location.toString().split('?')[0])
               }
             }}
+            css={{
+              maxWidth: '90vw',
+              marginLeft: 'auto',
+              marginRight: 'auto'
+            }}
         >
                 <Modal.Header>
                     <Text h3>

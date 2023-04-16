@@ -113,8 +113,8 @@ const ChatGPT = (): JSX.Element => {
   })
 
   useEffect(() => {
-    if (chatBoxRef.current != null) {
-      chatBoxRef.current.scrollTop = chatBoxRef.current.scrollHeight
+    if (chatBoxRef.current?.lastChild instanceof Element) {
+      chatBoxRef.current.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
     }
   }, [messages])
 
@@ -171,7 +171,7 @@ const ChatGPT = (): JSX.Element => {
                     }}
                 >
                     <Card css={{ height: '80vh', display: 'flex', flexDirection: 'column' }}>
-                      <Card.Body className={styles['chat-box']} ref={chatBoxRef}>
+                      <Card.Body ref={chatBoxRef} className={styles['chat-box']}>
                             {messages.map((message) => <Message {...message} />)}
                             {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
                         </Card.Body>
@@ -183,7 +183,7 @@ const ChatGPT = (): JSX.Element => {
                               id="userMessage"
                               name="userMessage"
                               minRows={1}
-                              maxRows={4}
+                              maxRows={5}
                               fullWidth
                               form="task-form"
                               placeholder="Type your message..."

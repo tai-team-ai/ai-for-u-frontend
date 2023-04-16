@@ -1,11 +1,20 @@
+.sandbox-footer {
+    display: flex;
+    align-items: stretch;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: .9rem;
+}
+
+
 .send-button {
     font-size: 18px;
-    padding: 8px;
-    position: absolute;
+    padding: 10px;
     border-radius: var(--nextui-radii-md);
-    right: 12px;
-    bottom: .8rem;
-    height: calc(2em + 1px);
+    right: 4px;
+    bottom: -.4rem;
+    height: calc(125% - 47px); /* set a default height */
     transition: var(--sandbox-entry-transition);
     filter: var(--shadow);
 }
@@ -17,11 +26,13 @@
 
 .user-message-textarea {
     white-space: pre-wrap;
-    margin-bottom: .3rem;
+    padding-bottom: .9rem;
+    padding-top: 1rem;
     transition: var(--sandbox-entry-transition);
     filter: var(--shadow);
     width: initial;
-    margin-right: 45px;
+    margin-right: 0px;
+
 }
 
 .user-message-textarea:hover {
@@ -29,12 +40,7 @@
     transform: var(--hover-translate)
 }
 
-.sandbox-footer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
+
 
 .sandbox-footer>div {
     padding-top: 12px;
@@ -60,7 +66,7 @@
     display: inline-block;
     max-width: 80%;
     padding: 8px;
-    margin: 4px 0;
+    margin: 6px 0;
     border-radius: 12px;
     filter: var(--shadow);
 }
