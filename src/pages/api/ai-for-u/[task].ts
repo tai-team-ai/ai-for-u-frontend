@@ -8,18 +8,20 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
   }
   const { task } = req.query
   let statusCode = 200
-  const token = getToken({ req })
+  const token = await getToken({ req, raw: true })
+  const headers: any = {
+    uuid: req.headers.uuid as string,
+    'Content-Type': 'application/json'
+  }
+  if (token !== null) {
+    headers.JWT = token
+  }
   fetch(
         `${process.env.API_URL}/ai-for-u/${task as string}`,
         {
           method: req.method,
           body: req.method === 'POST' ? JSON.stringify(req.body) : undefined,
-          // @ts-expect-error adding custom headers but the headers type is rigid.
-          headers: {
-            uuid: req.headers.uuid,
-            'Content-Type': 'application/json',
-            Token: token
-          }
+          headers
         }
   ).then(async response => {
     statusCode = response.status
