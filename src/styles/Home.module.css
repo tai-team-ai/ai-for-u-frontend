@@ -1,3 +1,16 @@
 .trust-builder-image {
     filter: brightness(0.8);
 }
+
+.hero-paragraph {
+    font-size: 1.4rem;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+@media (min-width: 992px) {
+    .hero-paragraph {
+        font-size: 1.5rem;
+    }
+}

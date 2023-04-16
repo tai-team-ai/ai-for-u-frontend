@@ -6,26 +6,78 @@ interface AIForAnimationProps {
   stepSpeed?: number // number of ms between word changes
 }
 
-export default function AIForAnimation ({ stepSpeed = 2000 }: AIForAnimationProps): JSX.Element {
-  const whoIsAIFor = [
+const TITLE: string = 'AI for U'
+
+export default function AIForAnimation ({ stepSpeed = 400 }: AIForAnimationProps): JSX.Element {
+  const whoIsAIFor: string[] = [
+    'Sports coaches',
+    'Event planners',
+    'Lawyers',
+    'Gamers',
+    'Students',
+    'Writers',
+    'Scientists',
+    'Designers',
+    'Developers',
     'Engineers',
-    'People',
-    'Dogs',
-    'Cats',
-    'Elephants',
-    '_____'
+    'Analysts',
+    'Managers',
+    'Musicians',
+    'Chefs',
+    'Photographers',
+    'Trainers',
+    'Planners',
+    'Agents',
+    'Workers',
+    'Psychologists',
+    'Teachers',
+    'Journalists',
+    'Real estate agents',
+    'Travel agents',
+    'Financial analysts',
+    'HR managers',
+    'Robotics engineers',
+    'Architects',
+    'Accountants',
+    'Government agencies',
+    'Healthcare providers',
+    'Fashion designers',
+    'Graphic designers',
+    'Interior designers',
+    'Web developers',
+    'Data scientists',
+    'Content creators',
+    '__________',
+    'Everyone',
+    'U'
   ]
   const rotatorRef = useRef<HTMLSpanElement>(null)
   const [activeIdx, setActiveIdx] = useState<number>(0)
   const [heightOffset, setHeightOffset] = useState<number>(0)
+  const [animationSpeed, setAnimationSpeed] = useState<number>(stepSpeed)
 
-  setTimeout(() => {
-    if (activeIdx < whoIsAIFor.length - 1) {
-      setActiveIdx(activeIdx + 1)
-    }
-  }, stepSpeed)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (activeIdx < whoIsAIFor.length - 1) {
+        if (whoIsAIFor.length - activeIdx <= 1) {
+          setAnimationSpeed(animationSpeed * 3)
+        } else if (whoIsAIFor.length - activeIdx <= 3) {
+          setAnimationSpeed(animationSpeed * 2)
+        } else if (whoIsAIFor.length - activeIdx <= 10) {
+          setAnimationSpeed(animationSpeed * 1.3)
+        } else if (activeIdx <= 8) {
+          setAnimationSpeed(animationSpeed * 0.95)
+        } else if (activeIdx <= 12) {
+          setAnimationSpeed(animationSpeed * 0.85)
+        }
+        setActiveIdx(activeIdx + 1)
+      } else {
+        setActiveIdx(whoIsAIFor.length - 1)
+      }
+    }, animationSpeed)
+    return () => { clearTimeout(timer) }
+  }, [activeIdx, animationSpeed])
 
-  // I'm doing this just becaues I don't really want to keep track of refs for all the elements
   useEffect(() => {
     if (rotatorRef === null || (rotatorRef.current == null)) {
       return
@@ -37,11 +89,31 @@ export default function AIForAnimation ({ stepSpeed = 2000 }: AIForAnimationProp
 
   return (
     <>
-      <div className='ai-4-animation'>
-        <span className={styles.container}><Text h2>AI for </Text><span ref={rotatorRef} className={styles.rotator}>
-          {whoIsAIFor.reverse().map((t, i) => <div style={{ transform: `translateY(${heightOffset}px)` }} className={`${styles.element} ${(whoIsAIFor.length - 1 - i) === activeIdx ? 'active' : 'inactive'}`}><Text h2>{t}</Text></div>)}
-        </span></span>
-      </div>
+      {activeIdx === whoIsAIFor.length - 1
+        ? (
+        <div className={styles.container}>
+          <Text className={styles['ai-for-u-title']} h1>{TITLE}</Text>
+        </div>
+          )
+        : (
+            <div className='ai-4-animation'>
+              <span className={styles.container}>
+                <Text className={styles['ai-for-u-title']} h1>AI for </Text>
+                <span ref={rotatorRef} className={styles.rotator}>
+                  {whoIsAIFor.reverse().map((t, i) => (
+                    <div
+                      style={{ transform: `translateY(${heightOffset}px)` }}
+                      className={`${styles.element} ${
+                        whoIsAIFor.length - 1 - i === activeIdx ? 'active' : 'inactive'
+                      }`}
+                    >
+                      <Text h1>{t}</Text>
+                    </div>
+                  ))}
+                </span>
+              </span>
+            </div>
+          )}
     </>
   )
 }

@@ -7,9 +7,8 @@
 }
 
 .rotator {
-    margin-left: .25em;
-    height: 1.5em;
-
+    margin-left: .35em;
+    height: 2.15em;
     display: flex;
     flex-direction: column;
     justify-content: end;
@@ -18,3 +17,5 @@
 .element {
     transition: transform .3s ease-in-out;
 }
+
+

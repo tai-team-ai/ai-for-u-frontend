@@ -8,6 +8,8 @@ import Image from 'next/image'
 import { Container, Row, Spacer, Button, Link, Grid } from '@nextui-org/react'
 import FancyHoverCard from '@/components/elements/FancyHoverCard'
 
+const HERO_DESCRIPTION: string = 'Super charge your life with powerful AI tools!'
+
 function Home (): JSX.Element {
   return (
         <Layout>
@@ -23,7 +25,7 @@ function Home (): JSX.Element {
                             </Row>
                             <Row justify="center">
                                 <p className={styles['hero-paragraph']}>
-                                    Eu dolor nulla officia officia nostrud nostrud consectetur adipisicing. Qui adipisicing consectetur sit ea amet. Aute excepteur pariatur duis culpa sint ipsum ad eu non consequat veniam qui. Tempor commodo incididunt irure dolore eu officia commodo consequat aliquip.
+                                    {HERO_DESCRIPTION}
                                 </p>
                             </Row>
                             <Spacer y={0.5} />
