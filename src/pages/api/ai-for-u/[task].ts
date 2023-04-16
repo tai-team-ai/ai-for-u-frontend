@@ -18,7 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
           headers: {
             uuid: req.headers.uuid,
             'Content-Type': 'application/json',
-            JWT: token
+            JWT: token ?? undefined
           }
         }
   ).then(async response => {
