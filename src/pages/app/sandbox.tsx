@@ -11,8 +11,7 @@ import { getInitialChat } from '@/utils/user'
 import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
-import GoProModal from '@/components/modals/GoProModal'
-import LoginModal from '@/components/modals/LoginModal'
+import { isMobileKeyboardVisible } from '@/utils/hooks'
 
 interface RequestBody {
   conversationUuid: string
@@ -87,13 +86,13 @@ const getConversationUuid = (): string => {
 }
 
 const ChatGPT = (): JSX.Element => {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const { data: session } = useSession()
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const conversationUuid = getConversationUuid()
-  const [showLogin, setShowLogin] = useState<boolean>(false)
-  const [loginMessage, setLoginMessage] = useState<string>('')
   const chatBoxRef = useRef<HTMLDivElement>(null)
+  const isKeyboardVisible = isMobileKeyboardVisible()
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -136,9 +135,6 @@ const ChatGPT = (): JSX.Element => {
           >
                 <form
                     id="task-form"
-                    style={{
-                      height: '100%'
-                    }}
                     onSubmit={(e) => {
                       e.preventDefault()
                       // @ts-expect-error the eventTarget could be anything but we know it's a form with custom types that arent' resolved at type checkig time.
@@ -162,9 +158,7 @@ const ChatGPT = (): JSX.Element => {
                             })
                           } else if (response.status === 429) {
                             void response.json().then(data => {
-                              // showSnackbar(data.message)
-                              setShowLogin(true)
-                              setLoginMessage(data.message)
+                              showSnackbar(data.message)
                               setLoading(false)
                             })
                           } else {
@@ -176,7 +170,7 @@ const ChatGPT = (): JSX.Element => {
                         })
                     }}
                 >
-                    <Card css={{ height: '80vh', display: 'flex', flexDirection: 'column' }} className={styles['sandbox-card']}>
+                    <Card css={{ height: isKeyboardVisible ? '20vh' : '80vh', display: 'flex', flexDirection: 'column' }} className={styles['sandbox-card']}>
                       <Card.Body ref={chatBoxRef} className={styles['chat-box']}>
                             {messages.map((message) => <Message {...message} />)}
                             {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
@@ -184,26 +178,27 @@ const ChatGPT = (): JSX.Element => {
                         <Card.Footer
                             className={styles['sandbox-footer']}
                         >
-                            <Textarea
-                              animated={false}
-                              id="userMessage"
-                              name="userMessage"
-                              minRows={1}
-                              maxRows={5}
-                              fullWidth
-                              form="task-form"
-                              placeholder="Type your message..."
-                              className={`${styles['user-message-textarea']} ${styles['user-message-textarea-hover']}`}
-                              onKeyDown={(event: any) => {
-                                if (!(event.shiftKey as boolean) && event.key === 'Enter') {
-                                  event.preventDefault()
-                                  const form: HTMLFormElement | null = document.querySelector('#task-form')
-                                  if (form != null) {
-                                    form.requestSubmit()
-                                  }
+                          <Textarea
+                            animated={false}
+                            id="userMessage"
+                            name="userMessage"
+                            minRows={1}
+                            maxRows={5}
+                            fullWidth
+                            form="task-form"
+                            placeholder="Type your message..."
+                            className={`${styles['user-message-textarea']} ${styles['user-message-textarea-hover']}`}
+                            onKeyDown={(event: any) => {
+                              if (!(event.shiftKey as boolean) && event.key === 'Enter') {
+                                event.preventDefault()
+                                const form: HTMLFormElement | null = document.querySelector('#task-form')
+                                if (form != null) {
+                                  form.requestSubmit()
                                 }
-                              }}
-                            />
+                              }
+                            }}
+                            ref={textAreaRef} // Set a ref to the text area element
+                          />
                             <Button
                               size="sm"
                               auto
@@ -215,20 +210,6 @@ const ChatGPT = (): JSX.Element => {
                         </Card.Footer>
                     </Card>
                 </form>
-                {session !== null
-                  ? <GoProModal
-                      bindings={{
-                        open: showLogin,
-                        onClose: () => { setShowLogin(false) }
-                      }}
-                      />
-                  : <LoginModal
-                      open={showLogin}
-                      setOpen={setShowLogin}
-                      isSignUp={true}
-                      message={loginMessage}
-                    />
-                    }
             </Template>
         </Layout>
     </>)
