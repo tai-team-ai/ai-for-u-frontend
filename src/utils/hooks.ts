@@ -31,7 +31,7 @@ function isMobile (): boolean {
   return width < 768
 }
 
-function isMobileKeyboardVisible(): boolean {
+function isMobileKeyboardVisible (): boolean {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
   const { height: windowHeight } = useViewport()
   const windowHeightRef = useRef(windowHeight)
