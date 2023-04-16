@@ -11,7 +11,7 @@ import { getInitialChat } from '@/utils/user'
 import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
-import { isMobile } from '@/utils/hooks'
+import { isMobile, isMobileKeyboardVisible } from '@/utils/hooks'
 
 interface RequestBody {
   conversationUuid: string
@@ -93,6 +93,7 @@ const ChatGPT = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false)
   const conversationUuid = getConversationUuid()
   const chatBoxRef = useRef<HTMLDivElement>(null)
+  const isKeyboardVisible = isMobileKeyboardVisible()
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -123,11 +124,15 @@ const ChatGPT = (): JSX.Element => {
 
   const handleClick = (): void => {
     if (isMobileDevice) {
-      const windowHeight = window.innerHeight
-      const halfwayPosition = windowHeight / 2
-      const currentScrollPosition =
-        window.pageYOffset ?? document.documentElement.scrollTop ?? 0
-      if (Math.abs(currentScrollPosition - halfwayPosition) > 10) {
+      if (isKeyboardVisible) {
+        setTimeout(() => {
+          const elementTop = textAreaRef.current?.getBoundingClientRect().top
+          const halfwayPosition = elementTop != null ? elementTop - window.innerHeight / 2 : 0
+          window.scrollTo({ top: halfwayPosition, behavior: 'smooth' })
+        }, 2000)
+      } else {
+        const elementTop = textAreaRef.current?.getBoundingClientRect().top
+        const halfwayPosition = elementTop != null ? elementTop - window.innerHeight / 2 : 0
         window.scrollTo({ top: halfwayPosition, behavior: 'smooth' })
       }
     }

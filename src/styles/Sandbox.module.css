@@ -54,10 +54,10 @@
 }
 
 @media (max-width: 991px) {
-    /* .sandbox-card {
+    .sandbox-card {
         height: 80vh !important;
         max-height: calc(80vh - 5rem) !important;
-    } */
+    }
 }
 
 

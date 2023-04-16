@@ -31,4 +31,32 @@ function isMobile (): boolean {
   return width < 768
 }
 
-export { isMobile }
+function isMobileKeyboardVisible (): boolean {
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+  const { height: windowHeight } = useViewport()
+
+  useEffect(() => {
+    const handleResize = (): void => {
+      // Check if the window height has decreased (keyboard is visible)
+      if (window.innerHeight < windowHeight) {
+        setIsKeyboardVisible(true)
+      } else {
+        setIsKeyboardVisible(false)
+      }
+    }
+
+    let resizeTimer: any
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer)
+      resizeTimer = setTimeout(handleResize, 200)
+    })
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [windowHeight])
+
+  return isKeyboardVisible
+}
+
+export { isMobile, isMobileKeyboardVisible }
