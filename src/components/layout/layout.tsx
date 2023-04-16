@@ -37,8 +37,10 @@ function Layout ({ children }: LayoutProps): JSX.Element {
             '@media screen and (min-width: 1280px)': {
               maxWidth: '1430px'
             },
-            // paddingBottom: '4rem', // This will create space at the bottom of the container for the footer.
-            minHeight: '100%' // This will make the container grow with its contents.
+            display: 'flex',
+            flexDirection: 'column',
+            marginBottom: '7rem', // This will create space at the bottom of the container for the footer.
+            minHeight: '75vh' // This will make the container grow with its contents.
           }}>
             {children}
           </Container>
