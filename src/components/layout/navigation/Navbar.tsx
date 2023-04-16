@@ -130,18 +130,20 @@ const NavBar = (): JSX.Element => {
                     ))}
                 </Navbar.Collapse>
             </Navbar>
-            <LoginModal
-                open={showLoginModal}
-                setOpen={(o) => { setShowLoginModal(o) }}
-                isSignUp={false}
-                error={error}
-            />
-            <LoginModal
-                open={showSignUpModal}
-                setOpen={(o) => { setShowSignUpModal(o) }}
-                isSignUp={true}
-                error={error}
-            />
+            <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
+              <LoginModal
+                  open={showLoginModal}
+                  setOpen={(o) => { setShowLoginModal(o) }}
+                  isSignUp={false}
+                  error={error}
+              />
+              <LoginModal
+                  open={showSignUpModal}
+                  setOpen={(o) => { setShowSignUpModal(o) }}
+                  isSignUp={true}
+                  error={error}
+              />
+            </div>
             <GoProModal bindings={goProBindings} />
         </React.Fragment>
   )

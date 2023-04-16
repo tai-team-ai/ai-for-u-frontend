@@ -3,7 +3,7 @@ import Template from '@/components/layout/template'
 import styles from '@/styles/Sandbox.module.css'
 import { Button, Card, Loading, Textarea, Text, useTheme } from '@nextui-org/react'
 import SendIcon from '@mui/icons-material/Send'
-import { type ReactNode, useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useState, useRef } from 'react'
 import { v4 as uuid } from 'uuid'
 import { uFetch } from '@/utils/http'
 import { RateResponse } from '@/components/modals/FeedbackModal'
@@ -43,13 +43,10 @@ const MessageBubble = ({ from, text }: MessageBubbleProps): JSX.Element => {
         <div className='message' style={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems }}>
             <Text
                 span
+                className={styles['chat-box-messages']}
                 css={{
-                  display: 'inline-block',
                   backgroundColor: bkgdColor,
                   color: textColor,
-                  padding: '8px',
-                  maxWidth: '80%',
-                  margin: '4px 0',
                   borderRadius,
                   borderEndStartRadius,
                   borderEndEndRadius
@@ -96,6 +93,7 @@ const ChatGPT = (): JSX.Element => {
   const conversationUuid = getConversationUuid()
   const [showLogin, setShowLogin] = useState<boolean>(false)
   const [loginMessage, setLoginMessage] = useState<string>('')
+  const chatBoxRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -119,9 +117,9 @@ const ChatGPT = (): JSX.Element => {
   })
 
   useEffect(() => {
-    const els = document.getElementsByClassName('message')
-    if ((els?.length) === 0) return
-    els[els.length - 1].scrollIntoView({ behavior: 'smooth' })
+    if (chatBoxRef.current?.lastChild instanceof Element) {
+      chatBoxRef.current.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
+    }
   }, [messages])
 
   return (<>
@@ -178,8 +176,8 @@ const ChatGPT = (): JSX.Element => {
                         })
                     }}
                 >
-                    <Card css={{ height: '100%' }}>
-                        <Card.Body>
+                    <Card css={{ height: '80vh', display: 'flex', flexDirection: 'column' }}>
+                      <Card.Body ref={chatBoxRef} className={styles['chat-box']}>
                             {messages.map((message) => <Message {...message} />)}
                             {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
                         </Card.Body>
@@ -187,30 +185,30 @@ const ChatGPT = (): JSX.Element => {
                             className={styles['sandbox-footer']}
                         >
                             <Textarea
-                                animated={false}
-                                id="userMessage"
-                                name="userMessage"
-                                minRows={1}
-                                maxRows={4}
-                                fullWidth
-                                form="task-form"
-                                placeholder="Type your message..."
-                                className={styles['user-message-textarea']}
-                                onKeyDown={(event: any) => {
-                                  if (!(event.shiftKey as boolean) && event.key === 'Enter') {
-                                    event.preventDefault()
-                                    const form: HTMLFormElement | null = document.querySelector('#task-form')
-                                    if (form != null) {
-                                      form.requestSubmit()
-                                    }
+                              animated={false}
+                              id="userMessage"
+                              name="userMessage"
+                              minRows={1}
+                              maxRows={5}
+                              fullWidth
+                              form="task-form"
+                              placeholder="Type your message..."
+                              className={`${styles['user-message-textarea']} ${styles['user-message-textarea-hover']}`}
+                              onKeyDown={(event: any) => {
+                                if (!(event.shiftKey as boolean) && event.key === 'Enter') {
+                                  event.preventDefault()
+                                  const form: HTMLFormElement | null = document.querySelector('#task-form')
+                                  if (form != null) {
+                                    form.requestSubmit()
                                   }
-                                }}
+                                }
+                              }}
                             />
                             <Button
-                                size="sm"
-                                auto
-                                className={styles['send-button']}
-                                type="submit"
+                              size="sm"
+                              auto
+                              className={`${styles['send-button']} ${styles['send-button-hover']}`}
+                              type="submit"
                             >
                                 <SendIcon shapeRendering='rounded' />
                             </Button>
