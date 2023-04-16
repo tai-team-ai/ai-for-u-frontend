@@ -39,8 +39,8 @@ function Layout ({ children }: LayoutProps): JSX.Element {
             },
             display: 'flex',
             flexDirection: 'column',
-            marginBottom: '7rem', // This will create space at the bottom of the container for the footer.
-            minHeight: '90vh' // This will make the container grow with its contents.
+            // marginBottom: '7rem', // This will create space at the bottom of the container for the footer.
+            minHeight: '60vh' // This will make the container grow with its contents.
           }}>
             {children}
           </Container>
