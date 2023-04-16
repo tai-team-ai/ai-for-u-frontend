@@ -167,7 +167,9 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   }
                   if (title === 'creativity') {
                     transforms[title] = Number
-                    return <Slider required={required} name={title} label={label} min={property.minimum | 0} max={property.maximum} defaultValue={property.default} />
+                    const [creativity, setCreativity] = useState<number>(property.default)
+                    resets[title] = { value: creativity, setValue: setCreativity, default: property.default }
+                    return <Slider required={required} name={title} label={label} min={property.minimum | 0} max={property.maximum} value={creativity} setValue={setCreativity} />
                   }
                   if (property.type === 'string') {
                     transforms[title] = String
