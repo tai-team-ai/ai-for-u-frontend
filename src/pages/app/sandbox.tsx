@@ -124,16 +124,16 @@ const ChatGPT = (): JSX.Element => {
 
   return (<>
         <Layout>
-            <Template
-                isSandbox={true}
-                exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples"
-                fillExample={(e) => {
-                  const textfield: HTMLTextAreaElement | null = document.querySelector('#userMessage')
-                  if (textfield != null) {
-                    textfield.value = e
-                  }
-                }}
-            >
+        <Template
+            isSandbox={true}
+            exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples"
+            fillExample={(e) => {
+              const textfield: HTMLTextAreaElement | null = document.querySelector('#userMessage')
+              if (textfield != null) {
+                textfield.value = e
+              }
+            }}
+          >
                 <form
                     id="task-form"
                     style={{
@@ -176,7 +176,7 @@ const ChatGPT = (): JSX.Element => {
                         })
                     }}
                 >
-                    <Card css={{ height: '80vh', display: 'flex', flexDirection: 'column' }}>
+                    <Card css={{ height: '80vh', display: 'flex', flexDirection: 'column' }} className={styles['sandbox-card']}>
                       <Card.Body ref={chatBoxRef} className={styles['chat-box']}>
                             {messages.map((message) => <Message {...message} />)}
                             {loading ? <MessageBubble from="ai" text={<Loading type="points" />}></MessageBubble> : null}
