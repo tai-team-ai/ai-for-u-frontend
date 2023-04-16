@@ -14,7 +14,9 @@
     border-radius: var(--nextui-radii-md);
     right: 4px;
     bottom: -.4rem;
-    height: calc(125% - 47px); /* set a default height */
+    max-height: 7.7rem;
+    min-height: 2.5rem;
+    height: calc(180% - 5.9rem);
     transition: var(--sandbox-entry-transition);
     filter: var(--shadow);
 }
@@ -46,7 +48,6 @@
         max-height: calc(80vh - 5rem) !important;
     }
 }
-
 
 
 .sandbox-footer>div {
