@@ -27,7 +27,7 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
     }
   }, [open])
 
-  const submitLoginForm = (event?: any): void => {
+  const submitLoginForm = async (event?: any): Promise<void> => {
     if (loginForm.current == null) return
     event.preventDefault()
 
@@ -43,29 +43,29 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
         const errors = validateSignUp({ email, password, confirmPassword })
         if (errors.length > 0) {
           setErrorMessage(errors.join('<br/>'))
+          return
         }
-        void uFetch('/api/auth/signup', {
-          method: 'POST',
-          body: JSON.stringify({ email, password, confirmPassword })
-        }).then(response => {
-          if (response.status === 422) {
-            void response.json().then(data => {
-              setErrorMessage(data.message.replace('\n', '<br/>'))
-            })
-          }
-        })
+        const signUpResponse = await uFetch(
+          '/api/auth/signup',
+          {
+            session: null,
+            method: 'POST',
+            body: JSON.stringify({ email, password, confirmPassword })
+          })
+        if (signUpResponse.status === 422) {
+          const { message } = await signUpResponse.json()
+          setErrorMessage(message.replace('\n', '<br/>'))
+          return
+        }
       }
 
-      void signIn('credentials', { email, password, redirect: false })
-        .then((response) => {
-          if (typeof response !== 'undefined') {
-            if (response.ok) {
-              setOpen(false)
-            } else {
-              setErrorMessage('Invalid email or password')
-            }
-          }
-        })
+      const signInResponse = await signIn('credentials', { email, password, redirect: false })
+      if (typeof signInResponse !== 'undefined' && signInResponse.ok) {
+        setOpen(false)
+      } else {
+        setErrorMessage('Invalid email or password')
+        return
+      }
     } finally {
       setLoggingIn(false)
     }
@@ -73,7 +73,7 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
 
   const getContentEmail = (): JSX.Element => {
     return (
-            <form ref={loginForm} id="loginForm" onSubmit={submitLoginForm}>
+            <form ref={loginForm} id="loginForm" onSubmit={(event) => { void submitLoginForm(event) }}>
                     <Input
                         required
                         fullWidth
