@@ -5,6 +5,12 @@
     margin-top: 3rem;
 }
 
+@media (max-width: 961px) {
+    .container {
+        margin-top: 1.95rem;
+    }
+}
+
 .container-animation-done {
     display: flex;
     overflow: hidden;
@@ -69,7 +75,7 @@
 
 @media (max-width: 961px) {
     .ai-for-u-title-animation {
-        font-size: 1.9rem;
+        font-size: 2.6rem;
         line-height: 1.5;
     }
 }
@@ -90,9 +96,9 @@
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 961px) {
     .ai-for-u-title-animation-done {
-        font-size: 3rem;
-        line-height: 1.5;
+        font-size: 4.1rem;
+        line-height: 1.73;
     }
 }

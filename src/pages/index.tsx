@@ -7,17 +7,25 @@ import styles from '@/styles/Home.module.css'
 import Image from 'next/image'
 import { Container, Row, Spacer, Button, Link, Grid } from '@nextui-org/react'
 import FancyHoverCard from '@/components/elements/FancyHoverCard'
+import { isMobile } from '@/utils/hooks'
 
 const HERO_DESCRIPTION: string = 'Super charge your life with powerful AI tools!'
 
 function Home (): JSX.Element {
+  const isMobileDisplay: boolean = isMobile()
   return (
         <Layout>
             <section className={styles['hero-section']}>
                 <Grid.Container gap={1} direction="row-reverse">
-                    <Grid xs={12} sm={6}>
-                        <img src="/images/screen.svg" ></img>
-                    </Grid>
+                    {!isMobileDisplay
+                      ? (
+                        <Grid xs={12} sm={6}>
+                            <img src="/images/screen.svg" ></img>
+                        </Grid>
+                        )
+                      : (
+                          <></>
+                        )}
                     <Grid xs={12} sm={6}>
                         <Container style={{ display: 'flex' }}>
                             <Row justify="center" css={{ marginTop: '10%' }}>

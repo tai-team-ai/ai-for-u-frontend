@@ -28,7 +28,7 @@ function useViewport (): { width: number, height: number } {
 
 function isMobile (): boolean {
   const { width } = useViewport()
-  return width < 768
+  return width < 960
 }
 
 function isMobileKeyboardVisible (): boolean {
