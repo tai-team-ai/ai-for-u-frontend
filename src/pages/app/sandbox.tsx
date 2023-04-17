@@ -11,7 +11,7 @@ import { getInitialChat } from '@/utils/user'
 import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
-import { isMobileKeyboardVisible, useAutoCollapseKeyboard } from '@/utils/hooks'
+import { isMobileKeyboardVisible, useAutoCollapseKeyboard, isMobile } from '@/utils/hooks'
 
 interface RequestBody {
   conversationUuid: string
@@ -94,6 +94,7 @@ const ChatGPT = (): JSX.Element => {
   const conversationUuid = getConversationUuid()
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const isKeyboardVisible = isMobileKeyboardVisible()
+  const isMobileBrowser = isMobile()
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -117,10 +118,24 @@ const ChatGPT = (): JSX.Element => {
   })
 
   useEffect(() => {
-    if (chatBoxRef.current?.lastChild instanceof Node) {
-      chatBoxRef.current.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
+    if (chatBoxRef.current?.lastChild instanceof Element) {
+      // Add a delay before scrolling
+      if (isMobileBrowser) {
+        const scrollTimeout = setTimeout(() => {
+          if (chatBoxRef.current?.lastChild instanceof Element) {
+            chatBoxRef.current.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
+          }
+        }, 200) // Adjust the delay time as needed
+
+        // Cleanup function to clear the timeout when the component unmounts or the effect is re-run
+        return () => {
+          clearTimeout(scrollTimeout)
+        }
+      } else {
+        chatBoxRef.current.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
+      }
     }
-  }, [messages])
+  }, [messages, loading])
 
   const submitHandler = (event: React.FormEvent<HTMLFormElement> | KeyboardEvent): void => {
     event.preventDefault()
