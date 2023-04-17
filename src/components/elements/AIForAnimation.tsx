@@ -48,7 +48,7 @@ export default function AIForAnimation ({ stepSpeed = 400 }: AIForAnimationProps
     ''
   ]
 
-  const MIN_ANIMATION_SPEED: number = 180
+  const MIN_ANIMATION_SPEED: number = 160
   const rotatorRef = useRef<HTMLSpanElement>(null)
   const [activeIdx, setActiveIdx] = useState<number>(0)
   const [heightOffset, setHeightOffset] = useState<number>(0)
