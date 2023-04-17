@@ -117,7 +117,7 @@ const ChatGPT = (): JSX.Element => {
   })
 
   useEffect(() => {
-    if (chatBoxRef.current?.lastChild instanceof Element) {
+    if (chatBoxRef.current?.lastChild instanceof Node) {
       chatBoxRef.current.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
     }
   }, [messages])
