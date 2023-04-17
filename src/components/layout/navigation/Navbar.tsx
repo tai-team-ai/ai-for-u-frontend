@@ -59,11 +59,11 @@ const NavBar = (): JSX.Element => {
   const templatesActive = typeof window !== 'undefined' && window.location.pathname === routes.TEMPLATES
 
   const navbarItems = [{
-    text: 'Sandbox',
+    text: 'AI Assistant',
     href: routes.SANDBOX,
     isActive: sandboxActive
   }, {
-    text: 'Templates',
+    text: 'AI Templates',
     href: routes.TEMPLATES,
     isActive: templatesActive
   }, {
@@ -75,7 +75,8 @@ const NavBar = (): JSX.Element => {
   return (
         <React.Fragment>
             <Navbar isBordered variant="floating" css={{
-              zIndex: '500'
+              zIndex: '500',
+              fontSize: '1.1rem'
             }}>
                 <Navbar.Brand>
                     <Navbar.Toggle showIn="sm" aria-label="toggle navigation" />
