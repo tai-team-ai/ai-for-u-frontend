@@ -1,13 +1,19 @@
 .container {
     display: flex;
     overflow: hidden;
-
-    font-size: 32px;
     line-height: 1.5;
+    margin-top: 3rem;
+}
+
+.container-animation-done {
+    display: flex;
+    overflow: hidden;
+    line-height: 1.5;
+    margin-top: 3rem;
 }
 
 .rotator {
-    margin-left: .35em;
+    margin-left: .9em;
     height: 2.15em;
     display: flex;
     flex-direction: column;
@@ -15,7 +21,78 @@
 }
 
 .element {
-    transition: transform .3s ease-in-out;
+    transition: transform .2s ease-in-out;
 }
 
 
+@keyframes fadeInGrowUp {
+    0% {
+        opacity: 0;
+        transform: translateY(-40%) scaleY(0.6);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+}
+
+
+/* @keyframes fadeOutGrowDown {
+    0% {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+    100% {
+        opacity: .5;
+        transform: scaleY(0.6) translateX(500px)
+    }
+}
+
+.fade-out-last-animation {
+    animation: fadeOutGrowDown 10s ease-out 1;
+    animation-fill-mode: forwards;
+} */
+
+.ai-for-u-title-animation {
+    font-size: 4.1rem;
+    line-height: 1.5;
+    margin-top: -1.5rem;
+}
+
+@media (max-width: 1280px) {
+    .ai-for-u-title-animation {
+        font-size: 2.8rem;
+        line-height: 1.5;
+        margin-top: 0rem;
+    }
+}
+
+@media (max-width: 961px) {
+    .ai-for-u-title-animation {
+        font-size: 1.9rem;
+        line-height: 1.5;
+    }
+}
+
+.ai-for-u-title-animation-done {
+    font-size: 6rem;
+    line-height: 1.66;
+    margin-bottom: -1.69rem;
+    animation: fadeInGrowUp 0.4s ease-out 1;
+    animation-fill-mode: forwards;
+}
+
+@media (max-width: 1280px) {
+    .ai-for-u-title-animation-done {
+        font-size: 4.2rem;
+        line-height: 2.0;
+        margin-bottom: -0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .ai-for-u-title-animation-done {
+        font-size: 3rem;
+        line-height: 1.5;
+    }
+}

@@ -19,8 +19,8 @@ function Home (): JSX.Element {
                         <img src="/images/screen.svg" ></img>
                     </Grid>
                     <Grid xs={12} sm={6}>
-                        <Container>
-                            <Row justify="center">
+                        <Container style={{ display: 'flex' }}>
+                            <Row justify="center" css={{ marginTop: '10%' }}>
                                 <AIForAnimation />
                             </Row>
                             <Row justify="center">
@@ -28,7 +28,6 @@ function Home (): JSX.Element {
                                     {HERO_DESCRIPTION}
                                 </p>
                             </Row>
-                            <Spacer y={0.5} />
                             <Row justify="center">
                                 <Link href={routes.TEMPLATES}>
                                     <Button
@@ -50,7 +49,7 @@ function Home (): JSX.Element {
                                     </Button>
                                 </Link>
                             </Row>
-                            <Spacer y={0.5} />
+                            <Spacer y={5} />
                         </Container>
                     </Grid>
                 </Grid.Container>

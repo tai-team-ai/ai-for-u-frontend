@@ -10,47 +10,45 @@ const TITLE: string = 'AI for U'
 
 export default function AIForAnimation ({ stepSpeed = 400 }: AIForAnimationProps): JSX.Element {
   const whoIsAIFor: string[] = [
-    'Sports coaches',
-    'Event planners',
+    'Students',
+    'Designers',
+    'Moms',
+    'Influencers',
+    'Managers',
+    'Coaches',
+    'Marketers',
     'Lawyers',
     'Gamers',
-    'Students',
     'Writers',
     'Scientists',
-    'Designers',
     'Developers',
     'Engineers',
     'Analysts',
-    'Managers',
     'Musicians',
     'Chefs',
-    'Photographers',
+    'Artists',
     'Trainers',
     'Planners',
     'Agents',
     'Workers',
-    'Psychologists',
     'Teachers',
     'Journalists',
-    'Real estate agents',
+    'Real estate',
     'Travel agents',
-    'Financial analysts',
+    'Accountants',
     'HR managers',
-    'Robotics engineers',
     'Architects',
     'Accountants',
-    'Government agencies',
-    'Healthcare providers',
-    'Fashion designers',
-    'Graphic designers',
-    'Interior designers',
-    'Web developers',
-    'Data scientists',
-    'Content creators',
+    'Healthcare',
+    'Designers',
+    'Developers',
+    'Scientists',
     '__________',
     'Everyone',
-    'U'
+    ''
   ]
+
+  const MIN_ANIMATION_SPEED: number = 200
   const rotatorRef = useRef<HTMLSpanElement>(null)
   const [activeIdx, setActiveIdx] = useState<number>(0)
   const [heightOffset, setHeightOffset] = useState<number>(0)
@@ -60,15 +58,18 @@ export default function AIForAnimation ({ stepSpeed = 400 }: AIForAnimationProps
     const timer = setTimeout(() => {
       if (activeIdx < whoIsAIFor.length - 1) {
         if (whoIsAIFor.length - activeIdx <= 1) {
-          setAnimationSpeed(animationSpeed * 3)
-        } else if (whoIsAIFor.length - activeIdx <= 3) {
-          setAnimationSpeed(animationSpeed * 2)
-        } else if (whoIsAIFor.length - activeIdx <= 10) {
-          setAnimationSpeed(animationSpeed * 1.3)
+          setAnimationSpeed(animationSpeed * 0.01)
+        } else if (whoIsAIFor.length - activeIdx <= 2) {
+          setAnimationSpeed(animationSpeed * 2.5)
+        } else if (whoIsAIFor.length - activeIdx <= 8) {
+          setAnimationSpeed(animationSpeed * 1.4)
         } else if (activeIdx <= 8) {
           setAnimationSpeed(animationSpeed * 0.95)
         } else if (activeIdx <= 12) {
-          setAnimationSpeed(animationSpeed * 0.85)
+          setAnimationSpeed(animationSpeed * 0.8)
+        }
+        if (animationSpeed < MIN_ANIMATION_SPEED) {
+          setAnimationSpeed(MIN_ANIMATION_SPEED)
         }
         setActiveIdx(activeIdx + 1)
       } else {
@@ -91,14 +92,14 @@ export default function AIForAnimation ({ stepSpeed = 400 }: AIForAnimationProps
     <>
       {activeIdx === whoIsAIFor.length - 1
         ? (
-        <div className={styles.container}>
-          <Text className={styles['ai-for-u-title']} h1>{TITLE}</Text>
+        <div className={styles['ontainer-animation-done']}>
+          <Text className={styles['ai-for-u-title-animation-done']} h1>{TITLE}</Text>
         </div>
           )
         : (
             <div className='ai-4-animation'>
               <span className={styles.container}>
-                <Text className={styles['ai-for-u-title']} h1>AI for </Text>
+                <Text className={styles['ai-for-u-title-animation']} h1>AI for </Text>
                 <span ref={rotatorRef} className={styles.rotator}>
                   {whoIsAIFor.reverse().map((t, i) => (
                     <div
@@ -107,7 +108,7 @@ export default function AIForAnimation ({ stepSpeed = 400 }: AIForAnimationProps
                         whoIsAIFor.length - 1 - i === activeIdx ? 'active' : 'inactive'
                       }`}
                     >
-                      <Text h1>{t}</Text>
+                      <Text className={styles['ai-for-u-title-animation']} h1>{t}</Text>
                     </div>
                   ))}
                 </span>
