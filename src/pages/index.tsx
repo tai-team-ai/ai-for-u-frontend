@@ -9,7 +9,30 @@ import { Container, Row, Spacer, Button, Link, Grid } from '@nextui-org/react'
 import FancyHoverCard from '@/components/elements/FancyHoverCard'
 import { isMobile } from '@/utils/hooks'
 
-const HERO_DESCRIPTION: string = 'Super charge your life with powerful AI tools!'
+const HERO_DESCRIPTION: string = 'Super charge your life with powerful AI templates & tools! 🚀'
+
+const TRUST_BUILDERS = [
+  {
+    title: 'AI Assistant (ChatGPT)',
+    description: 'Identical to ChatGPT, without the wait! You will be blown away by the possibilities! From generating content ideas, to writing emails, to just chatting, we\'ve got you covered!',
+    hover: 'Let\'s Chat! 😊'
+  },
+  {
+    title: 'Chrome Gmail Extension',
+    description: 'Tired of writing emails? Let AI do it for you! Our Chrome extension fully automates the process of writing emails! We\'re really excited to bring this to you!',
+    hover: 'Coming Soon! 🙌'
+  },
+  {
+    title: 'Baby Name Generator',
+    description: 'We\'ve heard you, and we\'re working on it! Our AI will help you find the perfect name while your expecting or dreaming of that perfect name!',
+    hover: 'Almost there! 🎊'
+  },
+  {
+    title: 'Mobile AI Tools Application',
+    description: 'We\'re working on bringing our AI tools to your mobile devices! We will be offering powerful multi-modal AI tools for your mobile devices!',
+    hover: 'Heck yeah! 🤩'
+  }
+]
 
 function Home (): JSX.Element {
   const isMobileDisplay: boolean = isMobile()
@@ -63,40 +86,18 @@ function Home (): JSX.Element {
                 </Grid.Container>
             </section>
             <section className={styles['trust-builders']}>
-                <Grid.Container gap={1}>
-                    <Grid xs={6} sm={3}>
-                        <FancyHoverCard
-                            size="sm"
-                            title={'AIForU'}
-                            description={'See what this innovative company is doing!'}
-                            hover="AI for Everyone!"
-                        />
-                    </Grid>
-                    <Grid xs={6} sm={3}>
-                        <FancyHoverCard
-                            size="sm"
-                            title={'Macrosoft'}
-                            description={'Big products, big solutions!'}
-                            hover="AI for Everyone!"
-                        />
-                    </Grid>
-                    <Grid xs={6} sm={3}>
-                        <FancyHoverCard
-                            size="sm"
-                            title={'Goggle'}
-                            description={'Even AI needs protection from those UV rays!'}
-                            hover="AI for Everyone!"
-                        />
-                    </Grid>
-                    <Grid xs={6} sm={3}>
-                        <FancyHoverCard
-                            size="sm"
-                            title={'Whalemart'}
-                            description={'Where else can whales go for their krill?'}
-                            hover="AI for Everyone!"
-                        />
-                    </Grid>
-                </Grid.Container>
+              <Grid.Container gap={2.6}>
+                {TRUST_BUILDERS.map((TRUST_BUILDERS, index) => (
+                  <Grid xs={12} sm={6} md={6} key={index}>
+                    <FancyHoverCard
+                      size="lg"
+                      title={TRUST_BUILDERS.title}
+                      description={TRUST_BUILDERS.description}
+                      hover={TRUST_BUILDERS.hover}
+                    />
+                  </Grid>
+                ))}
+              </Grid.Container>
             </section>
             <section className={styles['pages-section']}>
                 <div className={styles['pages-content']}>

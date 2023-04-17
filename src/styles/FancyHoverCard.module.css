@@ -1,15 +1,15 @@
 .fancy-card {
     position: relative;
     z-index: 1;
-    filter: var(--nextui-dropShadows-lg);
+    filter: var(--shadow);
     transform: translateY(0);
     transition: outline 350ms ease, color 350ms ease,
         transform 250ms ease;
 }
 
 .fancy-card:hover {
-    transform: translateY(-3px);
-    filter: var(--nextui-dropShadows-xl);
+    transform: var(--hover-translate);
+    filter: var(--hover-shadow);
 }
 
 .fancy-card:hover:before {

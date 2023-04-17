@@ -11,7 +11,8 @@ interface FancyHoverCardProps {
 
 export default function FancyHoverCard (props: FancyHoverCardProps): JSX.Element {
   const size: 'sm' | 'lg' = props.size ?? 'lg'
-  const titleSize = size === 'lg' ? 26 : 22
+  const titleSize = size === 'lg' ? 36 : 22
+  const descriptionSize = size === 'lg' ? 20 : 16
 
   return (
         <Card
@@ -27,7 +28,9 @@ export default function FancyHoverCard (props: FancyHoverCardProps): JSX.Element
                         className={styles.title}
                         css={{
                           color: '$colors$primary',
-                          marginBottom: 0
+                          marginBottom: '0.5rem',
+                          textAlign: 'center',
+                          lineHeight: '2.3rem'
                         }}
                         size={titleSize}
                     >
@@ -36,8 +39,12 @@ export default function FancyHoverCard (props: FancyHoverCardProps): JSX.Element
                     <Text
                         className={styles.description}
                         css={{
-                          color: '$colors$primaryLightActive'
+                          color: '$colors$primaryLightActive',
+                          lineHeight: '1.8rem',
+                          padding: '0 0.2rem',
+                          textAlign: 'center'
                         }}
+                        size={descriptionSize}
                     >
                         {props.description}
                     </Text>

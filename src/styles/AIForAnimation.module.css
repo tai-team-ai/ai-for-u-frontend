@@ -80,6 +80,13 @@
     }
 }
 
+@media (max-width: 481px) {
+    .ai-for-u-title-animation {
+        font-size: 2.2rem;
+        line-height: 1.2;
+    }
+}
+
 .ai-for-u-title-animation-done {
     font-size: 6rem;
     line-height: 1.66;
@@ -100,5 +107,11 @@
     .ai-for-u-title-animation-done {
         font-size: 4.1rem;
         line-height: 1.73;
+    }
+}
+
+@media (max-width: 481px) {
+    .ai-for-u-title-animation-done {
+        line-height: 1.4;
     }
 }
