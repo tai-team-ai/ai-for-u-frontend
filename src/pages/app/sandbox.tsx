@@ -11,7 +11,7 @@ import { getInitialChat } from '@/utils/user'
 import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
-import { isMobileKeyboardVisible } from '@/utils/hooks'
+import { isMobileKeyboardVisible, useAutoCollapseKeyboard } from '@/utils/hooks'
 
 interface RequestBody {
   conversationUuid: string
@@ -87,6 +87,7 @@ const getConversationUuid = (): string => {
 
 const ChatGPT = (): JSX.Element => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)
   const { data: session } = useSession()
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [loading, setLoading] = useState<boolean>(false)
@@ -121,6 +122,45 @@ const ChatGPT = (): JSX.Element => {
     }
   }, [messages])
 
+  const submitHandler = (event: React.FormEvent<HTMLFormElement> | KeyboardEvent): void => {
+    event.preventDefault()
+    const userMessage = (event instanceof KeyboardEvent)
+      ? (document.getElementById('userMessage') as HTMLInputElement).value
+      : event.currentTarget.userMessage.value;
+    (event instanceof KeyboardEvent)
+      ? (document.getElementById('userMessage') as HTMLInputElement).value = ''
+      : event.currentTarget.userMessage.value = ''
+    const request = { conversationUuid, userMessage }
+    messages.push({ request })
+    setMessages([...messages])
+    setLoading(true)
+    void uFetch('/api/ai-for-u/sandbox-chatgpt', { session, method: 'POST', body: JSON.stringify(request) })
+      .then(response => {
+        if (response.status === 200) {
+          void response.json().then(data => {
+            messages.push({
+              request,
+              response: data
+            })
+            setMessages([...messages])
+            setLoading(false)
+          })
+        } else if (response.status === 429) {
+          void response.json().then(data => {
+            showSnackbar(data.message)
+            setLoading(false)
+          })
+        } else {
+          void response.text().then(data => {
+            showSnackbar(data)
+            setLoading(false)
+          })
+        }
+      })
+  }
+
+  useAutoCollapseKeyboard(submitHandler)
+
   return (<>
         <Layout>
         <Template
@@ -135,40 +175,8 @@ const ChatGPT = (): JSX.Element => {
           >
                 <form
                     id="task-form"
-                    onSubmit={(e) => {
-                      e.preventDefault()
-                      // @ts-expect-error the eventTarget could be anything but we know it's a form with custom types that arent' resolved at type checkig time.
-                      const userMessage = e.target.userMessage.value
-                      // @ts-expect-error the eventTarget could be anything but we know it's a form with custom types that arent' resolved at type checkig time.
-                      e.target.userMessage.value = ''
-                      const request = { conversationUuid, userMessage }
-                      messages.push({ request })
-                      setMessages([...messages])
-                      setLoading(true)
-                      void uFetch('/api/ai-for-u/sandbox-chatgpt', { session, method: 'POST', body: JSON.stringify(request) })
-                        .then(response => {
-                          if (response.status === 200) {
-                            void response.json().then(data => {
-                              messages.push({
-                                request,
-                                response: data
-                              })
-                              setMessages([...messages])
-                              setLoading(false)
-                            })
-                          } else if (response.status === 429) {
-                            void response.json().then(data => {
-                              showSnackbar(data.message)
-                              setLoading(false)
-                            })
-                          } else {
-                            void response.text().then(data => {
-                              showSnackbar(data)
-                              setLoading(false)
-                            })
-                          }
-                        })
-                    }}
+                    ref={formRef}
+                    onSubmit={submitHandler}
                 >
                     <Card css={{ height: isKeyboardVisible ? '20vh' : '80vh', display: 'flex', flexDirection: 'column' }} className={styles['sandbox-card']}>
                       <Card.Body ref={chatBoxRef} className={styles['chat-box']}>

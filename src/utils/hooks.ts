@@ -67,7 +67,6 @@ const useAutoCollapseKeyboard = (submitHandler: () => void): void => {
   useEffect(() => {
     const handleKeyboardSubmit = (event: KeyboardEvent): void => {
       if (event.key === 'Enter') {
-        submitHandler();
         (document.activeElement as any).blur()
       }
     }
