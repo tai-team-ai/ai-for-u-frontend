@@ -11,7 +11,7 @@ interface FancyHoverCardProps {
 
 export default function FancyHoverCard (props: FancyHoverCardProps): JSX.Element {
   const size: 'sm' | 'lg' = props.size ?? 'lg'
-  const titleSize = size === 'lg' ? 36 : 22
+  const titleSize = size === 'lg' ? 30 : 22
   const descriptionSize = size === 'lg' ? 20 : 16
 
   return (
