@@ -14,7 +14,7 @@ const HERO_DESCRIPTION: string = 'Super charge your life with powerful AI templa
 const TRUST_BUILDERS = [
   {
     title: 'AI Assistant (ChatGPT)',
-    description: 'Identical to ChatGPT, without the wait! You will be blown away by the functionality that this tool offers! From generating content ideas, to writing emails, to just chatting, we\'ve got you covered!',
+    description: 'Identical to ChatGPT, without the wait! From generating content ideas, to writing emails, to generating code, our AI assistant is here to help!',
     hover: 'Let\'s Chat! 😊',
     link: routes.SANDBOX,
     subscribeModal: false
