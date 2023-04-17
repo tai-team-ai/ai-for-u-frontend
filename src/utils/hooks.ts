@@ -63,4 +63,20 @@ function isMobileKeyboardVisible (): boolean {
   return isKeyboardVisible
 }
 
-export { isMobile, isMobileKeyboardVisible }
+const useAutoCollapseKeyboard = (submitHandler: (event: KeyboardEvent) => void): void => {
+  useEffect(() => {
+    const handleKeyboardSubmit = (event: KeyboardEvent): void => {
+      if (event.key === 'Enter') {
+        (document.activeElement as any).blur()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyboardSubmit)
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyboardSubmit)
+    }
+  }, [submitHandler])
+}
+
+export { isMobile, isMobileKeyboardVisible, useAutoCollapseKeyboard }

@@ -11,7 +11,7 @@ import { getInitialChat } from '@/utils/user'
 import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
-import { isMobileKeyboardVisible } from '@/utils/hooks'
+import { isMobileKeyboardVisible, useAutoCollapseKeyboard, isMobile } from '@/utils/hooks'
 
 interface RequestBody {
   conversationUuid: string
@@ -87,12 +87,14 @@ const getConversationUuid = (): string => {
 
 const ChatGPT = (): JSX.Element => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
+  const formRef = useRef<HTMLFormElement>(null)
   const { data: session } = useSession()
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const conversationUuid = getConversationUuid()
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const isKeyboardVisible = isMobileKeyboardVisible()
+  const isMobileBrowser = isMobile()
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -117,9 +119,62 @@ const ChatGPT = (): JSX.Element => {
 
   useEffect(() => {
     if (chatBoxRef.current?.lastChild instanceof Element) {
-      chatBoxRef.current.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
+      // Add a delay before scrolling
+      if (isMobileBrowser) {
+        const scrollTimeout = setTimeout(() => {
+          if (chatBoxRef.current?.lastChild instanceof Element) {
+            chatBoxRef.current.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
+          }
+        }, 200) // Adjust the delay time as needed
+
+        // Cleanup function to clear the timeout when the component unmounts or the effect is re-run
+        return () => {
+          clearTimeout(scrollTimeout)
+        }
+      } else {
+        chatBoxRef.current.lastChild.scrollIntoView({ behavior: 'smooth', block: 'end', inline: 'nearest' })
+      }
     }
-  }, [messages])
+  }, [messages, loading])
+
+  const submitHandler = (event: React.FormEvent<HTMLFormElement> | KeyboardEvent): void => {
+    event.preventDefault()
+    const userMessage = (event instanceof KeyboardEvent)
+      ? (document.getElementById('userMessage') as HTMLInputElement).value
+      : event.currentTarget.userMessage.value;
+    (event instanceof KeyboardEvent)
+      ? (document.getElementById('userMessage') as HTMLInputElement).value = ''
+      : event.currentTarget.userMessage.value = ''
+    const request = { conversationUuid, userMessage }
+    messages.push({ request })
+    setMessages([...messages])
+    setLoading(true)
+    void uFetch('/api/ai-for-u/sandbox-chatgpt', { session, method: 'POST', body: JSON.stringify(request) })
+      .then(response => {
+        if (response.status === 200) {
+          void response.json().then(data => {
+            messages.push({
+              request,
+              response: data
+            })
+            setMessages([...messages])
+            setLoading(false)
+          })
+        } else if (response.status === 429) {
+          void response.json().then(data => {
+            showSnackbar(data.message)
+            setLoading(false)
+          })
+        } else {
+          void response.text().then(data => {
+            showSnackbar(data)
+            setLoading(false)
+          })
+        }
+      })
+  }
+
+  useAutoCollapseKeyboard(submitHandler)
 
   return (<>
         <Layout>
@@ -135,40 +190,8 @@ const ChatGPT = (): JSX.Element => {
           >
                 <form
                     id="task-form"
-                    onSubmit={(e) => {
-                      e.preventDefault()
-                      // @ts-expect-error the eventTarget could be anything but we know it's a form with custom types that arent' resolved at type checkig time.
-                      const userMessage = e.target.userMessage.value
-                      // @ts-expect-error the eventTarget could be anything but we know it's a form with custom types that arent' resolved at type checkig time.
-                      e.target.userMessage.value = ''
-                      const request = { conversationUuid, userMessage }
-                      messages.push({ request })
-                      setMessages([...messages])
-                      setLoading(true)
-                      void uFetch('/api/ai-for-u/sandbox-chatgpt', { session, method: 'POST', body: JSON.stringify(request) })
-                        .then(response => {
-                          if (response.status === 200) {
-                            void response.json().then(data => {
-                              messages.push({
-                                request,
-                                response: data
-                              })
-                              setMessages([...messages])
-                              setLoading(false)
-                            })
-                          } else if (response.status === 429) {
-                            void response.json().then(data => {
-                              showSnackbar(data.message)
-                              setLoading(false)
-                            })
-                          } else {
-                            void response.text().then(data => {
-                              showSnackbar(data)
-                              setLoading(false)
-                            })
-                          }
-                        })
-                    }}
+                    ref={formRef}
+                    onSubmit={submitHandler}
                 >
                     <Card css={{ height: isKeyboardVisible ? '20vh' : '80vh', display: 'flex', flexDirection: 'column' }} className={styles['sandbox-card']}>
                       <Card.Body ref={chatBoxRef} className={styles['chat-box']}>
