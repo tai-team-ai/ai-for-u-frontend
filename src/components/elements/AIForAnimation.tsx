@@ -12,43 +12,43 @@ export default function AIForAnimation ({ stepSpeed = 400 }: AIForAnimationProps
   const whoIsAIFor: string[] = [
     'Students',
     'Designers',
-    'Moms',
+    'Developers',
+    'Designers',
     'Influencers',
     'Managers',
     'Coaches',
-    'Marketers',
     'Lawyers',
+    'Moms',
     'Gamers',
     'Writers',
     'Scientists',
-    'Developers',
+    'Dads',
+    'Researchers',
     'Engineers',
     'Analysts',
     'Musicians',
+    'Parents',
     'Chefs',
-    'Artists',
     'Trainers',
     'Planners',
+    'Investors',
+    'Travelers',
     'Agents',
-    'Workers',
-    'Teachers',
+    'Mechanics',
     'Journalists',
-    'Real estate',
-    'Travel agents',
     'Accountants',
-    'HR managers',
     'Architects',
     'Accountants',
     'Healthcare',
-    'Designers',
-    'Developers',
-    'Scientists',
+    'Marketers',
+    'Teachers',
+    'Artists',
     '__________',
     'Everyone',
     ''
   ]
 
-  const MIN_ANIMATION_SPEED: number = 200
+  const MIN_ANIMATION_SPEED: number = 180
   const rotatorRef = useRef<HTMLSpanElement>(null)
   const [activeIdx, setActiveIdx] = useState<number>(0)
   const [heightOffset, setHeightOffset] = useState<number>(0)
@@ -60,9 +60,9 @@ export default function AIForAnimation ({ stepSpeed = 400 }: AIForAnimationProps
         if (whoIsAIFor.length - activeIdx <= 1) {
           setAnimationSpeed(animationSpeed * 0.01)
         } else if (whoIsAIFor.length - activeIdx <= 2) {
-          setAnimationSpeed(animationSpeed * 2.5)
-        } else if (whoIsAIFor.length - activeIdx <= 8) {
-          setAnimationSpeed(animationSpeed * 1.4)
+          setAnimationSpeed(animationSpeed * 2.0)
+        } else if (whoIsAIFor.length - activeIdx <= 7) {
+          setAnimationSpeed(animationSpeed * 1.5)
         } else if (activeIdx <= 8) {
           setAnimationSpeed(animationSpeed * 0.95)
         } else if (activeIdx <= 12) {

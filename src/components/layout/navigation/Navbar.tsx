@@ -59,7 +59,7 @@ const NavBar = (): JSX.Element => {
   const templatesActive = typeof window !== 'undefined' && window.location.pathname === routes.TEMPLATES
 
   const navbarItems = [{
-    text: 'ChatGPT',
+    text: 'AI Assistant',
     href: routes.SANDBOX,
     isActive: sandboxActive
   }, {

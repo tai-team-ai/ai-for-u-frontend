@@ -4,7 +4,6 @@ import { routes } from '@/utils/constants'
 import Layout from '@/components/layout/layout'
 import AIForAnimation from '@/components/elements/AIForAnimation'
 import styles from '@/styles/Home.module.css'
-import Image from 'next/image'
 import { Container, Row, Spacer, Button, Link, Grid } from '@nextui-org/react'
 import FancyHoverCard from '@/components/elements/FancyHoverCard'
 import SubscribeModal from '@/components/modals/SubscribeModal'
@@ -75,7 +74,7 @@ function Home (): JSX.Element {
                                         flat
                                         size="lg"
                                         className={styles['templates-btn']}>
-                                        Templates
+                                        AI Templates
                                     </Button>
                                 </Link>
                             </Row>
@@ -85,8 +84,9 @@ function Home (): JSX.Element {
                                     <Button
                                         flat
                                         size="lg"
+                                        color="secondary"
                                         className={styles['sandbox-btn']}>
-                                        Sandbox
+                                        AI Assistant (ChatGPT)
                                     </Button>
                                 </Link>
                             </Row>
@@ -98,7 +98,7 @@ function Home (): JSX.Element {
             <section className={styles['trust-builders']}>
               <Grid.Container gap={2.6}>
                 {TRUST_BUILDERS.map((TRUST_BUILDERS, index) => (
-                  <Grid xs={12} sm={6} md={6} key={index}>
+                  <Grid xs={12} sm={6} md={3} key={index}>
                     <Link
                           href={TRUST_BUILDERS.link != null ? TRUST_BUILDERS.link : '#'}
                           style={{ height: '100%', width: '100%' }}
@@ -120,7 +120,7 @@ function Home (): JSX.Element {
                 ))}
               </Grid.Container>
             </section>
-            <section className={styles['pages-section']}>
+            {/* <section className={styles['pages-section']}>
                 <div className={styles['pages-content']}>
                     <h1 className={styles['pages-title']}>
                         Pages
@@ -132,7 +132,7 @@ function Home (): JSX.Element {
                 <div className={styles['pages-graphic']}>
                     <Image src="" alt=""/>
                 </div>
-            </section>
+            </section> */}
             <SubscribeModal open={open} setOpen={setOpen} />
         </Layout>
   )
