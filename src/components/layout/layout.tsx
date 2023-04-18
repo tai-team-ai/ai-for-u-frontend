@@ -14,7 +14,6 @@ interface ColorsType {
   primaryLightHover: string
   primaryLightActive: string
   primaryLightContrast: string
-  primary: string
   primaryBorder: string
   primaryBorderHover: string
   primarySolidHover: string
@@ -30,7 +29,6 @@ export const colors: ColorsType = {
   primaryLightHover: '#9D7FD1', // originally $blue300
   primaryLightActive: '#6E54A3', // originally $blue400
   primaryLightContrast: '#2B1A57', // originally $blue600
-  primary: '#39188B', // originally $blue600
   primaryBorder: '#382466', // originally $blue500
   primaryBorderHover: '#2B1A57', // originally $blue600
   primarySolidHover: '#1F1249', // originally $blue700
