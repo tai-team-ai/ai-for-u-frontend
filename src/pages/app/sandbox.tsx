@@ -31,7 +31,7 @@ const MessageBubble = ({ from, text }: MessageBubbleProps): JSX.Element => {
   const { theme } = useTheme()
   let bkgdColor = 'rgba(0, 0, 0, 0.15)'
   if (typeof theme !== 'undefined') {
-    bkgdColor = from === 'ai' ? theme.colors.gray100.value : '$colors$primary'
+    bkgdColor = from === 'ai' ? theme.colors.gray100.value : '$colors$primaryLightContrast'
   }
   const textColor = from === 'ai' ? 'black' : 'white'
   const borderRadius = '12px'
@@ -227,6 +227,7 @@ const ChatGPT = (): JSX.Element => {
                               auto
                               className={`${styles['send-button']} ${styles['send-button-hover']}`}
                               type="submit"
+                              color='primary'
                             >
                                 <SendIcon shapeRendering='rounded' />
                             </Button>

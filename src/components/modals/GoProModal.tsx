@@ -10,7 +10,7 @@ const GoProModal = ({ bindings }: GoProModalProps): JSX.Element => {
         <Modal
             closeButton
             {...bindings}
-            width="50rem"
+            width="40rem"
             css={{
               maxWidth: '90vw',
               marginLeft: 'auto',
@@ -18,37 +18,37 @@ const GoProModal = ({ bindings }: GoProModalProps): JSX.Element => {
             }}
         >
             <Modal.Header>
-                <Text h3>Go Pro to unlock all the features.</Text>
+                <Text h3 color='error'>Pro Features Coming Soon</Text>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body css={{ paddingLeft: '3rem' }}>
                 <Grid.Container>
                     <Grid sm={6}>
                         <div>
-                            <Text h4>Feature set 1</Text>
-                            <ul style={{ listStyleType: 'circle' }}>
-                                <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
-                                <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
-                                <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
-                                <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
+                            <Text h4 css={{ marginBottom: '-0.5rem' }}>Powerful AI Tools for U</Text>
+                            <ul style={{ listStyleType: 'inherit' }}>
+                                <li>Tutoring assistant</li>
+                                <li>Paper writing AI templates</li>
+                                <li>Baby name AI templates</li>
+                                <li>Pair programming assistant</li>
                             </ul>
                         </div>
                     </Grid>
 
                     <Grid sm={6}>
                         <div>
-                            <Text h4>Feature set 1</Text>
+                            <Text h4 css={{ marginBottom: '-0.5rem' }}>Supercharge your Workflow</Text>
                             <ul style={{ listStyleType: 'circle' }}>
-                                <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
-                                <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
-                                <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
-                                <li>Do magna ex eiusmod mollit enim magna minim in minim nisi esse.</li>
+                                <li>Save responses and conversations</li>
+                                <li>Auto email resposes for Gmail</li>
+                                <li>10x daily usage limit</li>
+                                <li>Google Drive Integration</li>
                             </ul>
                         </div>
                     </Grid>
                 </Grid.Container>
             </Modal.Body>
             <Modal.Footer justify="flex-end">
-                <SubscribeField style={{ marginRight: '4rem' }} />
+                <SubscribeField style={{ marginRight: '6rem', marginBottom: '0.5rem' }} />
             </Modal.Footer>
         </Modal>
   )

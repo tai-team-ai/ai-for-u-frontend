@@ -27,3 +27,12 @@
 .rate-btn:hover {
     color: black;
 }
+
+.button {
+    filter: var(--shadow);
+}
+
+.button:hover {
+    filter: var(--hover-shadow);
+    transform: var(--hover-translate);
+}

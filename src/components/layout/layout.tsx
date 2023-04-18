@@ -25,6 +25,7 @@ interface ColorsType {
 
 // Also defined in global.css for now (defined there to prevent FOUC). Iddeally the styles in there would populate the below.
 export const colors: ColorsType = {
+  primary: '#2B1A57', // originally $blue500
   primaryLight: '#CAB1EF', // originally $blue200
   primaryLightHover: '#9D7FD1', // originally $blue300
   primaryLightActive: '#6E54A3', // originally $blue400

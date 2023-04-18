@@ -1,4 +1,5 @@
 import { joinMailingList } from '@/utils/endpoints'
+import styles from '@/styles/Modals.module.css'
 import { Text, Button, Input, Loading } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
 import { type CSSProperties, useRef, useState } from 'react'
@@ -32,6 +33,7 @@ const SubscribeField = ({ style }: SubscribeFieldProps): JSX.Element => {
         >
             <Input
                 fullWidth
+                className={styles.button}
                 placeholder="Join our mailing list!"
                 type="email"
                 ref={userEmail}
