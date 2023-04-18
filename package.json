@@ -4,10 +4,10 @@
   "private": true,
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.306.0",
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.0",
-    "@mui/material": "^5.11.6",
+    "@mui/material": "^5.12.1",
     "@mui/x-date-pickers": "^5.0.16",
     "@next-auth/dynamodb-adapter": "^3.0.1",
     "@next-auth/mongodb-adapter": "^1.1.1",

@@ -11,7 +11,8 @@ import { ResultBox } from '../layout/template'
 import Markdown from 'markdown-to-jsx'
 import { ShowDiffBtn } from './diffview'
 import { showSnackbar } from './Snackbar'
-import Slider from './Slider'
+// import Slider from './Slider'
+import { Slider } from '@mui/material'
 
 const camelToTitle = (camel: string): string => {
   const reuslt = camel.replace(/([A-Z])/g, ' $1')
@@ -169,7 +170,18 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     transforms[title] = Number
                     const [creativity, setCreativity] = useState<number>(property.default)
                     resets[title] = { value: creativity, setValue: setCreativity, default: property.default }
-                    return <Slider required={required} name={title} label={label} min={property.minimum | 0} max={property.maximum} value={creativity} setValue={setCreativity} />
+                    return <>
+                        <label htmlFor={title}>{label}</label>
+                        <Slider
+                            id={title}
+                            name={title}
+                            color="secondary"
+                            step={1}
+                            valueLabelDisplay="auto"
+                            onChange={(e, val) => { setCreativity(val as number) }}
+                            value={creativity}
+                        />
+                    </>
                   }
                   if (property.type === 'string') {
                     transforms[title] = String
