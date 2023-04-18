@@ -166,7 +166,8 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     maxLength: property.maxLength,
                     min: property.minimum | 0,
                     max: property.maximum,
-                    label
+                    label,
+                    tooltip: property.description
                   }
                   if (property.type === 'string') {
                     transforms[title] = String
@@ -188,7 +189,8 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   const dropdownProps = {
                     id: title,
                     name: title,
-                    label
+                    label,
+                    tooltip: property.description
                   }
                   if (typeof property.allOf !== 'undefined') {
                     transforms[title] = String
