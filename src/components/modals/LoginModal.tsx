@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Modal, Button, Input, Loading, Image, Text, Card } from '@nextui-org/react'
+import { Modal, Button, Input, Loading, Image, Text, Card, Link } from '@nextui-org/react'
 import EmailIcon from '@mui/icons-material/Email'
 import { signIn } from 'next-auth/react'
 import { validateSignUp } from '@/utils/validation'
@@ -8,16 +8,17 @@ import { uFetch } from '@/utils/http'
 interface LoginModalProps {
   open: boolean
   setOpen: (o: boolean) => void
-  isSignUp: boolean
+  signUp: boolean
   error?: string | null
   message?: string | null
 }
 
-const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = null }: LoginModalProps): JSX.Element => {
+const LoginModal = ({ open, setOpen, signUp = false, error = null, message = null }: LoginModalProps): JSX.Element => {
   const [loggingIn, setLoggingIn] = React.useState(false)
   const loginForm = useRef<HTMLFormElement>(null)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [modalState, setModalState] = useState<'providers' | 'email'>('providers')
+  const [isSignUp, setIsSignUp] = useState<boolean>(signUp)
 
   useEffect(() => {
     if (open) {
@@ -173,7 +174,7 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
                       )
                 }
               </Modal.Header>
-                <Modal.Body>
+                <Modal.Body css={{ marginTop: '-1rem' }}>
                 <Card
                     variant="bordered"
                     css={{
@@ -195,6 +196,11 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
                           getContentEmail()
                         )
                       : ('')}
+                      <Text h6 css={{ marginTop: '-0.9em', display: 'block', textAlign: 'center' }} color='secondary'>
+                        <Link onClick={() => { setIsSignUp(!isSignUp) }} style={{ color: 'inherit' }}>
+                          {isSignUp ? 'Already have an account? Login' : 'Don\'t have an account? Signup'}
+                        </Link>
+                      </Text>
                 </Modal.Body>
         </Modal>
   )

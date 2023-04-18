@@ -7,11 +7,12 @@ import { type ReactNode, useEffect, useState, useRef } from 'react'
 import { v4 as uuid } from 'uuid'
 import { uFetch } from '@/utils/http'
 import { RateResponse } from '@/components/modals/FeedbackModal'
-import { getInitialChat } from '@/utils/user'
+import { getInitialChat, getTokenExhaustedCallToAction } from '@/utils/user'
 import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
 import { isMobileKeyboardVisible, useAutoCollapseKeyboard, isMobile } from '@/utils/hooks'
+import LoginModal from '@/components/modals/LoginModal'
 
 interface RequestBody {
   conversationUuid: string
@@ -86,6 +87,7 @@ const getConversationUuid = (): string => {
 }
 
 const ChatGPT = (): JSX.Element => {
+  const [showLogin, setShowLogin] = useState<boolean>(false)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const { data: session } = useSession()
@@ -95,6 +97,7 @@ const ChatGPT = (): JSX.Element => {
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const isKeyboardVisible = isMobileKeyboardVisible()
   const isMobileBrowser = isMobile()
+  const [loginMessage, setLoginMessage] = useState<string>('')
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -162,7 +165,9 @@ const ChatGPT = (): JSX.Element => {
           })
         } else if (response.status === 429) {
           void response.json().then(data => {
-            showSnackbar(data.message)
+            const isUserLoggedIn = session !== null
+            setLoginMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
+            setShowLogin(true)
             setLoading(false)
           })
         } else {
@@ -235,6 +240,12 @@ const ChatGPT = (): JSX.Element => {
                     </Card>
                 </form>
             </Template>
+            <LoginModal
+              open={showLogin}
+              setOpen={setShowLogin}
+              signUp={true}
+              message={loginMessage}
+            />
         </Layout>
     </>)
 }

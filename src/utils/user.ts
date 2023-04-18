@@ -95,3 +95,11 @@ export async function getExamples (session: Session | null, route: string): Prom
   }
   return JSON.parse(storageItem)
 }
+
+export function getTokenExhaustedCallToAction (userLoggedIn: boolean): string {
+  if (userLoggedIn) {
+    return 'You have reached your daily usage limit. Subscribe to stay updated as we roll out exciting new features!'
+  } else {
+    return 'Sign in to Continue 🎉'
+  }
+}

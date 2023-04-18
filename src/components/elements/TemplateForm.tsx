@@ -13,6 +13,7 @@ import { ResultBox } from '../layout/template'
 import Markdown from 'markdown-to-jsx'
 import { ShowDiffBtn } from './diffview'
 import { showSnackbar } from './Snackbar'
+import { getTokenExhaustedCallToAction } from '@/utils/user'
 
 const camelToTitle = (camel: string): string => {
   const reuslt = camel.replace(/([A-Z])/g, ' $1')
@@ -102,14 +103,6 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
 
   const transforms: Record<string, (v: any) => any> = {}
 
-  const getTokenExhaustedCallToAction = (): string => {
-    if (session !== null) {
-      return 'Please Sign in to Continue Using AI for U'
-    } else {
-      return 'You have reached your daily usage limit. We are working to increase this limit. Subscribe to stay updated as we roll out exciting new features!'
-    }
-  }
-
   return (<>
         <form
             onSubmit={
@@ -130,7 +123,8 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                         })
                       } else if (response.status === 429) {
                         void response.json().then(message => {
-                          setLoginMessage(getTokenExhaustedCallToAction())
+                          const isUserLoggedIn = session !== null
+                          setLoginMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
                           setShowLogin(true)
                           setLoading(false)
                         })
@@ -237,7 +231,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                 {children}
             </ResultBox>
         </form>
-        {session !== null
+        {/* {session !== null
           ? <GoProModal
           bindings={{
             open: showLogin,
@@ -250,7 +244,13 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
           isSignUp={true}
           message={loginMessage}
         />
-        }
+        } */}
+        <LoginModal
+          open={showLogin}
+          setOpen={setShowLogin}
+          signUp={true}
+          message={loginMessage}
+        />
         </>)
 }
 
