@@ -12,6 +12,8 @@ import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
 import { isMobileKeyboardVisible, useAutoCollapseKeyboard, isMobile } from '@/utils/hooks'
+import GoProModal from '@/components/modals/GoProModal'
+import LoginModal from '@/components/modals/LoginModal'
 
 interface RequestBody {
   conversationUuid: string
@@ -91,10 +93,12 @@ const ChatGPT = (): JSX.Element => {
   const { data: session } = useSession()
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const [showLogin, setShowLogin] = useState<boolean>(false)
+  const [loginMessage, setLoginMessage] = useState<string>('')
   const conversationUuid = getConversationUuid()
   const chatBoxRef = useRef<HTMLDivElement>(null)
-  const isKeyboardVisible = isMobileKeyboardVisible()
-  const isMobileBrowser = isMobile()
+  const isKeyboardVisible: boolean = isMobileKeyboardVisible()
+  const isMobileBrowser: boolean = isMobile()
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -162,7 +166,9 @@ const ChatGPT = (): JSX.Element => {
           })
         } else if (response.status === 429) {
           void response.json().then(data => {
-            showSnackbar(data.message)
+            // showSnackbar(data.message)
+            setLoginMessage(data.message)
+            setShowLogin(true)
             setLoading(false)
           })
         } else {
@@ -233,6 +239,20 @@ const ChatGPT = (): JSX.Element => {
                         </Card.Footer>
                     </Card>
                 </form>
+              {session !== null
+                ? <GoProModal
+                      bindings={{
+                        open: showLogin,
+                        onClose: () => { setShowLogin(false) }
+                      }}
+                  />
+                : <LoginModal
+                      open={showLogin}
+                      setOpen={setShowLogin}
+                      isSignUp={true}
+                      message={loginMessage}
+                  />
+              }
             </Template>
         </Layout>
     </>)
