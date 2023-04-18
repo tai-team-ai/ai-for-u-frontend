@@ -2,7 +2,8 @@ import Input from './Input'
 import Textarea from './Textarea'
 import Dropdown from './Dropdown'
 import { Checkbox, Button, Loading, Text } from '@nextui-org/react'
-
+import LoginModal from '../modals/LoginModal'
+import GoProModal from '../modals/GoProModal'
 import { useState } from 'react'
 import { uFetch } from '@/utils/http'
 import { useSession } from 'next-auth/react'
@@ -13,11 +14,6 @@ import { ShowDiffBtn } from './diffview'
 import { showSnackbar } from './Snackbar'
 // import Slider from './Slider'
 import { Slider } from '@mui/material'
-
-const camelToTitle = (camel: string): string => {
-  const reuslt = camel.replace(/([A-Z])/g, ' $1')
-  return reuslt.charAt(0).toUpperCase() + reuslt.slice(1)
-}
 
 export declare interface State {
   setValue: (v: any) => void
@@ -96,6 +92,8 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
     userPromptFeedbackContext: {},
     aiResponseFeedbackContext: {}
   })
+  const [showLogin, setShowLogin] = useState<boolean>(false)
+  const [loginMessage, setLoginMessage] = useState<string>('')
   const [children, setChildren] = useState<JSX.Element>(<></>)
 
   const transforms: Record<string, (v: any) => any> = {}
@@ -120,7 +118,8 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                         })
                       } else if (response.status === 429) {
                         void response.json().then(message => {
-                          showSnackbar(message.message)
+                          setLoginMessage(message.message)
+                          setShowLogin(true)
                           setLoading(false)
                         })
                       } else {
@@ -150,9 +149,8 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
             {
                 Object.entries(properties).map(([title, property]: any) => {
                   const required = requiredList.includes(title)
-                  const labelValue = camelToTitle(title)
                   const label = <>
-                        <span>{labelValue}<span style={{ color: 'red' }}>{required ? '*' : ''}</span></span>
+                        <span>{property.title}<span style={{ color: 'red' }}>{required ? '*' : ''}</span></span>
                     </>
                   const inputProps = {
                     required,
@@ -240,7 +238,22 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
             <ResultBox showResult={showResult} loading={loading} responseProps={responseProps} >
                 {children}
             </ResultBox>
-        </form></>)
+        </form>
+        {session !== null
+          ? <GoProModal
+          bindings={{
+            open: showLogin,
+            onClose: () => { setShowLogin(false) }
+          }}
+          />
+          : <LoginModal
+          open={showLogin}
+          setOpen={setShowLogin}
+          isSignUp={true}
+          message={loginMessage}
+        />
+        }
+        </>)
 }
 
 export default TemplateForm

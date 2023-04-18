@@ -207,7 +207,6 @@ export default function Template ({ isSandbox = false, children = null, exampleU
             <Grid sm={3} xs={0}>
                 {<Examples examples={examples} fillExample={fillExample}></Examples>}
             </Grid>
-
         </Grid.Container>
   )
 }
