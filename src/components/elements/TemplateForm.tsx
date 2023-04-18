@@ -12,6 +12,8 @@ import { ResultBox } from '../layout/template'
 import Markdown from 'markdown-to-jsx'
 import { ShowDiffBtn } from './diffview'
 import { showSnackbar } from './Snackbar'
+// import Slider from './Slider'
+import { Slider } from '@mui/material'
 
 export declare interface State {
   setValue: (v: any) => void
@@ -161,6 +163,23 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     min: property.minimum | 0,
                     max: property.maximum,
                     label
+                  }
+                  if (title === 'creativity') {
+                    transforms[title] = Number
+                    const [creativity, setCreativity] = useState<number>(property.default)
+                    resets[title] = { value: creativity, setValue: setCreativity, default: property.default }
+                    return <>
+                        <label htmlFor={title}>{label}</label>
+                        <Slider
+                            id={title}
+                            name={title}
+                            color="secondary"
+                            step={1}
+                            valueLabelDisplay="auto"
+                            onChange={(e, val) => { setCreativity(val as number) }}
+                            value={creativity}
+                        />
+                    </>
                   }
                   if (property.type === 'string') {
                     transforms[title] = String
