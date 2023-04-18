@@ -13,11 +13,6 @@ import Markdown from 'markdown-to-jsx'
 import { ShowDiffBtn } from './diffview'
 import { showSnackbar } from './Snackbar'
 
-const camelToTitle = (camel: string): string => {
-  const reuslt = camel.replace(/([A-Z])/g, ' $1')
-  return reuslt.charAt(0).toUpperCase() + reuslt.slice(1)
-}
-
 export declare interface State {
   setValue: (v: any) => void
 }
@@ -152,9 +147,8 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
             {
                 Object.entries(properties).map(([title, property]: any) => {
                   const required = requiredList.includes(title)
-                  const labelValue = camelToTitle(title)
                   const label = <>
-                        <span>{labelValue}<span style={{ color: 'red' }}>{required ? '*' : ''}</span></span>
+                        <span>{property.title}<span style={{ color: 'red' }}>{required ? '*' : ''}</span></span>
                     </>
                   const inputProps = {
                     required,
