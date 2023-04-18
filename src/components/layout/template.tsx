@@ -22,16 +22,16 @@ const Example = ({ example, fillExample, ...props }: PropsWithChildren<ExamplePr
             <Card
                 isPressable
                 isHoverable
-                // variant="bordered"
                 className={styles['template-card']}
                 disableRipple={true} // if this page is turned into a single page app, then we'd want to enable this again
-                css={{ $$cardColor: '$colors$secondaryLight', color: '$colors$secondaryLightContrast' }}
+                css={{ $$cardColor: '$colors$secondaryLight', color: '$colors$secondaryLightContrast', marginRight: '1rem' }}
                 onPress={() => { if (fillExample !== null) fillExample(example) }}
             >
                 <Card.Body css={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Text
-                        size="$xl"
+                        size="$1xl"
                         weight="semibold"
+                        css={{ justifyContent: 'center', alignItems: 'center', display: 'flex' }}
                         color="$colors$secondaryText" >
                         {props.children}
                     </Text>
@@ -76,7 +76,7 @@ const Examples = ({ examples, fillExample }: ExamplesProps): JSX.Element => {
                 Examples
             </Text>
             <div className={styles.examples}>
-                <Grid.Container gap={1} justify='flex-start'>
+                <Grid.Container gap={1} justify='flex-start' css={{ justifyContent: 'center' }}>
                     {
                         examples.length > 0
                           ? examples.map((example) => {
@@ -98,7 +98,7 @@ const ExampleDropdown = ({ examples, fillExample }: ExamplesProps): JSX.Element 
   return (
         <Dropdown>
             <Dropdown.Button css={{ width: '100%', fontSize: '1.2rem' }} size={'md'} flat color='secondary' >Examples</Dropdown.Button>
-            <Dropdown.Menu
+            <Dropdown.Menu css={{ height: '100%' }}
                 onAction={(key) => {
                   fillExample(examples[key as number].example)
                 }}

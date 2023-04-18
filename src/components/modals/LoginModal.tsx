@@ -16,7 +16,6 @@ interface LoginModalProps {
 const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = null }: LoginModalProps): JSX.Element => {
   const [loggingIn, setLoggingIn] = React.useState(false)
   const loginForm = useRef<HTMLFormElement>(null)
-
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [modalState, setModalState] = useState<'providers' | 'email'>('providers')
 
@@ -164,13 +163,17 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
               marginRight: 'auto'
             }}
         >
-                <Modal.Header>
-                    <Text h3>
-                        {isSignUp ? 'Sign up to Access Preview' : 'Login to Access Preview'}
-                    </Text>
-                </Modal.Header>
+              <Modal.Header>
+                  {message === null
+                    ? null
+                    : (
+                        <Text h3 color='secondary' >
+                            {message}
+                        </Text>
+                      )
+                }
+              </Modal.Header>
                 <Modal.Body>
-                  <Text css={{ textAlign: 'center' }}>{message}</Text>
                 <Card
                     variant="bordered"
                     css={{

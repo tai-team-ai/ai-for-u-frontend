@@ -102,6 +102,14 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
 
   const transforms: Record<string, (v: any) => any> = {}
 
+  const getTokenExhaustedCallToAction = (): string => {
+    if (session !== null) {
+      return 'Please Sign in to Continue Using AI for U'
+    } else {
+      return 'You have reached your daily usage limit. We are working to increase this limit. Subscribe to stay updated as we roll out exciting new features!'
+    }
+  }
+
   return (<>
         <form
             onSubmit={
@@ -122,7 +130,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                         })
                       } else if (response.status === 429) {
                         void response.json().then(message => {
-                          setLoginMessage(message.message)
+                          setLoginMessage(getTokenExhaustedCallToAction())
                           setShowLogin(true)
                           setLoading(false)
                         })
