@@ -22,7 +22,7 @@ const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections =
         <>
             <label style={{ display: 'block' }} htmlFor={id}>{label} <InfoPopover text={tooltip}/></label>
             <NextUIDropdown >
-                <NextUIDropdown.Button css={{ textTransform: 'capitalize', ...css }} flat>
+                <NextUIDropdown.Button color='primary' css={{ textTransform: 'capitalize', marginBottom: '0.4rem', ...css }} flat>
                     {selectedValue}
                 </NextUIDropdown.Button>
                 <NextUIDropdown.Menu

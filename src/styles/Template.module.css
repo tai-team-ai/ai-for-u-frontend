@@ -6,6 +6,24 @@
     width: 100%;
 }
 
+.template-card {
+    border-radius: 0.9rem;
+    height: 100%;
+    width: 100%;
+    font-size: 1.1rem;
+    filter: var(--shadow);
+}
+
+.template-card:hover {
+    filter: var(--hover-shadow);
+    transform: var(--hover-translate);
+}
+
+.action-phrase {
+    padding-top: 3em;
+    font-weight: bold;
+}
+
 .result-box {
     overflow-y: scroll;
     overflow-x: wrap;

@@ -61,15 +61,18 @@ const NavBar = (): JSX.Element => {
   const navbarItems = [{
     text: 'AI Assistant',
     href: routes.SANDBOX,
-    isActive: sandboxActive
+    isActive: sandboxActive,
+    textColor: 'inherit'
   }, {
     text: 'AI Templates',
     href: routes.TEMPLATES,
-    isActive: templatesActive
+    isActive: templatesActive,
+    textColor: 'inherit'
   }, {
     text: 'Go Pro',
     onPress: () => { setShowGoProModal(true) },
-    isActive: false
+    isActive: false,
+    textColor: 'error'
   }]
 
   return (
@@ -98,6 +101,7 @@ const NavBar = (): JSX.Element => {
                                     key={idx}
                                     isActive={nav.isActive}
                                     href={nav.href}
+                                    color={nav.textColor as 'text' | 'inherit' | 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'}
                                     onPress={nav.onPress}
                                 >{nav.text}</Navbar.Link>)
                     })}
@@ -118,7 +122,7 @@ const NavBar = (): JSX.Element => {
                     {navbarItems.map((nav, idx) => (
                         <Navbar.CollapseItem key={idx}>
                             <Link
-                                color="inherit"
+                                color={nav.textColor as 'text' | 'inherit' | 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'}
                                 css={{
                                   minWidth: '100%'
                                 }}

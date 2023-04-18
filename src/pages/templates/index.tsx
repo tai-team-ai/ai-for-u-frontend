@@ -88,7 +88,6 @@ const Index = (): JSX.Element => {
                 <Text
                     h1
                     css={{
-                      color: '$colors$primary',
                       '@media screen and (max-width: 768px)': {
                         fontSize: '$3xl'
                       }

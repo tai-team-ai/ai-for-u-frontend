@@ -22,17 +22,17 @@ const Example = ({ example, fillExample, ...props }: PropsWithChildren<ExamplePr
             <Card
                 isPressable
                 isHoverable
-                variant="bordered"
+                // variant="bordered"
                 className={styles['template-card']}
                 disableRipple={true} // if this page is turned into a single page app, then we'd want to enable this again
-                css={{ h: '$24', $$cardColor: '$colors$primary' }}
+                css={{ $$cardColor: '$colors$secondaryLight', color: '$colors$secondaryLightContrast' }}
                 onPress={() => { if (fillExample !== null) fillExample(example) }}
             >
                 <Card.Body css={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     <Text
                         size="$xl"
-                        weight="bold"
-                        color="white" >
+                        weight="semibold"
+                        color="$colors$secondaryText" >
                         {props.children}
                     </Text>
                 </Card.Body>
@@ -97,14 +97,14 @@ const Examples = ({ examples, fillExample }: ExamplesProps): JSX.Element => {
 const ExampleDropdown = ({ examples, fillExample }: ExamplesProps): JSX.Element => {
   return (
         <Dropdown>
-            <Dropdown.Button css={{ width: '100%' }} >Examples</Dropdown.Button>
+            <Dropdown.Button css={{ width: '100%', fontSize: '1.2rem' }} size={'md'} flat color='secondary' >Examples</Dropdown.Button>
             <Dropdown.Menu
                 onAction={(key) => {
                   fillExample(examples[key as number].example)
                 }}
             >
                 {examples.map((example, index) => {
-                  return <Dropdown.Item key={index} variant="flat" color="primary">{example.name}</Dropdown.Item>
+                  return <Dropdown.Item key={index} variant="flat" color="secondary">{example.name}</Dropdown.Item>
                 })}
             </Dropdown.Menu>
         </Dropdown>

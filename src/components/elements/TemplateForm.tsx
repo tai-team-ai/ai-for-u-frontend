@@ -1,6 +1,7 @@
 import Input from './Input'
 import Textarea from './Textarea'
 import Dropdown from './Dropdown'
+import styles from '@/styles/TemplateForm.module.css'
 import { Checkbox, Button, Loading, Text } from '@nextui-org/react'
 import LoginModal from '../modals/LoginModal'
 import GoProModal from '../modals/GoProModal'
@@ -183,7 +184,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   if (property.type === 'boolean') {
                     transforms[title] = Boolean
                     // @ts-expect-error The checkbox component usually doesn't allow Elements in the label but it supports it.
-                    return <Checkbox size="sm" {...inputProps} />
+                    return <Checkbox css={{ marginBottom: '0.4rem', marginTop: '0.4rem' }} size="sm" {...inputProps} />
                   }
                   const dropdownProps = {
                     id: title,
@@ -214,11 +215,13 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     light
                     color="error"
                     type="reset"
+                    className={styles['reset-button']}
                 >Reset</Button>
                 <Button
                     flat
                     type="submit"
                     disabled={loading}
+                    className={styles['submit-button']}
                 >{loading ? <Loading type="points" /> : 'Submit'}
                 </Button>
             </div>
