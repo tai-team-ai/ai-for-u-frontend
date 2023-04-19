@@ -1,12 +1,11 @@
 :root {
     --fancy-card1: 56, 36, 102;
     --fancy-card2: 81, 17, 171;
-    --fancy-card3: 236, 142, 121;
+    --fancy-card3: 243, 18, 96, 1;
     --sandbox-entry-transition: filter .3s ease-in-out, transform .3s ease-in-out;
-    --shadow: drop-shadow(2px 0 4px rgba(0, 0, 0, 0.15)) drop-shadow(-2px 0 4px rgba(0, 0, 0, 0.15));
+    --shadow: drop-shadow(2px 0 4px rgba(0, 0, 0, 0.10)) drop-shadow(-2px 0 4px rgba(0, 0, 0, 0.10));
     --hover-shadow: drop-shadow(4px 0 5px rgba(0, 0, 0, 0.15)) drop-shadow(-4px 0 5px rgba(0, 0, 0, 0.15));
-    --hover-translate: translateY(-3.5px);
-    --hover-translate: translateY(-4px);
+    --hover-translate: translateY(-3px);
     --primary-light: #CAB1EF; /* originally $blue200 */
     --primary-light-hover: #9D7FD1; /* originally $blue300 */
     --primary-light-active: #6E54A3; /* originally $blue400 */
@@ -33,7 +32,9 @@ code {
         monospace;
 }
 
-html,
+html {
+    overflow-y: scroll;
+}
 body {
     height: 100%;
 }

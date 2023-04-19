@@ -11,10 +11,56 @@
     height: 100%;
     width: 100%;
     font-size: 1.1rem;
-    filter: var(--shadow);
+    
 }
 
 .template-card:hover {
+    filter: var(--hover-shadow);
+    transform: var(--hover-translate);
+}
+
+.back-arrow-container {
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 0.5rem;
+    margin-bottom: -1.2rem;
+    margin-top: 0.8rem;
+}
+
+.back-arrow {
+    width: 2.5%;
+    height: auto;
+    margin-right: 0.1rem;
+    margin-top: -0.4rem;
+}
+
+@media (max-width: 1280px) {
+    .back-arrow {
+        width: 4%;
+        margin-right: 0.0rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .back-arrow {
+        width: 5%
+    }
+}
+
+@media (max-width: 480px) {
+    .back-arrow {
+        width: 7%;
+        margin-right: -0.2rem;
+    }
+}
+
+.back-arrow-link {
+    filter: var(--shadow);
+    transform: none;
+    transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+.back-arrow-link:hover {
     filter: var(--hover-shadow);
     transform: var(--hover-translate);
 }

@@ -26,7 +26,8 @@ const LoginButtons = ({ setIsSignUp, setShowLoginModal }: LoginButtonProps): JSX
                 <Button auto flat onClick={ () => {
                   setIsSignUp(true)
                   setShowLoginModal(true)
-                }}>
+                }}
+                >
                 Sign Up
                 </Button>
             </Navbar.Item>
@@ -37,7 +38,7 @@ const LoginButtons = ({ setIsSignUp, setShowLoginModal }: LoginButtonProps): JSX
 const LogoutButtons = (): JSX.Element => {
   return (
         <Navbar.Link>
-            <Button auto flat onPress={() => { void signOut() }}>
+            <Button auto flat className={styles['sign-up-btn']} onPress={() => { void signOut() }}>
                 Logout
             </Button>
         </Navbar.Link>

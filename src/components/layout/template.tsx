@@ -1,5 +1,5 @@
 import styles from '@/styles/Template.module.css'
-import { Card, Grid, Text, Loading, Dropdown } from '@nextui-org/react'
+import { Card, Grid, Text, Loading, Dropdown, Link } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
 import { type FormEventHandler, type PropsWithChildren, useEffect, useRef, useState } from 'react'
 import { getExamples } from '@/utils/user'
@@ -200,6 +200,12 @@ export default function Template ({ isSandbox = false, children = null, exampleU
             </Grid>
             <Grid sm={9} xs={12}>
                 <section ref={sectionRef} className={`${styles.content} ${isSandbox ? styles.sandbox : ''}`}>
+                <Link href="/templates" className={styles['back-arrow-link']}>
+                  <Grid.Container className={styles['back-arrow-container']}>
+                    <img src="/left-arrow.png" alt="Back to Templates" className={styles['back-arrow']}/>
+                    <Text h4 css={{ marginLeft: '0.5rem' }}>Back to Templates</Text>
+                  </Grid.Container>
+                </Link>
                     {children}
                     {resultBox}
                 </section>
