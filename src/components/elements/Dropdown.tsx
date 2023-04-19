@@ -22,8 +22,26 @@ const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections =
         <>
             <label style={{ display: 'block' }} htmlFor={id}>{label} <InfoPopover text={tooltip}/></label>
             <NextUIDropdown >
-                <NextUIDropdown.Button color='primary' css={{ textTransform: 'capitalize', marginBottom: '0.4rem', ...css }} flat>
-                    {selectedValue}
+            <NextUIDropdown.Button
+              color="primary"
+              css={{
+                textTransform: 'capitalize',
+                marginBottom: '0.4rem',
+                ...css,
+                overflow: 'visible'
+              }}
+              flat
+          >
+              <div // THis div is necessary to truncate the text and prevent teh button overflowing the screen
+                  style={{
+                    overflow: 'hidden',
+                    maxWidth: 'calc(min(35vw, 15rem))',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis'
+                  }}
+              >
+                  {selectedValue}
+              </div>
                 </NextUIDropdown.Button>
                 <NextUIDropdown.Menu
                     disallowEmptySelection
