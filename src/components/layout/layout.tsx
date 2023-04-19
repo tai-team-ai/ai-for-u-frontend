@@ -3,6 +3,8 @@ import Footer from '@/components/layout/Footer'
 import { Container, NextUIProvider, createTheme } from '@nextui-org/react'
 import { SSRProvider } from 'react-bootstrap'
 import Snackbar from '../elements/Snackbar'
+import { getInitialChat } from '@/utils/user'
+import { useSession } from 'next-auth/react'
 
 interface LayoutProps {
   children: any
@@ -50,6 +52,8 @@ export const theme = createTheme({
 })
 
 function Layout ({ children }: LayoutProps): JSX.Element {
+  const { data: session } = useSession()
+  void getInitialChat(session)
   return (
     <SSRProvider>
       <NextUIProvider theme={theme}>
