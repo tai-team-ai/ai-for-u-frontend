@@ -3,24 +3,26 @@ import { uFetch } from './http'
 
 interface JoinMailingListProps {
   session: Session | null
-  email: string
+  emailAddress: string
   setIsSubmitting: (v: boolean) => void
   setIsSubscribed: (v: boolean) => void
 }
 
-const joinMailingList = async ({ session, email, setIsSubmitting, setIsSubscribed }: JoinMailingListProps): Promise<void> => {
+const joinMailingList = async ({ session, emailAddress, setIsSubmitting, setIsSubscribed }: JoinMailingListProps): Promise<void> => {
   setIsSubmitting(true)
-  const response = await uFetch('/api/email-list', {
+  const response = await uFetch('/api/ai-for-u/subscription', {
     session,
     method: 'POST',
-    body: JSON.stringify({ email })
+    body: JSON.stringify({ emailAddress })
   })
   if (response.status === 200) {
-    setIsSubmitting(false)
     setIsSubscribed(true)
-  } else {
-    setIsSubmitting(false)
   }
+  if (response.status === 500) {
+    setIsSubscribed(false)
+  }
+
+  setIsSubmitting(false)
 }
 
 export { joinMailingList }

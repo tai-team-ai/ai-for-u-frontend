@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react'
+import styles from '@/styles/Modals.module.css'
 import { Modal, Button, Input, Loading, Text } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
 import { joinMailingList } from '@/utils/endpoints'
@@ -30,13 +31,13 @@ export default function SubscribeModal ({ open, setOpen }: SubscribeModalProps):
               if (userEmail.current == null) {
                 return
               }
-              const email = userEmail.current.value
-              void joinMailingList({ session, email, setIsSubmitting, setIsSubscribed })
+              const emailAddress = userEmail.current.value
+              void joinMailingList({ session, emailAddress, setIsSubmitting, setIsSubscribed })
             }}>
-                <Modal.Header>
-                    <Text h3>More feature coming soon!</Text>
+                <Modal.Header css={{ marginBottom: '-0.9rem' }}>
+                    <Text h3 className={styles['go-pro-animation']}>More features coming soon!</Text>
                 </Modal.Header>
-                <Modal.Body>
+                <Modal.Body css={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
                     {!isSubscribed
                       ? (
                         <>
@@ -52,7 +53,10 @@ export default function SubscribeModal ({ open, setOpen }: SubscribeModalProps):
                         </>
                         )
                       : (
-                        <Text>Thanks for joining our mailing list.</Text>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1rem' }}>
+                          <Text h3>You're in!!! 🎉 </Text>
+                          <Text h4>Here's to using AI to make the world a better place! 🥂</Text>
+                        </div>
                         )}
                 </Modal.Body>
                 <Modal.Footer>
@@ -64,6 +68,7 @@ export default function SubscribeModal ({ open, setOpen }: SubscribeModalProps):
                         flat
                         color="primary"
                         type="submit"
+                        className={styles.button}
                         disabled={isSubmitting}
                     >
                         {isSubmitting

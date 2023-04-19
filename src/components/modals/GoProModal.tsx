@@ -35,7 +35,7 @@ const GoProModal = ({ open, setOpenState, message = null }: GoProModalProps): JS
         >
             <Modal.Header>
               <Grid.Container alignItems="center" justify="center" direction="column">
-                <Text h3 color='error' className={styles['go-pro-animation']}>Pro Features Coming Soon</Text>
+                <Text h3 className={styles['go-pro-animation']}>Pro Features Coming Soon</Text>
                 {message === null
                   ? null
                   : (

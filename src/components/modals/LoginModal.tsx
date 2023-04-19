@@ -198,7 +198,7 @@ const LoginModal = ({ open, setOpenState, signUp = false, error = null, message 
                       : ('')}
                       <Text h6 css={{ marginTop: '-0.6em', display: 'block', textAlign: 'center' }} color='secondary'>
                         <Link onClick={() => { setIsSignUp(!isSignUp) }} style={{ color: 'inherit' }}>
-                          {isSignUp ? 'Already have an account? Login' : 'Don\'t have an account? Signup'}
+                          {isSignUp ? 'Already have an account?' : 'Don\'t have an account?'}
                         </Link>
                       </Text>
                 </Modal.Body>

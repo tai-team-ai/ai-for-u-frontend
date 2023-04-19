@@ -15,7 +15,12 @@ const SubscribeField = ({ style }: SubscribeFieldProps): JSX.Element => {
   const { data: session } = useSession()
 
   if (isSubscribed) {
-    return <Text>Thank you for subscribbing to our mailing list</Text>
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
+        <Text h3 className={styles['go-pro-animation']}>You're in!</Text>
+        <Text h5>How will you use AI for good in this world? 🌏</Text>
+      </div>
+    )
   }
 
   return (
@@ -27,8 +32,8 @@ const SubscribeField = ({ style }: SubscribeFieldProps): JSX.Element => {
               if (userEmail.current == null) {
                 return
               }
-              const email = userEmail.current.value
-              void joinMailingList({ session, email, setIsSubmitting, setIsSubscribed })
+              const emailAddress = userEmail.current.value
+              void joinMailingList({ session, emailAddress, setIsSubmitting, setIsSubscribed })
             }}
         >
             <Input

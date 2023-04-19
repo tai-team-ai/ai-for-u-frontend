@@ -10,7 +10,7 @@ const InfoPopover = ({ text }: InfoPopoverProps): JSX.Element => {
   if (text.trim().length === 0) {
     return <></>
   }
-  return <Tooltip arrow disableFocusListener title={text}  enterTouchDelay={0} TransitionComponent={Zoom} followCursor placement={isMobile() ? 'top' : 'right'} leaveTouchDelay={2500}>
+  return <Tooltip arrow disableFocusListener title={text} enterTouchDelay={0} TransitionComponent={Zoom} followCursor placement={isMobile() ? 'top' : 'right'} leaveTouchDelay={2500}>
         <IconButton><InfoOutlined sx={{ fontSize: 13, marginLeft: '-0.5rem', marginTop: '-0.5rem' }}/></IconButton>
     </Tooltip>
 }
