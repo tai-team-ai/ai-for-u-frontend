@@ -15,11 +15,12 @@ import { ShowDiffBtn } from './diffview'
 import { showSnackbar } from './Snackbar'
 import { Slider } from '@mui/material'
 import { getTokenExhaustedCallToAction } from '@/utils/user'
+import { colors } from '@/components/layout/layout'
 
-const camelToTitle = (camel: string): string => {
-  const reuslt = camel.replace(/([A-Z])/g, ' $1')
-  return reuslt.charAt(0).toUpperCase() + reuslt.slice(1)
-
+// const camelToTitle = (camel: string): string => {
+//   const reuslt = camel.replace(/([A-Z])/g, ' $1')
+//   return reuslt.charAt(0).toUpperCase() + reuslt.slice(1)
+// }
 
 function range (start: number, stop: number | null = null): number[] {
   if (stop == null) {
@@ -113,6 +114,11 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
 
   const transforms: Record<string, (v: any) => any> = {}
 
+  function hexToRGBA (hex, alpha): string {
+    const [r, g, b] = hex.match(/\w\w/g).map((x) => parseInt(x, 16))
+    return `rgba(${r},${g},${b},${alpha})`
+  }
+
   return (<>
         <form
             onSubmit={
@@ -194,8 +200,24 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                         <Slider
                             id={title}
                             name={title}
-                            color="secondary"
-                            step={1}
+                            step={5}
+                            min={0}
+                            max={100}
+                            sx={{
+                              color: colors.primaryLightHover,
+                              '& .MuiSlider-thumb': {
+                                '&:hover': {
+                                  boxShadow: `0px 0px 0px 8px ${hexToRGBA(
+                                    colors.secondaryLightContrast,
+                                    0.16
+                                  )}`
+                                }
+                              }
+                            }}
+                            marks={[
+                              { value: 0, label: '0' },
+                              { value: 100, label: '100' }
+                            ]}
                             valueLabelDisplay="auto"
                             onChange={(e, val) => { setCreativity(val as number) }}
                             value={creativity}

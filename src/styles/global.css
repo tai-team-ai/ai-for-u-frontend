@@ -27,6 +27,7 @@
     /* originally $white */
     --primary-shadow: #382466;
     /* originally $blue500 */
+    --secondary-light-contrast: #7828C8;
 }
 
 body {
