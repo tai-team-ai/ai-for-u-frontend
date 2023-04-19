@@ -114,9 +114,13 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
 
   const transforms: Record<string, (v: any) => any> = {}
 
-  function hexToRGBA (hex, alpha): string {
-    const [r, g, b] = hex.match(/\w\w/g).map((x) => parseInt(x, 16))
-    return `rgba(${r},${g},${b},${alpha})`
+  function hexToRGBA (hex: string, alpha: number): string {
+    const match = hex.match(/\w\w/g)
+    if (match !== null) {
+      const [r, g, b] = match.map((x: string) => parseInt(x, 16))
+      return `rgba(${r},${g},${b},${alpha})`
+    }
+    return ''
   }
 
   return (<>
