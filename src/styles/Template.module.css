@@ -29,33 +29,31 @@
 }
 
 .back-arrow {
-    width: 2.5%;
+    width: 4%;
     height: auto;
-    margin-right: 0.1rem;
-    margin-top: -0.4rem;
+    align-items: center;
+    margin-right: -0.2rem;
+    margin-bottom: 0.35rem;
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 961px) {
     .back-arrow {
-        width: 4%;
-        margin-right: 0.0rem;
-    }
-}
-
-@media (max-width: 768px) {
-    .back-arrow {
-        width: 5%
+        width: 4.7%;
+        /* margin-bottom: 2.5% */
     }
 }
 
 @media (max-width: 480px) {
     .back-arrow {
         width: 7%;
-        margin-right: -0.2rem;
+        margin-right: -0.3rem;
     }
 }
 
 .back-arrow-link {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     filter: var(--shadow);
     transform: none;
     transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out;
