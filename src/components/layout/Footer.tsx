@@ -1,5 +1,5 @@
 import React from 'react'
-import { Container, Grid, Text, Image, Link, useModal } from '@nextui-org/react'
+import { Container, Grid, Text, Image, Link } from '@nextui-org/react'
 import { routes } from '@/utils/constants'
 import { isMobile } from '@/utils/hooks'
 import styles from '@/styles/Footer.module.css'
@@ -7,8 +7,8 @@ import SubscribeField from '../elements/SubscribeField'
 import GoProModal from '@/components/modals/GoProModal'
 
 const Footer = (): JSX.Element => {
-  const { setVisible: setShowGoProModal, bindings: goProBindings } = useModal()
   const isMobileDevice = isMobile()
+  const [showGoProModal, setShowGoProModal] = React.useState(false)
 
   return (
     <>
@@ -36,7 +36,6 @@ const Footer = (): JSX.Element => {
                         </Container>
                     </Container>
                 </footer>
-                <GoProModal bindings={goProBindings} />
             </React.Fragment>
             )
           : (
@@ -46,11 +45,11 @@ const Footer = (): JSX.Element => {
                         <Container>
                             <Grid.Container gap={2} justify='space-between'>
                                 <Grid justify='flex-start'>
-                                    <ul>
+                                    <ul style={{ listStyle: 'none' }}>
                                         <Text h3 css={{ lineHeight: '1em', marginTop: '1em' }}>Pages</Text>
                                         <li><Link css={{ color: '$colors$primary' }} href={routes.SANDBOX}>Sandbox</Link></li>
                                         <li><Link css={{ color: '$colors$primary' }} href={routes.TEMPLATES}>Templates</Link></li>
-                                        <li><Link css={{ color: '$colors$primary' }} onClick={() => { setShowGoProModal(true) }}>GoPro</Link></li>
+                                        <li><Link color='error' onClick={() => { setShowGoProModal(true) }}>GoPro</Link></li>
                                     </ul>
                                 </Grid>
                                 <Grid css={{ marginRight: '-5em', marginTop: '1.3em' }}>
@@ -68,9 +67,9 @@ const Footer = (): JSX.Element => {
                                 &copy; AIforU - 2022
                             </Text>
                         </Container>
-                        <GoProModal bindings={goProBindings} />
                     </Container>
                 </footer>
+                <GoProModal open={showGoProModal} setOpenState={setShowGoProModal} />
             </React.Fragment>
             )
       }
