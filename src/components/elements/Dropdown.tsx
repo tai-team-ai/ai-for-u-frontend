@@ -17,7 +17,13 @@ declare interface DropdownProps {
 
 const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections = [], selectionMode = 'single', label = null, tooltip = '', css = null, selected, setSelected }: DropdownProps): JSX.Element => {
   const selectedValue = useMemo(() => Array.from(selected).join(', ').replaceAll('_', ' '), [selected])
-  console.log(selectedValue)
+
+  for (let i = 0; i < selected.length; i++) {
+    // check if undefined or null
+    if (selected[i] !== null && selected[i] !== undefined) {
+      selected[i] = selected[i].toString()
+    }
+  }
   return (
         <>
             <label style={{ display: 'block' }} htmlFor={id}>{label} <InfoPopover text={tooltip}/></label>
@@ -45,7 +51,7 @@ const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections =
                 <NextUIDropdown.Menu
                     disallowEmptySelection
                     selectionMode={selectionMode}
-                    selectedKeys={selected}
+                    selectedKeys={selected.slice(0) === undefined ? [] : selected.slice(0)}
                     // @ts-expect-error the selected keys resolve to strings in this kase.
                     onSelectionChange={setSelected}
                 >

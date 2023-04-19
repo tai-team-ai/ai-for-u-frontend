@@ -250,7 +250,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   if (property.type === 'integer') {
                     transforms[title] = Number
                     const [selected, setSelected] = useState([property.default])
-                    resets[title] = { value: selected, setValue: (v: any) => { setSelected([v]) }, default: property.default }
+                    resets[title] = { value: selected, setValue: setSelected, default: [property.default] }
                     return <Dropdown {...dropdownProps} validSelections={range(property.minimum, property.maximum).map(String)} selectionMode="single" selected={selected} setSelected={setSelected} />
                   }
                   if (typeof property.allOf !== 'undefined') {
