@@ -12,7 +12,8 @@ import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
 import { isMobileKeyboardVisible, useAutoCollapseKeyboard, isMobile } from '@/utils/hooks'
-
+import GoProModal from '@/components/modals/GoProModal'
+import LoginModal from '@/components/modals/LoginModal'
 
 interface RequestBody {
   conversationUuid: string
@@ -93,12 +94,10 @@ const ChatGPT = (): JSX.Element => {
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [showLogin, setShowLogin] = useState<boolean>(false)
-  const [loginMessage, setLoginMessage] = useState<string>('')
   const conversationUuid = getConversationUuid()
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const isKeyboardVisible = isMobileKeyboardVisible()
   const isMobileBrowser = isMobile()
-  const [showLogin, setShowLogin] = useState<boolean>(false)
   const [callToActionMessage, setCallToActionMessage] = useState<string>('')
   const [showGoPro, setShowGoPro] = useState<boolean>(false)
 
@@ -246,20 +245,6 @@ const ChatGPT = (): JSX.Element => {
                         </Card.Footer>
                     </Card>
                 </form>
-              {session !== null
-                ? <GoProModal
-                      bindings={{
-                        open: showLogin,
-                        onClose: () => { setShowLogin(false) }
-                      }}
-                  />
-                : <LoginModal
-                      open={showLogin}
-                      setOpen={setShowLogin}
-                      isSignUp={true}
-                      message={loginMessage}
-                  />
-              }
             </Template>
             <GoProModal
               open={showGoPro}
@@ -269,7 +254,7 @@ const ChatGPT = (): JSX.Element => {
             <LoginModal
               open={showLogin}
               setOpenState={setShowLogin}
-              signUp={true}
+              isSignUp={false}
               message={callToActionMessage}
             />
         </Layout>

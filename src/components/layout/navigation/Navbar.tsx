@@ -16,7 +16,7 @@ interface LoginButtonProps {
 const LoginButtons = ({ setIsSignUp, setShowLoginModal }: LoginButtonProps): JSX.Element => {
   return (
         <>
-            <Navbar.Link color="inherit" onPress={ () => {
+            <Navbar.Link color="inherit" onClick={ () => {
               setIsSignUp(false)
               setShowLoginModal(true)
             }}>
@@ -24,6 +24,7 @@ const LoginButtons = ({ setIsSignUp, setShowLoginModal }: LoginButtonProps): JSX
             </Navbar.Link>
             <Navbar.Item>
                 <Button auto flat onClick={ () => {
+                  console.info('signup')
                   setIsSignUp(true)
                   setShowLoginModal(true)
                 }}
@@ -146,7 +147,7 @@ const NavBar = (): JSX.Element => {
               <LoginModal
                   open={showLoginModal}
                   setOpenState={setShowLoginModal}
-                  signUp={isSignUp}
+                  isSignUp={isSignUp}
                   error={error}
               />
             </div>

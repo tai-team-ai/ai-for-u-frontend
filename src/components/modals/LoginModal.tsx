@@ -8,17 +8,21 @@ import { uFetch } from '@/utils/http'
 interface LoginModalProps {
   open: boolean
   setOpenState: (o: boolean) => void
-  signUp: boolean
+  isSignUp: boolean
   error?: string | null
   message?: string | null
 }
 
-const LoginModal = ({ open, setOpenState, signUp = false, error = null, message = null }: LoginModalProps): JSX.Element => {
+const LoginModal = ({ open, setOpenState, isSignUp, error = null, message = null }: LoginModalProps): JSX.Element => {
   const [loggingIn, setLoggingIn] = React.useState(false)
   const loginForm = useRef<HTMLFormElement>(null)
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [modalState, setModalState] = useState<'providers' | 'email'>('providers')
-  const [isSignUp, setIsSignUp] = useState<boolean>(signUp)
+  const [isSignUpModal, setIsSignUpState] = useState<boolean>(isSignUp)
+
+  useEffect(() => {
+    setIsSignUpState(isSignUp)
+  }, [isSignUp])
 
   useEffect(() => {
     if (open) {
@@ -38,7 +42,7 @@ const LoginModal = ({ open, setOpenState, signUp = false, error = null, message 
       const email = String(formDataJSON.email)
       const password = String(formDataJSON.password)
 
-      if (isSignUp) {
+      if (isSignUpModal) {
         const confirmPassword = String(formDataJSON.confirmPassword)
         const errors = validateSignUp({ email, password, confirmPassword })
         if (errors.length > 0) {
@@ -91,7 +95,7 @@ const LoginModal = ({ open, setOpenState, signUp = false, error = null, message 
                         initialValue=""
                         name="password"
                     />
-                    {isSignUp
+                    {isSignUpModal
                       ? <Input.Password
                         fullWidth
                         required
@@ -114,7 +118,7 @@ const LoginModal = ({ open, setOpenState, signUp = false, error = null, message 
                             <Loading type="points" />
                             )
                           : (
-                              isSignUp ? 'Signup' : 'Login'
+                              isSignUpModal ? 'Signup' : 'Login'
                             )}
                     </Button>
                 </form>
@@ -132,7 +136,7 @@ const LoginModal = ({ open, setOpenState, signUp = false, error = null, message 
                     iconLeftCss={{ left: '12px' }}
                     icon={<EmailIcon shapeRendering='rounded' />}
                 >
-                    {isSignUp ? 'Sign up with Email' : 'Login with Email'}
+                    {isSignUpModal ? 'Sign up with Email' : 'Login with Email'}
                 </Button>
                 <Button
                     onPress={() => { void signIn('google') }}
@@ -142,7 +146,7 @@ const LoginModal = ({ open, setOpenState, signUp = false, error = null, message 
                     iconLeftCss={{ left: '0' }}
                     icon={<Image src="/btn_google_light_normal_ios.svg"/>}
                 >
-                    {isSignUp ? 'Sign up with Google' : 'Login with Google'}
+                    {isSignUpModal ? 'Sign up with Google' : 'Login with Google'}
                 </Button>
             </>
     )
@@ -197,8 +201,8 @@ const LoginModal = ({ open, setOpenState, signUp = false, error = null, message 
                         )
                       : ('')}
                       <Text h6 css={{ marginTop: '-0.6em', display: 'block', textAlign: 'center' }} color='secondary'>
-                        <Link onClick={() => { setIsSignUp(!isSignUp) }} style={{ color: 'inherit' }}>
-                          {isSignUp ? 'Already have an account?' : 'Don\'t have an account?'}
+                        <Link onClick={() => { setIsSignUpState(!isSignUpModal) }} style={{ color: 'inherit' }}>
+                          {isSignUpModal ? 'Already have an account?' : 'Don\'t have an account?'}
                         </Link>
                       </Text>
                 </Modal.Body>

@@ -299,7 +299,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
         <LoginModal
           open={showLogin}
           setOpenState={setShowLogin}
-          signUp={true}
+          isSignUp={true}
           message={callToActionMessage}
         />
         </>)
