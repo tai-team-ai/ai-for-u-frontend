@@ -47,16 +47,16 @@ const prefetchInitialChat = async (session: Session | null): Promise<string> => 
   }).then(async response => {
     return await response.json()
   }).then(data => {
-    window.localStorage.setItem('initialChat', data.gptResponse)
+    sessionStorage.setItem('initialChat', data.gptResponse)
     return data.gptResponse
   })
 }
 
 export async function getInitialChat (session: Session | null): Promise<string> {
-  if (typeof localStorage === 'undefined') {
+  if (typeof sessionStorage === 'undefined') {
     return 'no chat yet'
   }
-  let initialChat = localStorage.getItem('initialChat')
+  let initialChat = sessionStorage.getItem('initialChat')
   if (initialChat == null) {
     initialChat = await prefetchInitialChat(session)
     if (initialChat.length === 0) {

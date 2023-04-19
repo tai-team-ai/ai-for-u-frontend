@@ -13,12 +13,13 @@ import { ResultBox } from '../layout/template'
 import Markdown from 'markdown-to-jsx'
 import { ShowDiffBtn } from './diffview'
 import { showSnackbar } from './Snackbar'
+import { Slider } from '@mui/material'
 import { getTokenExhaustedCallToAction } from '@/utils/user'
 
 const camelToTitle = (camel: string): string => {
   const reuslt = camel.replace(/([A-Z])/g, ' $1')
   return reuslt.charAt(0).toUpperCase() + reuslt.slice(1)
-}
+
 
 export declare interface State {
   setValue: (v: any) => void
@@ -160,9 +161,8 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
             {
                 Object.entries(properties).map(([title, property]: any) => {
                   const required = requiredList.includes(title)
-                  const labelValue = camelToTitle(title)
                   const label = <>
-                        <span>{labelValue}<span style={{ color: 'red' }}>{required ? '*' : ''}</span></span>
+                        <span>{property.title}<span style={{ color: 'red' }}>{required ? '*' : ''}</span></span>
                     </>
                   const inputProps = {
                     required,
@@ -174,7 +174,25 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     maxLength: property.maxLength,
                     min: property.minimum | 0,
                     max: property.maximum,
-                    label
+                    label,
+                    tooltip: property.description
+                  }
+                  if (title === 'creativity') {
+                    transforms[title] = Number
+                    const [creativity, setCreativity] = useState<number>(property.default)
+                    resets[title] = { value: creativity, setValue: setCreativity, default: property.default }
+                    return <>
+                        <label htmlFor={title}>{label}</label>
+                        <Slider
+                            id={title}
+                            name={title}
+                            color="secondary"
+                            step={1}
+                            valueLabelDisplay="auto"
+                            onChange={(e, val) => { setCreativity(val as number) }}
+                            value={creativity}
+                        />
+                    </>
                   }
                   if (property.type === 'string') {
                     transforms[title] = String
@@ -196,7 +214,8 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   const dropdownProps = {
                     id: title,
                     name: title,
-                    label
+                    label,
+                    tooltip: property.description
                   }
                   if (typeof property.allOf !== 'undefined') {
                     transforms[title] = String

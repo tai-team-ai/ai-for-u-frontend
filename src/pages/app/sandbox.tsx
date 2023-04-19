@@ -12,8 +12,7 @@ import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
 import { isMobileKeyboardVisible, useAutoCollapseKeyboard, isMobile } from '@/utils/hooks'
-import LoginModal from '@/components/modals/LoginModal'
-import GoProModal from '@/components/modals/GoProModal'
+
 
 interface RequestBody {
   conversationUuid: string
@@ -93,6 +92,8 @@ const ChatGPT = (): JSX.Element => {
   const { data: session } = useSession()
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [loading, setLoading] = useState<boolean>(false)
+  const [showLogin, setShowLogin] = useState<boolean>(false)
+  const [loginMessage, setLoginMessage] = useState<string>('')
   const conversationUuid = getConversationUuid()
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const isKeyboardVisible = isMobileKeyboardVisible()
@@ -245,6 +246,20 @@ const ChatGPT = (): JSX.Element => {
                         </Card.Footer>
                     </Card>
                 </form>
+              {session !== null
+                ? <GoProModal
+                      bindings={{
+                        open: showLogin,
+                        onClose: () => { setShowLogin(false) }
+                      }}
+                  />
+                : <LoginModal
+                      open={showLogin}
+                      setOpen={setShowLogin}
+                      isSignUp={true}
+                      message={loginMessage}
+                  />
+              }
             </Template>
             <GoProModal
               open={showGoPro}
