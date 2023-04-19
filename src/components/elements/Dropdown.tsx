@@ -18,12 +18,13 @@ declare interface DropdownProps {
 const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections = [], selectionMode = 'single', label = null, tooltip = '', css = null, selected, setSelected }: DropdownProps): JSX.Element => {
   const selectedValue = useMemo(() => Array.from(selected).join(', ').replaceAll('_', ' '), [selected])
   console.log(selectedValue)
+  const maxLength = 50
   return (
         <>
             <label style={{ display: 'block' }} htmlFor={id}>{label} <InfoPopover text={tooltip}/></label>
             <NextUIDropdown >
                 <NextUIDropdown.Button css={{ textTransform: 'capitalize', ...css }} flat>
-                    {selectedValue}
+                    {selectedValue.length > maxLength ? `${selectedValue.substring(0, maxLength)}...` : selectedValue}
                 </NextUIDropdown.Button>
                 <NextUIDropdown.Menu
                     disallowEmptySelection
