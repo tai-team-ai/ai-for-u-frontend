@@ -239,7 +239,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   if (property.type === 'boolean') {
                     transforms[title] = Boolean
                     // @ts-expect-error The checkbox component usually doesn't allow Elements in the label but it supports it.
-                    return <Checkbox css={{ marginBottom: '0.4rem', marginTop: '0.4rem' }} size="sm" {...inputProps} />
+                    return <Checkbox css={{ marginBottom: '0.4rem', marginTop: '0.4rem' }} size="sm" {...inputProps} color='secondary'/>
                   }
                   const dropdownProps = {
                     id: title,

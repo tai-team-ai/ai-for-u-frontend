@@ -27,8 +27,7 @@ const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections =
               css={{
                 textTransform: 'capitalize',
                 marginBottom: '0.4rem',
-                ...css,
-                overflow: 'visible'
+                ...css
               }}
               flat
           >
@@ -53,7 +52,6 @@ const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections =
                     {Object.entries(validSelections).map(([key, val]) => {
                       return <NextUIDropdown.Item css={{ textTransform: 'capitalize' }} key={val}>{val}</NextUIDropdown.Item>
                     })}
-
                 </NextUIDropdown.Menu>
             </NextUIDropdown>
             <input data-type="dropdown" placeholder={initialSelection} hidden id={id} name={name} value={selectedValue}/>

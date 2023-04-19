@@ -11,12 +11,13 @@
     height: 100%;
     width: 100%;
     font-size: 1.1rem;
-    
+    --shadow: drop-shadow(2px 15px 10px rgba(0, 0, 0, 0.20)) drop-shadow(-2px 15px 10px rgba(0, 0, 0, 0.20));
 }
 
 .template-card:hover {
-    filter: var(--hover-shadow);
-    transform: var(--hover-translate);
+    /* filter: var(--hover-shadow); */
+    transform: translateY(-4px);
+    --shadow: drop-shadow(2px 15px 10px rgba(0, 0, 0, 0.20)) drop-shadow(-2px 15px 10px rgba(0, 0, 0, 0.20));
 }
 
 .back-arrow-container {
@@ -24,7 +25,7 @@
     display: flex;
     justify-content: flex-end;
     padding-right: 0.5rem;
-    margin-bottom: -1.2rem;
+    margin-bottom: -1.0rem;
     margin-top: 0.8rem;
 }
 
@@ -54,7 +55,6 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    filter: var(--shadow);
     transform: none;
     transition: filter 0.3s ease-in-out, transform 0.3s ease-in-out;
 }
