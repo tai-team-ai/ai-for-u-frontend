@@ -200,12 +200,16 @@ export default function Template ({ isSandbox = false, children = null, exampleU
             </Grid>
             <Grid sm={9} xs={12}>
                 <section ref={sectionRef} className={`${styles.content} ${isSandbox ? styles.sandbox : ''}`}>
-                <Grid.Container className={styles['back-arrow-container']}>
-                  <Link href="/templates" className={styles['back-arrow-link']}>
-                    <img src="/left-arrow.png" alt="Back to Templates" className={styles['back-arrow']}/>
-                    <Text h4 css={{ marginLeft: '0.5rem' }}>Back to Templates</Text>
-                  </Link>
-                </Grid.Container>
+                {!isSandbox
+                  ? (
+                      <Grid.Container className={styles['back-arrow-container']}>
+                        <Link href="/templates" className={styles['back-arrow-link']}>
+                          <img src="/left-arrow.png" alt="Back to Templates" className={styles['back-arrow']}/>
+                          <Text h4 css={{ marginLeft: '0.5rem' }}>Back to Templates</Text>
+                        </Link>
+                      </Grid.Container>
+                    )
+                  : null}
                     {children}
                     {resultBox}
                 </section>
