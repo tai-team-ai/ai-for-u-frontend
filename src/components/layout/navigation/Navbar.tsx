@@ -102,7 +102,7 @@ const NavBar = (): JSX.Element => {
                         </Link>
                     </Text>
                 </Navbar.Brand>
-                <Navbar.Content hideIn="sm">
+                <Navbar.Content hideIn="sm" css={{ marginLeft: '14%' }}>
                     {navbarItems.map((nav, idx) => {
                       return (
                                 <Navbar.Link
