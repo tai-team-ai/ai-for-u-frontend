@@ -7,13 +7,13 @@ import { uFetch } from '@/utils/http'
 
 interface LoginModalProps {
   open: boolean
-  setOpen: (o: boolean) => void
+  setOpenState: (o: boolean) => void
   signUp: boolean
   error?: string | null
   message?: string | null
 }
 
-const LoginModal = ({ open, setOpen, signUp = false, error = null, message = null }: LoginModalProps): JSX.Element => {
+const LoginModal = ({ open, setOpenState, signUp = false, error = null, message = null }: LoginModalProps): JSX.Element => {
   const [loggingIn, setLoggingIn] = React.useState(false)
   const loginForm = useRef<HTMLFormElement>(null)
   const [errorMessage, setErrorMessage] = useState<string>('')
@@ -61,7 +61,7 @@ const LoginModal = ({ open, setOpen, signUp = false, error = null, message = nul
 
       const signInResponse = await signIn('credentials', { email, password, redirect: false })
       if (typeof signInResponse !== 'undefined' && signInResponse.ok) {
-        setOpen(false)
+        setOpenState(false)
       } else {
         setErrorMessage('Invalid email or password')
         return
@@ -153,7 +153,7 @@ const LoginModal = ({ open, setOpen, signUp = false, error = null, message = nul
             open={open}
             closeButton
             onClose={() => {
-              setOpen(false)
+              setOpenState(false)
               if (window.location.toString() !== window.location.toString().split('?')[0]) {
                 window.location.replace(window.location.toString().split('?')[0])
               }

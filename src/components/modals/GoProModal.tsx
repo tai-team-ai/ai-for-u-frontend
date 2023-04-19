@@ -2,14 +2,17 @@ import { Grid, Modal, Text } from '@nextui-org/react'
 import SubscribeField from '../elements/SubscribeField'
 
 declare interface GoProModalProps {
-  bindings: { open: boolean, onClose: () => void }
+  open: boolean
+  setOpenState: React.Dispatch<React.SetStateAction<boolean>>
+  message?: string | null
 }
 
-const GoProModal = ({ bindings }: GoProModalProps): JSX.Element => {
+const GoProModal = ({ open, setOpenState, message = null }: GoProModalProps): JSX.Element => {
   return (
         <Modal
+            open={open}
             closeButton
-            {...bindings}
+            onClose={() => { setOpenState(false) }}
             width="40rem"
             css={{
               maxWidth: '90vw',
@@ -18,7 +21,17 @@ const GoProModal = ({ bindings }: GoProModalProps): JSX.Element => {
             }}
         >
             <Modal.Header>
+              <Grid.Container alignItems="center" justify="center" direction="column">
                 <Text h3 color='error'>Pro Features Coming Soon</Text>
+                {message === null
+                  ? null
+                  : (
+                          <Text h6 color='secondary' css={{ marginTop: '-0.5rem', marginBottom: '-0.5rem', padding: '0 4rem' }}>
+                              {message}
+                          </Text>
+                    )
+                    }
+              </Grid.Container>
             </Modal.Header>
             <Modal.Body css={{ paddingLeft: '3rem' }}>
                 <Grid.Container>

@@ -98,7 +98,8 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
     aiResponseFeedbackContext: {}
   })
   const [showLogin, setShowLogin] = useState<boolean>(false)
-  const [loginMessage, setLoginMessage] = useState<string>('')
+  const [showGoPro, setShowGoPro] = useState<boolean>(false)
+  const [callToActionMessage, setCallToActionMessage] = useState<string>('')
   const [children, setChildren] = useState<JSX.Element>(<></>)
 
   const transforms: Record<string, (v: any) => any> = {}
@@ -124,8 +125,12 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                       } else if (response.status === 429) {
                         void response.json().then(message => {
                           const isUserLoggedIn = session !== null
-                          setLoginMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
-                          setShowLogin(true)
+                          setCallToActionMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
+                          if (isUserLoggedIn) {
+                            setShowGoPro(true)
+                          } else {
+                            setShowLogin(true)
+                          }
                           setLoading(false)
                         })
                       } else {
@@ -231,25 +236,16 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                 {children}
             </ResultBox>
         </form>
-        {/* {session !== null
-          ? <GoProModal
-          bindings={{
-            open: showLogin,
-            onClose: () => { setShowLogin(false) }
-          }}
-          />
-          : <LoginModal
-          open={showLogin}
-          setOpen={setShowLogin}
-          isSignUp={true}
-          message={loginMessage}
+        <GoProModal
+          open={showGoPro}
+          message={callToActionMessage}
+          setOpenState={setShowGoPro}
         />
-        } */}
         <LoginModal
           open={showLogin}
-          setOpen={setShowLogin}
+          setOpenState={setShowLogin}
           signUp={true}
-          message={loginMessage}
+          message={callToActionMessage}
         />
         </>)
 }
