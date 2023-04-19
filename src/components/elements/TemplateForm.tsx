@@ -15,6 +15,14 @@ import { showSnackbar } from './Snackbar'
 // import Slider from './Slider'
 import { Slider } from '@mui/material'
 
+function range (start: number, stop: number | null = null): number[] {
+  if (stop == null) {
+    stop = start
+    start = 0
+  }
+  return Array.from({ length: stop - start }, (_, index) => index + start)
+}
+
 export declare interface State {
   setValue: (v: any) => void
 }
@@ -190,10 +198,6 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     // @ts-expect-error there seems to be some required props on textarea that aren't really required.
                     return <Textarea {...inputProps} />
                   }
-                  if (property.type === 'integer') {
-                    transforms[title] = Number
-                    return <Input {...inputProps} />
-                  }
                   if (property.type === 'boolean') {
                     transforms[title] = Boolean
                     // @ts-expect-error The checkbox component usually doesn't allow Elements in the label but it supports it.
@@ -204,6 +208,12 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     name: title,
                     label,
                     tooltip: property.description
+                  }
+                  if (property.type === 'integer') {
+                    transforms[title] = Number
+                    const [selected, setSelected] = useState([property.default])
+                    resets[title] = { value: selected, setValue: (v: any) => { setSelected([v]) }, default: property.default }
+                    return <Dropdown {...dropdownProps} validSelections={range(property.minimum, property.maximum).map(String)} selectionMode="single" selected={selected} setSelected={setSelected} />
                   }
                   if (typeof property.allOf !== 'undefined') {
                     transforms[title] = String
