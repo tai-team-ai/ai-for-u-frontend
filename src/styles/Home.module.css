@@ -34,6 +34,10 @@
     }
 }
 
+.no-hover:hover {
+    opacity: 1 !important;
+}
+
 
 .templates-btn {
     font-size: 1.1rem;

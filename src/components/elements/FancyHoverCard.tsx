@@ -17,17 +17,16 @@ export default function FancyHoverCard (props: FancyHoverCardProps): JSX.Element
   return (
         <Card
             isPressable
-
-            variant="bordered"
+            variant='bordered'
             className={`${styles['fancy-card']} ${styles[size]}`}
-            css={{ $$cardColor: '$colors$primaryLight', height: '100%', boxSizing: 'border-box', boxShadow: '1px 1px 3px 0 rgba(0, 0, 0, 0.1), -1px -1px 3px 0 rgba(0, 0, 0, 0.1)' }}
+            css={{ $$cardColor: '$colors$primaryLight', height: '100%', paddingBottom: '1rem', boxSizing: 'border-box', boxShadow: '1px 1px 3px 0 rgba(0, 0, 0, 0.1), -1px -1px 3px 0 rgba(0, 0, 0, 0.1)' }}
             >
                 <Card.Body className={styles['fancy-card-content']}>
                     <Text
                         h3
                         className={styles.title}
                         css={{
-                          color: '$colors$primary',
+                          color: '$colors$primaryLightContrast',
                           marginBottom: '0.5rem',
                           textAlign: 'center',
                           lineHeight: '2.3rem'
@@ -39,11 +38,12 @@ export default function FancyHoverCard (props: FancyHoverCardProps): JSX.Element
                     <Text
                         className={styles.description}
                         css={{
-                          color: '$colors$primaryLightActive',
-                          lineHeight: '1.8rem',
+                          // color: '$colors$primaryLightContrast',
+                          lineHeight: '1.9rem',
                           padding: '0 0.2rem',
                           textAlign: 'center'
                         }}
+                        weight='light'
                         size={descriptionSize}
                     >
                         {props.description}

@@ -1,6 +1,7 @@
 import Input from './Input'
 import Textarea from './Textarea'
 import Dropdown from './Dropdown'
+import styles from '@/styles/TemplateForm.module.css'
 import { Checkbox, Button, Loading, Text } from '@nextui-org/react'
 import LoginModal from '../modals/LoginModal'
 import GoProModal from '../modals/GoProModal'
@@ -12,8 +13,14 @@ import { ResultBox } from '../layout/template'
 import Markdown from 'markdown-to-jsx'
 import { ShowDiffBtn } from './diffview'
 import { showSnackbar } from './Snackbar'
-// import Slider from './Slider'
 import { Slider } from '@mui/material'
+import { getTokenExhaustedCallToAction } from '@/utils/user'
+import { colors } from '@/components/layout/layout'
+
+// const camelToTitle = (camel: string): string => {
+//   const reuslt = camel.replace(/([A-Z])/g, ' $1')
+//   return reuslt.charAt(0).toUpperCase() + reuslt.slice(1)
+// }
 
 function range (start: number, stop: number | null = null): number[] {
   if (stop == null) {
@@ -101,10 +108,20 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
     aiResponseFeedbackContext: {}
   })
   const [showLogin, setShowLogin] = useState<boolean>(false)
-  const [loginMessage, setLoginMessage] = useState<string>('')
+  const [showGoPro, setShowGoPro] = useState<boolean>(false)
+  const [callToActionMessage, setCallToActionMessage] = useState<string>('')
   const [children, setChildren] = useState<JSX.Element>(<></>)
 
   const transforms: Record<string, (v: any) => any> = {}
+
+  function hexToRGBA (hex: string, alpha: number): string {
+    const match = hex.match(/\w\w/g)
+    if (match !== null) {
+      const [r, g, b] = match.map((x: string) => parseInt(x, 16))
+      return `rgba(${r},${g},${b},${alpha})`
+    }
+    return ''
+  }
 
   return (<>
         <form
@@ -121,21 +138,26 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                         void response.json().then(data => {
                           setResponseProps({ aiResponseFeedbackContext: data, aiToolEndpointName: task, userPromptFeedbackContext: body })
                           setChildren(<ResultChildren body={body} data={data} task={task} />)
-                          setLoading(false)
                           setShowResult(true)
                         })
                       } else if (response.status === 429) {
                         void response.json().then(message => {
-                          setLoginMessage(message.message)
-                          setShowLogin(true)
-                          setLoading(false)
+                          const isUserLoggedIn = session !== null
+                          setCallToActionMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
+                          if (isUserLoggedIn) {
+                            setShowGoPro(true)
+                          } else {
+                            setShowLogin(true)
+                          }
                         })
                       } else {
                         void response.text().then(message => {
                           showSnackbar(message)
-                          setLoading(false)
                         })
                       }
+                    })
+                    .finally(() => {
+                      setLoading(false)
                     })
                 }
             }
@@ -182,8 +204,24 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                         <Slider
                             id={title}
                             name={title}
-                            color="secondary"
-                            step={1}
+                            step={5}
+                            min={0}
+                            max={100}
+                            sx={{
+                              color: colors.primaryLightHover,
+                              '& .MuiSlider-thumb': {
+                                '&:hover': {
+                                  boxShadow: `0px 0px 0px 8px ${hexToRGBA(
+                                    colors.secondaryLightContrast,
+                                    0.16
+                                  )}`
+                                }
+                              }
+                            }}
+                            marks={[
+                              { value: 0, label: '0' },
+                              { value: 100, label: '100' }
+                            ]}
                             valueLabelDisplay="auto"
                             onChange={(e, val) => { setCreativity(val as number) }}
                             value={creativity}
@@ -201,7 +239,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   if (property.type === 'boolean') {
                     transforms[title] = Boolean
                     // @ts-expect-error The checkbox component usually doesn't allow Elements in the label but it supports it.
-                    return <Checkbox size="sm" {...inputProps} />
+                    return <Checkbox css={{ marginBottom: '0.4rem', marginTop: '0.4rem' }} size="sm" {...inputProps} color='secondary'/>
                   }
                   const dropdownProps = {
                     id: title,
@@ -212,7 +250,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   if (property.type === 'integer') {
                     transforms[title] = Number
                     const [selected, setSelected] = useState([property.default])
-                    resets[title] = { value: selected, setValue: (v: any) => { setSelected([v]) }, default: property.default }
+                    resets[title] = { value: selected, setValue: setSelected, default: [property.default] }
                     return <Dropdown {...dropdownProps} validSelections={range(property.minimum, property.maximum).map(String)} selectionMode="single" selected={selected} setSelected={setSelected} />
                   }
                   if (typeof property.allOf !== 'undefined') {
@@ -239,11 +277,13 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     light
                     color="error"
                     type="reset"
+                    className={styles['reset-button']}
                 >Reset</Button>
                 <Button
                     flat
                     type="submit"
                     disabled={loading}
+                    className={styles['submit-button']}
                 >{loading ? <Loading type="points" /> : 'Submit'}
                 </Button>
             </div>
@@ -251,20 +291,17 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                 {children}
             </ResultBox>
         </form>
-        {session !== null
-          ? <GoProModal
-          bindings={{
-            open: showLogin,
-            onClose: () => { setShowLogin(false) }
-          }}
-          />
-          : <LoginModal
-          open={showLogin}
-          setOpen={setShowLogin}
-          isSignUp={true}
-          message={loginMessage}
+        <GoProModal
+          open={showGoPro}
+          message={callToActionMessage}
+          setOpenState={setShowGoPro}
         />
-        }
+        <LoginModal
+          open={showLogin}
+          setOpenState={setShowLogin}
+          isSignUp={true}
+          message={callToActionMessage}
+        />
         </>)
 }
 

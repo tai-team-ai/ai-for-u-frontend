@@ -17,25 +17,47 @@ declare interface DropdownProps {
 
 const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections = [], selectionMode = 'single', label = null, tooltip = '', css = null, selected, setSelected }: DropdownProps): JSX.Element => {
   const selectedValue = useMemo(() => Array.from(selected).join(', ').replaceAll('_', ' '), [selected])
-  console.log(selectedValue)
+
+  for (let i = 0; i < selected.length; i++) {
+    // check if undefined or null
+    if (selected[i] !== null && selected[i] !== undefined) {
+      selected[i] = selected[i].toString()
+    }
+  }
   return (
         <>
             <label style={{ display: 'block' }} htmlFor={id}>{label} <InfoPopover text={tooltip}/></label>
             <NextUIDropdown >
-                <NextUIDropdown.Button css={{ textTransform: 'capitalize', ...css }} flat>
-                    {selectedValue}
+            <NextUIDropdown.Button
+              color="primary"
+              css={{
+                textTransform: 'capitalize',
+                marginBottom: '0.4rem',
+                ...css
+              }}
+              flat
+          >
+              <div // THis div is necessary to truncate the text and prevent teh button overflowing the screen
+                  style={{
+                    overflow: 'hidden',
+                    maxWidth: 'calc(min(35vw, 15rem))',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis'
+                  }}
+              >
+                  {selectedValue}
+              </div>
                 </NextUIDropdown.Button>
                 <NextUIDropdown.Menu
                     disallowEmptySelection
                     selectionMode={selectionMode}
-                    selectedKeys={selected}
+                    selectedKeys={selected.slice(0) === undefined ? [] : selected.slice(0)}
                     // @ts-expect-error the selected keys resolve to strings in this kase.
                     onSelectionChange={setSelected}
                 >
                     {Object.entries(validSelections).map(([key, val]) => {
                       return <NextUIDropdown.Item css={{ textTransform: 'capitalize' }} key={val}>{val}</NextUIDropdown.Item>
                     })}
-
                 </NextUIDropdown.Menu>
             </NextUIDropdown>
             <input data-type="dropdown" placeholder={initialSelection} hidden id={id} name={name} value={selectedValue}/>

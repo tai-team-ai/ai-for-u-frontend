@@ -1,0 +1,12 @@
+.submit-button {
+    filter: var(--shadow);
+}
+
+.submit-button:hover {
+    filter: var(--hover-shadow);
+    transform: var(--hover-translate);
+}
+
+.reset-button:hover {
+    transform: var(--hover-translate);
+}

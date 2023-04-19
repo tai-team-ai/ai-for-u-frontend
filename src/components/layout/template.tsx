@@ -1,5 +1,5 @@
 import styles from '@/styles/Template.module.css'
-import { Card, Grid, Text, Loading, Dropdown } from '@nextui-org/react'
+import { Card, Grid, Text, Loading, Dropdown, Link } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
 import { type FormEventHandler, type PropsWithChildren, useEffect, useRef, useState } from 'react'
 import { getExamples } from '@/utils/user'
@@ -22,17 +22,17 @@ const Example = ({ example, fillExample, ...props }: PropsWithChildren<ExamplePr
             <Card
                 isPressable
                 isHoverable
-                variant="bordered"
                 className={styles['template-card']}
                 disableRipple={true} // if this page is turned into a single page app, then we'd want to enable this again
-                css={{ h: '$24', $$cardColor: '$colors$primary' }}
+                css={{ $$cardColor: '$colors$secondaryLight', color: '$colors$secondaryLightContrast', marginRight: '1rem', textAlign: 'center' }}
                 onPress={() => { if (fillExample !== null) fillExample(example) }}
             >
-                <Card.Body css={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Card.Body css={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '7rem', textAlign: 'center' }}>
                     <Text
-                        size="$xl"
-                        weight="bold"
-                        color="white" >
+                        size="$2xl"
+                        weight="semibold"
+                        css={{ lineHeight: '1.8rem', textAlign: 'center' }}
+                        color="$colors$secondaryText" >
                         {props.children}
                     </Text>
                 </Card.Body>
@@ -97,14 +97,14 @@ const Examples = ({ examples, fillExample }: ExamplesProps): JSX.Element => {
 const ExampleDropdown = ({ examples, fillExample }: ExamplesProps): JSX.Element => {
   return (
         <Dropdown>
-            <Dropdown.Button css={{ width: '100%' }} >Examples</Dropdown.Button>
+            <Dropdown.Button css={{ width: '100%', fontSize: '1.2rem' }} size={'md'} flat color='secondary' >Examples</Dropdown.Button>
             <Dropdown.Menu
                 onAction={(key) => {
                   fillExample(examples[key as number].example)
                 }}
             >
                 {examples.map((example, index) => {
-                  return <Dropdown.Item key={index} variant="flat" color="primary">{example.name}</Dropdown.Item>
+                  return <Dropdown.Item key={index} variant="flat" color="secondary">{example.name}</Dropdown.Item>
                 })}
             </Dropdown.Menu>
         </Dropdown>
@@ -200,6 +200,12 @@ export default function Template ({ isSandbox = false, children = null, exampleU
             </Grid>
             <Grid sm={9} xs={12}>
                 <section ref={sectionRef} className={`${styles.content} ${isSandbox ? styles.sandbox : ''}`}>
+                <Grid.Container className={styles['back-arrow-container']}>
+                  <Link href="/templates" className={styles['back-arrow-link']}>
+                    <img src="/left-arrow.png" alt="Back to Templates" className={styles['back-arrow']}/>
+                    <Text h4 css={{ marginLeft: '0.5rem' }}>Back to Templates</Text>
+                  </Link>
+                </Grid.Container>
                     {children}
                     {resultBox}
                 </section>

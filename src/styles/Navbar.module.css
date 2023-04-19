@@ -3,3 +3,12 @@
     bottom: 4px;
     position: absolute;
 }
+
+.sign-up-btn {
+    filter: var(--shadow);
+}
+
+.sign-up-btn:hover {
+    transform: var(--hover-translate);
+    filter: var(--hover-shadow);
+}

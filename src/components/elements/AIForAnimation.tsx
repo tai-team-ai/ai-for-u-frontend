@@ -8,7 +8,7 @@ interface AIForAnimationProps {
 
 const TITLE: string = 'AI for U'
 
-export default function AIForAnimation ({ stepSpeed = 400 }: AIForAnimationProps): JSX.Element {
+export default function AIForAnimation ({ stepSpeed = 500 }: AIForAnimationProps): JSX.Element {
   const whoIsAIFor: string[] = [
     'Students',
     'Designers',

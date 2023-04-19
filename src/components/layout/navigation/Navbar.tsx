@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Navbar, Button, Link, Text, useModal } from '@nextui-org/react'
+import { Navbar, Button, Link, Text } from '@nextui-org/react'
 import { routes, errors } from '../../../utils/constants'
 import LoginModal from '../../modals/LoginModal'
 import { useSession, signOut } from 'next-auth/react'
@@ -9,18 +9,26 @@ import { useRouter } from 'next/router'
 import GoProModal from '@/components/modals/GoProModal'
 
 interface LoginButtonProps {
-  onLogin: () => void
-  onSignUp: () => void
+  setIsSignUp: React.Dispatch<React.SetStateAction<boolean>>
+  setShowLoginModal: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const LoginButtons = ({ onLogin, onSignUp }: LoginButtonProps): JSX.Element => {
+const LoginButtons = ({ setIsSignUp, setShowLoginModal }: LoginButtonProps): JSX.Element => {
   return (
         <>
-            <Navbar.Link color="inherit" onPress={onLogin}>
+            <Navbar.Link color="inherit" onClick={ () => {
+              setIsSignUp(false)
+              setShowLoginModal(true)
+            }}>
                 Login
             </Navbar.Link>
             <Navbar.Item>
-                <Button auto flat onPress={onSignUp}>
+                <Button auto flat onClick={ () => {
+                  console.info('signup')
+                  setIsSignUp(true)
+                  setShowLoginModal(true)
+                }}
+                >
                 Sign Up
                 </Button>
             </Navbar.Item>
@@ -31,7 +39,7 @@ const LoginButtons = ({ onLogin, onSignUp }: LoginButtonProps): JSX.Element => {
 const LogoutButtons = (): JSX.Element => {
   return (
         <Navbar.Link>
-            <Button auto flat onPress={() => { void signOut() }}>
+            <Button auto flat className={styles['sign-up-btn']} onPress={() => { void signOut() }}>
                 Logout
             </Button>
         </Navbar.Link>
@@ -39,10 +47,10 @@ const LogoutButtons = (): JSX.Element => {
 }
 
 const NavBar = (): JSX.Element => {
-  const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
-  const [showSignUpModal, setShowSignUpModal] = useState<boolean>(false)
   const { data: session } = useSession()
-  const { setVisible: setShowGoProModal, bindings: goProBindings } = useModal()
+  const [isSignUp, setIsSignUp] = useState<boolean>(false)
+  const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
+  const [showGoProModal, setShowGoProModal] = useState<boolean>(false)
   getUserID(session)
   const [error, setError] = useState('')
   const router = useRouter()
@@ -61,15 +69,18 @@ const NavBar = (): JSX.Element => {
   const navbarItems = [{
     text: 'AI Assistant',
     href: routes.SANDBOX,
-    isActive: sandboxActive
+    isActive: sandboxActive,
+    textColor: 'inherit'
   }, {
     text: 'AI Templates',
     href: routes.TEMPLATES,
-    isActive: templatesActive
+    isActive: templatesActive,
+    textColor: 'inherit'
   }, {
     text: 'Go Pro',
     onPress: () => { setShowGoProModal(true) },
-    isActive: false
+    isActive: false,
+    textColor: 'error'
   }]
 
   return (
@@ -98,6 +109,7 @@ const NavBar = (): JSX.Element => {
                                     key={idx}
                                     isActive={nav.isActive}
                                     href={nav.href}
+                                    color={nav.textColor as 'text' | 'inherit' | 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'}
                                     onPress={nav.onPress}
                                 >{nav.text}</Navbar.Link>)
                     })}
@@ -109,8 +121,8 @@ const NavBar = (): JSX.Element => {
                         )
                       : (
                         <LoginButtons
-                            onLogin={() => { setShowLoginModal(true) }}
-                            onSignUp={() => { setShowSignUpModal(true) }}
+                            setIsSignUp={setIsSignUp}
+                            setShowLoginModal={setShowLoginModal}
                         />
                         )}
                 </Navbar.Content>
@@ -118,7 +130,7 @@ const NavBar = (): JSX.Element => {
                     {navbarItems.map((nav, idx) => (
                         <Navbar.CollapseItem key={idx}>
                             <Link
-                                color="inherit"
+                                color={nav.textColor as 'text' | 'inherit' | 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'}
                                 css={{
                                   minWidth: '100%'
                                 }}
@@ -134,18 +146,12 @@ const NavBar = (): JSX.Element => {
             <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'center', marginTop: '1rem' }}>
               <LoginModal
                   open={showLoginModal}
-                  setOpen={(o) => { setShowLoginModal(o) }}
-                  isSignUp={false}
-                  error={error}
-              />
-              <LoginModal
-                  open={showSignUpModal}
-                  setOpen={(o) => { setShowSignUpModal(o) }}
-                  isSignUp={true}
+                  setOpenState={setShowLoginModal}
+                  isSignUp={isSignUp}
                   error={error}
               />
             </div>
-            <GoProModal bindings={goProBindings} />
+            <GoProModal open={showGoProModal} setOpenState={setShowGoProModal} />
         </React.Fragment>
   )
 }

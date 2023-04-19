@@ -1,0 +1,79 @@
+.star-rating {
+    text-align: center;
+}
+
+.star-btn {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.on {
+    color: #000;
+}
+
+.off {
+    color: #ccc;
+}
+
+.rate-btn {
+    margin-left: 1rem;
+    font-size: 10pt;
+    cursor: pointer;
+    color: grey;
+}
+
+.rate-btn:hover {
+    color: black;
+}
+
+.button {
+    filter: var(--shadow);
+    animation: move 8s ease-in-out infinite;
+}
+
+@keyframes move {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    20%, 80% {
+        transform: translateY(-1.5px);
+    }
+    40%, 60% {
+        transform: translateY(1.5px);
+    }
+    50% {
+        transform: translateY(0);
+    }
+}
+.button:hover {
+    filter: var(--hover-shadow);
+    transform: var(--hover-translate);
+}
+
+.go-pro-features-list-mobile {
+    text-align: center;
+    line-height: 1.5rem;
+}
+
+.go-pro-animation {
+    margin-bottom: -0.5rem;
+    color: transparent;
+    background-image: linear-gradient(to right, rgba(120, 40, 200, 0.8), rgba(81, 17, 171, 0.8), rgba(243, 18, 96, 1), rgba(120, 40, 200, 0.8));
+    background-clip: text;
+    background-size: 200% 200%;
+    animation: glitter 5s linear infinite;
+    font-weight: bolder;
+}
+
+@keyframes glitter {
+    0% {
+        background-position: 150% 0;
+    }
+    100% {
+        background-position: -50% 0;
+    }
+}
+
+

@@ -100,6 +100,7 @@ function Home (): JSX.Element {
                 {TRUST_BUILDERS.map((TRUST_BUILDERS, index) => (
                   <Grid xs={12} sm={6} md={3} key={index}>
                     <Link
+                          className={styles['no-hover']}
                           href={TRUST_BUILDERS.link != null ? TRUST_BUILDERS.link : '#'}
                           style={{ height: '100%', width: '100%' }}
                           onClick={(e) => {

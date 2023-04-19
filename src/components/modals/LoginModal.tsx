@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Modal, Button, Input, Loading, Image, Text, Card } from '@nextui-org/react'
+import { Modal, Button, Input, Loading, Image, Text, Card, Link } from '@nextui-org/react'
 import EmailIcon from '@mui/icons-material/Email'
 import { signIn } from 'next-auth/react'
 import { validateSignUp } from '@/utils/validation'
@@ -7,18 +7,22 @@ import { uFetch } from '@/utils/http'
 
 interface LoginModalProps {
   open: boolean
-  setOpen: (o: boolean) => void
+  setOpenState: (o: boolean) => void
   isSignUp: boolean
   error?: string | null
   message?: string | null
 }
 
-const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = null }: LoginModalProps): JSX.Element => {
+const LoginModal = ({ open, setOpenState, isSignUp, error = null, message = null }: LoginModalProps): JSX.Element => {
   const [loggingIn, setLoggingIn] = React.useState(false)
   const loginForm = useRef<HTMLFormElement>(null)
-
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [modalState, setModalState] = useState<'providers' | 'email'>('providers')
+  const [isSignUpModal, setIsSignUpState] = useState<boolean>(isSignUp)
+
+  useEffect(() => {
+    setIsSignUpState(isSignUp)
+  }, [isSignUp])
 
   useEffect(() => {
     if (open) {
@@ -38,7 +42,7 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
       const email = String(formDataJSON.email)
       const password = String(formDataJSON.password)
 
-      if (isSignUp) {
+      if (isSignUpModal) {
         const confirmPassword = String(formDataJSON.confirmPassword)
         const errors = validateSignUp({ email, password, confirmPassword })
         if (errors.length > 0) {
@@ -61,7 +65,7 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
 
       const signInResponse = await signIn('credentials', { email, password, redirect: false })
       if (typeof signInResponse !== 'undefined' && signInResponse.ok) {
-        setOpen(false)
+        setOpenState(false)
       } else {
         setErrorMessage('Invalid email or password')
         return
@@ -91,7 +95,7 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
                         initialValue=""
                         name="password"
                     />
-                    {isSignUp
+                    {isSignUpModal
                       ? <Input.Password
                         fullWidth
                         required
@@ -114,7 +118,7 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
                             <Loading type="points" />
                             )
                           : (
-                              isSignUp ? 'Signup' : 'Login'
+                              isSignUpModal ? 'Signup' : 'Login'
                             )}
                     </Button>
                 </form>
@@ -132,7 +136,7 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
                     iconLeftCss={{ left: '12px' }}
                     icon={<EmailIcon shapeRendering='rounded' />}
                 >
-                    {isSignUp ? 'Sign up with Email' : 'Login with Email'}
+                    {isSignUpModal ? 'Sign up with Email' : 'Login with Email'}
                 </Button>
                 <Button
                     onPress={() => { void signIn('google') }}
@@ -142,7 +146,7 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
                     iconLeftCss={{ left: '0' }}
                     icon={<Image src="/btn_google_light_normal_ios.svg"/>}
                 >
-                    {isSignUp ? 'Sign up with Google' : 'Login with Google'}
+                    {isSignUpModal ? 'Sign up with Google' : 'Login with Google'}
                 </Button>
             </>
     )
@@ -153,7 +157,7 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
             open={open}
             closeButton
             onClose={() => {
-              setOpen(false)
+              setOpenState(false)
               if (window.location.toString() !== window.location.toString().split('?')[0]) {
                 window.location.replace(window.location.toString().split('?')[0])
               }
@@ -164,13 +168,17 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
               marginRight: 'auto'
             }}
         >
-                <Modal.Header>
-                    <Text h3>
-                        {isSignUp ? 'Sign up to Access Preview' : 'Login to Access Preview'}
-                    </Text>
-                </Modal.Header>
-                <Modal.Body>
-                  <Text css={{ textAlign: 'center' }}>{message}</Text>
+              <Modal.Header>
+                  {message === null
+                    ? null
+                    : (
+                        <Text h3 color='secondary' >
+                            {message}
+                        </Text>
+                      )
+                }
+              </Modal.Header>
+                <Modal.Body css={{ marginTop: '-1rem' }}>
                 <Card
                     variant="bordered"
                     css={{
@@ -192,6 +200,11 @@ const LoginModal = ({ open, setOpen, isSignUp = false, error = null, message = n
                           getContentEmail()
                         )
                       : ('')}
+                      <Text h6 css={{ marginTop: '-0.6em', display: 'block', textAlign: 'center' }} color='secondary'>
+                        <Link onClick={() => { setIsSignUpState(!isSignUpModal) }} style={{ color: 'inherit' }}>
+                          {isSignUpModal ? 'Already have an account?' : 'Don\'t have an account?'}
+                        </Link>
+                      </Text>
                 </Modal.Body>
         </Modal>
   )

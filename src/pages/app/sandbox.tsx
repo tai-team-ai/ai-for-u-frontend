@@ -7,7 +7,7 @@ import { type ReactNode, useEffect, useState, useRef } from 'react'
 import { v4 as uuid } from 'uuid'
 import { uFetch } from '@/utils/http'
 import { RateResponse } from '@/components/modals/FeedbackModal'
-import { getInitialChat } from '@/utils/user'
+import { getInitialChat, getTokenExhaustedCallToAction } from '@/utils/user'
 import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
@@ -33,7 +33,7 @@ const MessageBubble = ({ from, text }: MessageBubbleProps): JSX.Element => {
   const { theme } = useTheme()
   let bkgdColor = 'rgba(0, 0, 0, 0.15)'
   if (typeof theme !== 'undefined') {
-    bkgdColor = from === 'ai' ? theme.colors.gray100.value : '$colors$primary'
+    bkgdColor = from === 'ai' ? theme.colors.gray100.value : '$colors$primaryLightContrast'
   }
   const textColor = from === 'ai' ? 'black' : 'white'
   const borderRadius = '12px'
@@ -94,11 +94,12 @@ const ChatGPT = (): JSX.Element => {
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [showLogin, setShowLogin] = useState<boolean>(false)
-  const [loginMessage, setLoginMessage] = useState<string>('')
   const conversationUuid = getConversationUuid()
   const chatBoxRef = useRef<HTMLDivElement>(null)
-  const isKeyboardVisible: boolean = isMobileKeyboardVisible()
-  const isMobileBrowser: boolean = isMobile()
+  const isKeyboardVisible = isMobileKeyboardVisible()
+  const isMobileBrowser = isMobile()
+  const [callToActionMessage, setCallToActionMessage] = useState<string>('')
+  const [showGoPro, setShowGoPro] = useState<boolean>(false)
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -162,21 +163,25 @@ const ChatGPT = (): JSX.Element => {
               response: data
             })
             setMessages([...messages])
-            setLoading(false)
           })
         } else if (response.status === 429) {
           void response.json().then(data => {
-            // showSnackbar(data.message)
-            setLoginMessage(data.message)
-            setShowLogin(true)
-            setLoading(false)
+            const isUserLoggedIn = session !== null
+            setCallToActionMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
+            if (isUserLoggedIn) {
+              setShowGoPro(true)
+            } else {
+              setShowLogin(true)
+            }
           })
         } else {
           void response.text().then(data => {
             showSnackbar(data)
-            setLoading(false)
           })
         }
+      })
+      .finally(() => {
+        setLoading(false)
       })
   }
 
@@ -233,27 +238,25 @@ const ChatGPT = (): JSX.Element => {
                               auto
                               className={`${styles['send-button']} ${styles['send-button-hover']}`}
                               type="submit"
+                              color='primary'
                             >
                                 <SendIcon shapeRendering='rounded' />
                             </Button>
                         </Card.Footer>
                     </Card>
                 </form>
-              {session !== null
-                ? <GoProModal
-                      bindings={{
-                        open: showLogin,
-                        onClose: () => { setShowLogin(false) }
-                      }}
-                  />
-                : <LoginModal
-                      open={showLogin}
-                      setOpen={setShowLogin}
-                      isSignUp={true}
-                      message={loginMessage}
-                  />
-              }
             </Template>
+            <GoProModal
+              open={showGoPro}
+              message={callToActionMessage}
+              setOpenState={setShowGoPro}
+            />
+            <LoginModal
+              open={showLogin}
+              setOpenState={setShowLogin}
+              isSignUp={false}
+              message={callToActionMessage}
+            />
         </Layout>
     </>)
 }

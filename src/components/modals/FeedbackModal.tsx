@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Modal, Button, Input, Loading, Text } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
 import { uFetch } from '@/utils/http'
-import styles from '@/styles/FeedbackModal.module.css'
+import styles from '@/styles/Modals.module.css'
 
 export interface ResponseProps {
   aiResponseFeedbackContext: any
