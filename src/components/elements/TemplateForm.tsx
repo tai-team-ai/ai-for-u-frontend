@@ -119,7 +119,6 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                         void response.json().then(data => {
                           setResponseProps({ aiResponseFeedbackContext: data, aiToolEndpointName: task, userPromptFeedbackContext: body })
                           setChildren(<ResultChildren body={body} data={data} task={task} />)
-                          setLoading(false)
                           setShowResult(true)
                         })
                       } else if (response.status === 429) {
@@ -131,14 +130,15 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                           } else {
                             setShowLogin(true)
                           }
-                          setLoading(false)
                         })
                       } else {
                         void response.text().then(message => {
                           showSnackbar(message)
-                          setLoading(false)
                         })
                       }
+                    })
+                    .finally(() => {
+                      setLoading(false)
                     })
                 }
             }

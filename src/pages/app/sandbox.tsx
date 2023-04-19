@@ -13,6 +13,7 @@ import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
 import { isMobileKeyboardVisible, useAutoCollapseKeyboard, isMobile } from '@/utils/hooks'
 import LoginModal from '@/components/modals/LoginModal'
+import GoProModal from '@/components/modals/GoProModal'
 
 interface RequestBody {
   conversationUuid: string
@@ -87,7 +88,6 @@ const getConversationUuid = (): string => {
 }
 
 const ChatGPT = (): JSX.Element => {
-  const [showLogin, setShowLogin] = useState<boolean>(false)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const { data: session } = useSession()
@@ -97,7 +97,9 @@ const ChatGPT = (): JSX.Element => {
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const isKeyboardVisible = isMobileKeyboardVisible()
   const isMobileBrowser = isMobile()
-  const [loginMessage, setLoginMessage] = useState<string>('')
+  const [showLogin, setShowLogin] = useState<boolean>(false)
+  const [callToActionMessage, setCallToActionMessage] = useState<string>('')
+  const [showGoPro, setShowGoPro] = useState<boolean>(false)
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -161,21 +163,25 @@ const ChatGPT = (): JSX.Element => {
               response: data
             })
             setMessages([...messages])
-            setLoading(false)
           })
         } else if (response.status === 429) {
           void response.json().then(data => {
             const isUserLoggedIn = session !== null
-            setLoginMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
-            setShowLogin(true)
-            setLoading(false)
+            setCallToActionMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
+            if (isUserLoggedIn) {
+              setShowGoPro(true)
+            } else {
+              setShowLogin(true)
+            }
           })
         } else {
           void response.text().then(data => {
             showSnackbar(data)
-            setLoading(false)
           })
         }
+      })
+      .finally(() => {
+        setLoading(false)
       })
   }
 
@@ -240,11 +246,16 @@ const ChatGPT = (): JSX.Element => {
                     </Card>
                 </form>
             </Template>
+            <GoProModal
+              open={showGoPro}
+              message={callToActionMessage}
+              setOpenState={setShowGoPro}
+            />
             <LoginModal
               open={showLogin}
-              setOpen={setShowLogin}
+              setOpenState={setShowLogin}
               signUp={true}
-              message={loginMessage}
+              message={callToActionMessage}
             />
         </Layout>
     </>)
