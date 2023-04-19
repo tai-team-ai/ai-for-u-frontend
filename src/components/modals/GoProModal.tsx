@@ -26,14 +26,14 @@ const GoProModal = ({ open, setOpenState, message = null }: GoProModalProps): JS
                 {message === null
                   ? null
                   : (
-                          <Text h6 color='secondary' css={{ marginTop: '-0.5rem', marginBottom: '-0.5rem', padding: '0 4rem' }}>
+                          <Text h6 color='secondary' css={{ marginTop: '-0.5rem', marginBottom: '-0.7rem', padding: '0 4rem' }}>
                               {message}
                           </Text>
                     )
                     }
               </Grid.Container>
             </Modal.Header>
-            <Modal.Body css={{ paddingLeft: '3rem' }}>
+            <Modal.Body css={{ paddingLeft: '3rem', marginBottom: '-0.5rem' }}>
                 <Grid.Container>
                     <Grid sm={6}>
                         <div>
@@ -60,8 +60,8 @@ const GoProModal = ({ open, setOpenState, message = null }: GoProModalProps): JS
                     </Grid>
                 </Grid.Container>
             </Modal.Body>
-            <Modal.Footer justify="flex-end">
-                <SubscribeField style={{ marginRight: '6rem', marginBottom: '0.5rem' }} />
+            <Modal.Footer justify="center">
+                <SubscribeField style={{ marginRight: '6rem', marginBottom: '0.5rem', marginTop: '0.3rem' }} />
             </Modal.Footer>
         </Modal>
   )

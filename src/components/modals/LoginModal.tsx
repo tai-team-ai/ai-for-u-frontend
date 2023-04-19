@@ -196,7 +196,7 @@ const LoginModal = ({ open, setOpenState, signUp = false, error = null, message 
                           getContentEmail()
                         )
                       : ('')}
-                      <Text h6 css={{ marginTop: '-0.9em', display: 'block', textAlign: 'center' }} color='secondary'>
+                      <Text h6 css={{ marginTop: '-0.6em', display: 'block', textAlign: 'center' }} color='secondary'>
                         <Link onClick={() => { setIsSignUp(!isSignUp) }} style={{ color: 'inherit' }}>
                           {isSignUp ? 'Already have an account? Login' : 'Don\'t have an account? Signup'}
                         </Link>
