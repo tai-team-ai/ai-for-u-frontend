@@ -7,7 +7,7 @@ import { type ReactNode, useEffect, useState, useRef } from 'react'
 import { v4 as uuid } from 'uuid'
 import { uFetch } from '@/utils/http'
 import { RateResponse } from '@/components/modals/FeedbackModal'
-import { getInitialChat, getTokenExhaustedCallToAction } from '@/utils/user'
+import { getTokenExhaustedCallToAction } from '@/utils/user'
 import { useSession } from 'next-auth/react'
 import Markdown from 'markdown-to-jsx'
 import { showSnackbar } from '@/components/elements/Snackbar'
@@ -76,17 +76,6 @@ const Message = ({ request, response = null }: MessageProps): JSX.Element => {
     </div>
 }
 
-const getConversationUuid = (): string => {
-  // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
-  if (typeof global._conversationUuid === 'undefined') {
-    // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
-    global._conversationUuid = uuid()
-  }
-  // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
-  const conversationUuid = global._conversationUuid
-  return conversationUuid
-}
-
 const ChatGPT = (): JSX.Element => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
@@ -94,7 +83,8 @@ const ChatGPT = (): JSX.Element => {
   const [messages, setMessages] = useState<MessageProps[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [showLogin, setShowLogin] = useState<boolean>(false)
-  const conversationUuid = getConversationUuid()
+  // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
+  let conversationUuid: string = global._conversationUuid
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const isKeyboardVisible = isMobileKeyboardVisible()
   const isMobileBrowser = isMobile()
@@ -102,24 +92,47 @@ const ChatGPT = (): JSX.Element => {
   const [showGoPro, setShowGoPro] = useState<boolean>(false)
   const maxLinesTextArea = 5
 
-  useEffect(() => {
-    if (messages.length === 0) {
-      setLoading(true)
-      void getInitialChat(session).then(gptResponse => {
-        if (messages.length === 0) {
-          messages.push({
-            request: {
-              conversationUuid,
-              userMessage: ''
-            },
-            response: {
-              gptResponse
+  const getResponse = async (request: RequestBody): Promise<void> => {
+    setLoading(true)
+    void uFetch('/api/ai-for-u/sandbox-chatgpt', { session, method: 'POST', body: JSON.stringify(request) })
+      .then(response => {
+        if (response.status === 200) {
+          void response.json().then(data => {
+            messages.push({
+              request,
+              response: data
+            })
+            setMessages([...messages])
+          })
+        } else if (response.status === 429) {
+          void response.json().then(data => {
+            const isUserLoggedIn = session !== null && typeof session !== 'undefined'
+            setCallToActionMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
+            if (isUserLoggedIn) {
+              setShowGoPro(true)
+            } else {
+              setShowLogin(true)
             }
           })
-          setMessages([...messages])
-          setLoading(false)
+        } else {
+          void response.text().then(data => {
+            showSnackbar(data)
+          })
         }
       })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+
+  useEffect(() => {
+    // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
+    if (typeof global._conversationUuid === 'undefined') {
+      // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
+      global._conversationUuid = uuid()
+      // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
+      conversationUuid = global._conversationUuid
+      void getResponse({ conversationUuid, userMessage: '' })
     }
   })
 
@@ -154,36 +167,7 @@ const ChatGPT = (): JSX.Element => {
     const request = { conversationUuid, userMessage }
     messages.push({ request })
     setMessages([...messages])
-    setLoading(true)
-    void uFetch('/api/ai-for-u/sandbox-chatgpt', { session, method: 'POST', body: JSON.stringify(request) })
-      .then(response => {
-        if (response.status === 200) {
-          void response.json().then(data => {
-            messages.push({
-              request,
-              response: data
-            })
-            setMessages([...messages])
-          })
-        } else if (response.status === 429) {
-          void response.json().then(data => {
-            const isUserLoggedIn = session !== null
-            setCallToActionMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
-            if (isUserLoggedIn) {
-              setShowGoPro(true)
-            } else {
-              setShowLogin(true)
-            }
-          })
-        } else {
-          void response.text().then(data => {
-            showSnackbar(data)
-          })
-        }
-      })
-      .finally(() => {
-        setLoading(false)
-      })
+    void getResponse(request)
   }
 
   useAutoCollapseKeyboard(submitHandler)

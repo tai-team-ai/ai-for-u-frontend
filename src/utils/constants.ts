@@ -25,5 +25,3 @@ export const routes = {
 export const errors: Record<string, string> = {
   OAuthAccountNotLinked: 'Email already exists. Please login with your email and password instead of Google.'
 }
-
-export const secrets: Record<string, string> = typeof process.env.secrets !== 'undefined' ? JSON.parse(process.env.secrets) : {}
