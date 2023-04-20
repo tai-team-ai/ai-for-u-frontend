@@ -17,7 +17,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse): Promi
   const adapter = useDynamoDBAdapter()
   let user = await adapter.getUserByEmail(email)
   if (user != null) {
-    res.status(422).json({ message: `email ${email as string} already exists` })
+    res.status(422).json({ message: `Email ${email as string} already exists. Please try signing up again with a different email.` })
     return
   }
   user = await adapter.createUser({
