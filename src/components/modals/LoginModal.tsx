@@ -187,7 +187,7 @@ const LoginModal = ({ open, setOpenState, isSignUp, error = null, message = null
                       display: errorMessage.length > 0 ? 'block' : 'none'
                     }}>
                     <Card.Body>
-                        <Text css={{ color: '$red700' }} dangerouslySetInnerHTML={{ __html: errorMessage }} />
+                        <Text css={{ color: '$red700', textAlign: 'center' }} dangerouslySetInnerHTML={{ __html: errorMessage }} />
                     </Card.Body>
                 </Card>
                     {modalState === 'providers'
