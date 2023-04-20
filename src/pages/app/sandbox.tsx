@@ -100,6 +100,7 @@ const ChatGPT = (): JSX.Element => {
   const isMobileBrowser = isMobile()
   const [callToActionMessage, setCallToActionMessage] = useState<string>('')
   const [showGoPro, setShowGoPro] = useState<boolean>(false)
+  const maxLinesTextArea = 5;
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -217,21 +218,45 @@ const ChatGPT = (): JSX.Element => {
                             id="userMessage"
                             name="userMessage"
                             minRows={1}
-                            maxRows={5}
+                            maxRows={maxLinesTextArea}
+                            cacheMeasurements={false}
                             fullWidth
                             form="task-form"
                             placeholder="Type your message..."
                             className={`${styles['user-message-textarea']} ${styles['user-message-textarea-hover']}`}
-                            onKeyDown={(event: any) => {
-                              if (!(event.shiftKey as boolean) && event.key === 'Enter') {
+                            ref={textAreaRef} // Set a ref to the text area element
+                            onKeyDown={(event: any) => { // this handles adding newlines and resizing the textarea when ctrl + enter or shift + enter or meta + enter is pressed
+                              const lineHeight = 20 // Set the line height in pixels (you can adjust this value)
+                              if (
+                                ((event.ctrlKey as boolean) || (event.shiftKey as boolean) || (event.metaKey as boolean)) &&
+                                event.key === 'Enter'
+                              ) {
                                 event.preventDefault()
-                                const form: HTMLFormElement | null = document.querySelector('#task-form')
+                                if (textAreaRef.current != null) {
+                                  const newValue = textAreaRef.current.value + '\n'
+                                  textAreaRef.current.value = newValue
+                                  // Count the number of lines in the textarea
+                                  const lines = textAreaRef.current.value.split('\n').length
+                                  // Manually adjust the height of the textarea based on the number of lines
+                                  textAreaRef.current.style.height = 'auto'
+                                  const newHeight = lines * lineHeight
+                                  textAreaRef.current.style.height =
+                                    lines <= maxLinesTextArea ? `${newHeight}px` : `${maxLinesTextArea * lineHeight}px`
+                                  // Add this block to set the focus back to the textarea with a slight delay
+                                  setTimeout(() => {
+                                    if (textAreaRef.current != null) {
+                                      textAreaRef.current.focus()
+                                    }
+                                  }, 0)
+                                }
+                              } else if (event.key === 'Enter') {
+                                event.preventDefault()
+                                const form: HTMLFormElement | null = document.querySelector('#task-form');
                                 if (form != null) {
                                   form.requestSubmit()
                                 }
                               }
                             }}
-                            ref={textAreaRef} // Set a ref to the text area element
                           />
                             <Button
                               size="sm"
