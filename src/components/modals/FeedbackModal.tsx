@@ -48,23 +48,25 @@ interface StarRatingProps {
 const StarRating = ({ rating, setRating }: StarRatingProps): JSX.Element => {
   const [hover, setHover] = useState(5)
   return (
-        <div className={styles['star-rating']}>
-            {[...Array(5)].map((star, index) => {
-              index += 1
-              return (
-                    <button
-                        type="button"
-                        key={index}
-                        className={`${styles[index <= (hover) ? 'on' : 'off']} ${styles['star-btn']}`}
-                        onClick={() => { setRating(index) }}
-                        onMouseEnter={() => { setHover(index) }}
-                        onMouseLeave={() => { setHover(rating) }}
-                        >
-                        <span className={styles.star}>&#9733;</span>
-                    </button>
-              )
-            })}
-        </div>
+      <div className={styles['star-rating']}>
+        <span className={styles['glitter-container']}>
+          {[...Array(5)].map((star, index) => {
+            index += 1
+            return (
+              <button
+                type="button"
+                key={index}
+                className={`${styles[index <= (hover) ? 'on' : 'off']} ${styles['star-btn']}`}
+                onClick={() => { setRating(index) }}
+                onMouseEnter={() => { setHover(index) }}
+                onMouseLeave={() => { setHover(rating) }}
+              >
+                <span className={styles.star}>&#9733;</span>
+              </button>
+            )
+          })}
+        </span>
+      </div>
   )
 }
 
@@ -99,18 +101,18 @@ const FeedbackModal = ({ open, setOpen, aiResponseFeedbackContext, aiToolEndpoin
             }}
         >
                 <Modal.Header>
-                    <Text h3>
-                        How did the AI do?
+                    <Text h3 className={styles['go-pro-animation']}>
+                        How'd the AI do?
                     </Text>
                 </Modal.Header>
-                    <Modal.Body>
+                    <Modal.Body css={{ marginBottom: '-0.5rem', marginTop: '-1.1rem' }}>
                         <StarRating
                             rating={rating}
                             setRating={setRating}
                         />
                             <Input
                             type="text"
-                            label={rating < 5 ? 'Tell us how the AI could improve' : 'Amazing!🎉 What was great about it?'}
+                            placeholder={rating < 5 ? 'What could we ask the AI to do better?' : 'Amazing! 🎉 What was great about it?'}
                             onChange={(event: any) => { setWrittenFeedback(event.target.value) }}
                         />
                     </Modal.Body>
@@ -120,6 +122,7 @@ const FeedbackModal = ({ open, setOpen, aiResponseFeedbackContext, aiToolEndpoin
                             flat
                             type="submit"
                             color="primary"
+                            className={styles.button}
                             disabled={loading}
                             onPress={() => { void submitFeedback() }}
                         >
