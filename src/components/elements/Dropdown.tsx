@@ -17,7 +17,11 @@ declare interface DropdownProps {
 
 const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections = [], selectionMode = 'single', label = null, tooltip = '', css = null, selected, setSelected }: DropdownProps): JSX.Element => {
   const selectedValue = useMemo(() => Array.from(selected).join(', ').replaceAll('_', ' '), [selected])
-
+  if (selected === undefined || selected === null) {
+    selected = []
+  } else if (!Array.isArray(selected)) {
+    selected = [selected]
+  }
   for (let i = 0; i < selected.length; i++) {
     // check if undefined or null
     if (selected[i] !== null && selected[i] !== undefined) {

@@ -69,14 +69,17 @@
 }
 
 .result-box {
-    overflow-y: scroll;
+    overflow-y: auto;
     overflow-x: wrap;
-    max-height: 30em;
+    max-height: 15rem;
     padding: 1em;
     border: solid 1px lightgrey;
     border-radius: 15px;
     margin: 1em;
+    margin-bottom: 0.5rem;
 }
+
+
 
 .sandbox .task-form {
     height: 100%;
