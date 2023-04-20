@@ -23,5 +23,5 @@ export const routes = {
 }
 
 export const errors: Record<string, string> = {
-  OAuthAccountNotLinked: 'To confirm your identity, sign in with the same account you used originally.'
+  OAuthAccountNotLinked: 'Email already exists. Please login with email instead of Google.'
 }

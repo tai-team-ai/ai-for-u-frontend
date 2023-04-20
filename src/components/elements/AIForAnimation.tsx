@@ -43,7 +43,7 @@ export default function AIForAnimation ({ stepSpeed = 500 }: AIForAnimationProps
     'Marketers',
     'Teachers',
     'Artists',
-    '__________',
+    '_________',
     'Everyone',
     ''
   ]
