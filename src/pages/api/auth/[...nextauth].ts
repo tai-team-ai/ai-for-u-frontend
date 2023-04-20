@@ -4,7 +4,6 @@ import CredentialsProvider from 'next-auth/providers/credentials'
 import { type NextApiRequest, type NextApiResponse } from 'next'
 import bcrypt from 'bcrypt'
 import { useDynamoDBAdapter } from '@/adapters/dynamodb'
-import { secrets } from '@/utils/constants'
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
   const adapter = useDynamoDBAdapter()
@@ -23,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<any> =
       // OAuth authentication providers...
       GoogleProvider({
         clientId: process.env.GOOGLE_ID as string,
-        clientSecret: secrets.GOOGLE_SECRET
+        clientSecret: process.env.GOOGLE_SECRET as string
       }),
       CredentialsProvider({
         name: 'Credentials',
@@ -49,7 +48,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<any> =
     pages: {
       signIn: '/'
     },
-    secret: secrets.NEXTAUTH_SECRET
+    secret: process.env.NEXTAUTH_SECRET
   }
   return NextAuth(req, res, authOptions)
 }

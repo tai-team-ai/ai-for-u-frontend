@@ -25,5 +25,3 @@ export const routes = {
 export const errors: Record<string, string> = {
   OAuthAccountNotLinked: 'To confirm your identity, sign in with the same account you used originally.'
 }
-
-export const secrets: Record<string, string> = typeof process.env.secrets !== 'undefined' ? JSON.parse(process.env.secrets) : {}
