@@ -24,7 +24,7 @@ const Example = ({ example, fillExample, ...props }: PropsWithChildren<ExamplePr
                 isHoverable
                 className={styles['template-card']}
                 disableRipple={true} // if this page is turned into a single page app, then we'd want to enable this again
-                css={{ $$cardColor: '$colors$secondaryLight', color: '$colors$secondaryLightContrast', marginRight: '1rem', textAlign: 'center' }}
+                css={{ $$cardColor: '$colors$secondaryLight', color: '$colors$secondaryLightContrast', marginRight: '1rem', textAlign: 'center', marginBottom: '1.3rem' }}
                 onPress={() => { if (fillExample !== null) fillExample(example) }}
             >
                 <Card.Body css={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '7rem', textAlign: 'center', overflowY: 'hidden' }}>
