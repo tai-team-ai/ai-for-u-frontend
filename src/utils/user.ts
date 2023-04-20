@@ -101,6 +101,6 @@ export function getTokenExhaustedCallToAction (userLoggedIn: boolean): string {
   if (userLoggedIn) {
     return 'You\'ve reached your daily limit. Check back tomorrow!'
   } else {
-    return 'Sign Up to Continue 🎉'
+    return 'Sign In to Continue 🎉'
   }
 }
