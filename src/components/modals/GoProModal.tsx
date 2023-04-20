@@ -1,4 +1,4 @@
-import { Grid, Modal, Text, Popover, Link } from '@nextui-org/react'
+import { Grid, Modal, Text } from '@nextui-org/react'
 import SubscribeField from '../elements/SubscribeField'
 import { isMobile } from '../../utils/hooks'
 import styles from '@/styles/Modals.module.css'
@@ -36,21 +36,11 @@ const GoProModal = ({ open, setOpenState, message = null }: GoProModalProps): JS
         >
             <Modal.Header>
               <Grid.Container alignItems="center" justify="center" direction="column">
-                <Popover defaultOpen={true} placement='top' offset={-13} shouldFlip={false}>
-                  <Popover.Trigger>
-                    <Link>
-                        <Text h3 className={styles['go-pro-animation']}>Pro Features Coming Soon</Text>
-                      </Link>
-                  </Popover.Trigger>
-                  <Popover.Content>
-                    {message === null
-                      ? null
-                      : (
-                          <Text h4 color='secondary' css={{ padding: '1rem', maxWidth: 'calc(min(75vw, 30rem))', textAlign: 'center' }}>{message}</Text>
-                        )
+                    <Text h3 className={styles['go-pro-animation']}>{message === null
+                      ? ('Pro Features Coming Soon')
+                      : message
                     }
-                  </Popover.Content>
-                </Popover>
+                    </Text>
               </Grid.Container>
             </Modal.Header>
             <Modal.Body css={{ marginBottom: '-0.5rem', marginTop: '-0.2rem' }}>
