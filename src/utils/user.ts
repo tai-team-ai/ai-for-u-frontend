@@ -29,7 +29,8 @@ const prefetchExamples = (session: Session | null): void => {
   const routes = [
     '/api/ai-for-u/sandbox-chatgpt-examples',
     '/api/ai-for-u/text-summarizer-examples',
-    '/api/ai-for-u/text-revisor-examples'
+    '/api/ai-for-u/text-revisor-examples',
+    '/api/ai-for-u/cover-letter-examples'
   ]
   for (const route of routes) {
     void prefetchExample(session, route)
