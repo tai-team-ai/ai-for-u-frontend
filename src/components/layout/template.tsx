@@ -27,7 +27,7 @@ const Example = ({ example, fillExample, ...props }: PropsWithChildren<ExamplePr
                 css={{ $$cardColor: '$colors$secondaryLight', color: '$colors$secondaryLightContrast', marginRight: '1rem', textAlign: 'center' }}
                 onPress={() => { if (fillExample !== null) fillExample(example) }}
             >
-                <Card.Body css={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '7rem', textAlign: 'center' }}>
+                <Card.Body css={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '7rem', textAlign: 'center', overflowY: 'hidden' }}>
                     <Text
                         size="$2xl"
                         weight="semibold"

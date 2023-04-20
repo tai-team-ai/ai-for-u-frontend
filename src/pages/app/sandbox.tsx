@@ -100,7 +100,7 @@ const ChatGPT = (): JSX.Element => {
   const isMobileBrowser = isMobile()
   const [callToActionMessage, setCallToActionMessage] = useState<string>('')
   const [showGoPro, setShowGoPro] = useState<boolean>(false)
-  const maxLinesTextArea = 5;
+  const maxLinesTextArea = 5
 
   useEffect(() => {
     if (messages.length === 0) {
@@ -251,7 +251,7 @@ const ChatGPT = (): JSX.Element => {
                                 }
                               } else if (event.key === 'Enter') {
                                 event.preventDefault()
-                                const form: HTMLFormElement | null = document.querySelector('#task-form');
+                                const form: HTMLFormElement | null = document.querySelector('#task-form')
                                 if (form != null) {
                                   form.requestSubmit()
                                 }
