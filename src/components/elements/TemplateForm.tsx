@@ -57,25 +57,10 @@ const ResultChildren = ({ task, data, body }: ResultChildrenProps): JSX.Element 
                 <ShowDiffBtn oldValue={body.textToRevise} newValue={text} />
             </>)}
         </>
-  } else if (task === 'catchy-title-creator') {
+  } else if (typeof data.response !== 'undefined') {
     return <>
-            <Text h3>Titles</Text>
-            <ul>
-                {data.titles.map((title: string) => {
-                  return <>
-                        <li><Markdown>{title}</Markdown></li>
-                    </>
-                })}
-            </ul>
-        </>
-  } else if (task === 'cover-letter-writer') {
-    return <>
-            <Markdown>{data.coverLetter}</Markdown>
-        </>
-  } else if (task === 'text-summarizer') {
-    return <>
-            <Markdown>{data.summary}</Markdown>
-        </>
+      <Markdown>{data.response}</Markdown>
+    </>
   } else {
     return <>
             <Markdown>{JSON.stringify(data)}</Markdown>
