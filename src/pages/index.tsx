@@ -8,6 +8,8 @@ import { Container, Row, Spacer, Button, Link, Grid } from '@nextui-org/react'
 import FancyHoverCard from '@/components/elements/FancyHoverCard'
 import SubscribeModal from '@/components/modals/SubscribeModal'
 import { isMobile } from '@/utils/hooks'
+import { type NextPage } from 'next'
+import Router from 'next/router'
 
 const HERO_DESCRIPTION: string = 'Super charge your life with powerful AI templates & tools! 🚀'
 
@@ -42,7 +44,7 @@ const TRUST_BUILDERS = [
   }
 ]
 
-function Home (): JSX.Element {
+const Home: NextPage = (): JSX.Element => {
   const isMobileDisplay: boolean = isMobile()
   const [open, setOpen] = useState(false)
   return (
@@ -121,21 +123,21 @@ function Home (): JSX.Element {
                 ))}
               </Grid.Container>
             </section>
-            {/* <section className={styles['pages-section']}>
-                <div className={styles['pages-content']}>
-                    <h1 className={styles['pages-title']}>
-                        Pages
-                    </h1>
-                    <p className={styles['pages-paragraph']}>
-                        Cupidatat deserunt deserunt aute ullamco ea commodo deserunt et. Deserunt culpa pariatur dolore ad culpa ea eiusmod in ut. Qui in est est occaecat minim veniam ipsum culpa irure occaecat. Nulla duis quis eiusmod eu pariatur mollit pariatur mollit.
-                    </p>
-                </div>
-                <div className={styles['pages-graphic']}>
-                    <Image src="" alt=""/>
-                </div>
-            </section> */}
             <SubscribeModal open={open} setOpen={setOpen} />
         </Layout>
   )
+}
+Home.getInitialProps = async ({ res, query }): Promise<any> => {
+  const callbackUrl = query.callbackUrl
+  const error = query.error
+  if (typeof callbackUrl !== 'undefined') {
+    if (typeof res !== 'undefined' && res !== null) {
+      res.writeHead(307, { Location: `${callbackUrl as string}?error=${error as string}` })
+      res.end()
+    } else {
+      void Router.replace(callbackUrl as string)
+    }
+  }
+  return {}
 }
 export default Home
