@@ -26,6 +26,7 @@ export default class MyDocument extends Document {
           />
           {CssBaseline.flush()}
           <link rel="shortcut icon" href="/logo-a.png" />
+          <title>AI For U</title>
         </Head>
         <body>
           <Main />
