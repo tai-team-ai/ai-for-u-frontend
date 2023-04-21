@@ -10,14 +10,14 @@ declare interface GoProModalProps {
 }
 
 const AI_TOOLS = [
+  '10x daily usage limit',
+  'Save responses and conversations',
+  'Auto email responses for Gmail',
+  'Google Drive Integration',
   'Tutoring assistant',
   'Paper writing AI templates',
   'Baby name AI templates',
-  'Pair programming assistant',
-  'Save responses and conversations',
-  'Auto email responses for Gmail',
-  '10x daily usage limit',
-  'Google Drive Integration'
+  'Pair programming assistant'
 ]
 
 const GoProModal = ({ open, setOpenState, message = null }: GoProModalProps): JSX.Element => {
@@ -35,12 +35,15 @@ const GoProModal = ({ open, setOpenState, message = null }: GoProModalProps): JS
             }}
         >
             <Modal.Header>
-              <Grid.Container alignItems="center" justify="center" direction="column">
-                    <Text h3 className={styles['go-pro-animation']}>{message === null
-                      ? ('Pro Features Coming Soon')
-                      : message
-                    }
-                    </Text>
+              <Grid.Container alignItems="center" justify="center" direction="column" css={{ padding: '0 0' }}>
+              <Text h3 className={styles['go-pro-animation']} css={{ marginLeft: '-1rem', marginRight: '-1rem' }}>
+                {message !== null &&
+                  <span style={{ display: 'block' }}>
+                    {message}
+                  </span>
+                }
+                Pro Features Coming Soon!
+              </Text>
               </Grid.Container>
             </Modal.Header>
             <Modal.Body css={{ marginBottom: '-0.5rem', marginTop: '-0.2rem' }}>
@@ -61,7 +64,7 @@ const GoProModal = ({ open, setOpenState, message = null }: GoProModalProps): JS
                     <Grid.Container direction="row">
                       <Grid sm={6}>
                         <div style={{ marginLeft: '2rem' }}>
-                          <Text h4 css={{ marginBottom: '-0.5rem' }}>Powerful AI Tools for U</Text>
+                          <Text h4 css={{ marginBottom: '-0.5rem' }}>Supercharge your Workflow</Text>
                           <ul style={{ listStyleType: 'inherit', alignItems: 'left' }}>
                             {AI_TOOLS.slice(0, 4).map((tool, index) => (
                               <li key={index} className="go-pro">
@@ -73,7 +76,7 @@ const GoProModal = ({ open, setOpenState, message = null }: GoProModalProps): JS
                       </Grid>
                     <Grid sm={6}>
                         <div style={{ marginLeft: '1rem' }} >
-                            <Text h4 css={{ marginBottom: '-0.5rem' }}>Supercharge your Workflow</Text>
+                            <Text h4 css={{ marginBottom: '-0.5rem' }}>Powerful AI Tools for U</Text>
                             <ul style={{ listStyleType: 'inherit', alignItems: 'left' }}>
                             {AI_TOOLS.slice(4, 8).map((tool, index) => (
                               <li key={index} className="go-pro">

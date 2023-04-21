@@ -99,7 +99,7 @@ export async function getExamples (session: Session | null, route: string): Prom
 
 export function getTokenExhaustedCallToAction (userLoggedIn: boolean): string {
   if (userLoggedIn) {
-    return 'You\'ve reached your daily limit. Check back tomorrow!'
+    return 'You\'ve reached your daily limit.'
   } else {
     return 'Sign In to Continue 🎉'
   }
