@@ -157,6 +157,8 @@ export default function Template ({ isSandbox = false, children = null, exampleU
         if ((resets != null) && typeof resets[key] !== 'undefined') {
           if (typeof example[key] === 'string') {
             resets[key].setValue([example[key]])
+          } else if (key !== 'creativity' && typeof example[key] === 'number') {
+            resets[key].setValue([String(example[key])])
           } else {
             resets[key].setValue(example[key])
           }
