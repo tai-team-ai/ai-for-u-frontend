@@ -111,6 +111,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
           })
         } else if (response.status === 429) {
           void response.json().then(data => {
+            console.log(session)
             const isUserLoggedIn = session !== null && typeof session !== 'undefined'
             setCallToActionMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
             if (isUserLoggedIn) {
@@ -131,6 +132,9 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   }
 
   useEffect(() => {
+    if (typeof session === 'undefined') {
+      return
+    }
     // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
     if (typeof global._conversationUuid === 'undefined') {
       // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
