@@ -1,12 +1,12 @@
 import styles from '@/styles/Template.module.css'
 import { Card, Grid, Text, Loading, Dropdown, Link } from '@nextui-org/react'
-import { useSession } from 'next-auth/react'
-import { type FormEventHandler, type PropsWithChildren, useEffect, useRef, useState } from 'react'
-import { getExamples } from '@/utils/user'
+// import { useSession } from 'next-auth/react'
+import { type FormEventHandler, type PropsWithChildren, useEffect, useRef } from 'react'
+// import { getExamples } from '@/utils/user'
 import { RateResponse, type ResponseProps } from '../modals/FeedbackModal'
 import { type Reset } from '@/components/elements/TemplateForm'
 
-interface ExampleObject {
+export interface ExampleObject {
   name: string
   example: any
 }
@@ -114,34 +114,15 @@ const ExampleDropdown = ({ examples, fillExample }: ExamplesProps): JSX.Element 
 interface TemplateProps {
   isSandbox?: boolean
   children?: React.ReactNode
-  exampleUrl?: string | null
+  examples: ExampleObject[]
   fillExample?: ((e: any) => void) | null
   handleSubmit?: FormEventHandler | null
   resultBox?: JSX.Element | null
   resets?: Record<string, Reset> | null
 }
 
-export default function Template ({ isSandbox = false, children = null, exampleUrl = null, fillExample = null, resultBox = null, resets = null }: TemplateProps): JSX.Element {
-  const { data: session } = useSession()
-  const [examples, setExamples] = useState<ExampleObject[]>([])
-  const [loading, setLoading] = useState(false)
+export default function Template ({ isSandbox = false, children = null, examples = [], fillExample = null, resets = null }: TemplateProps): JSX.Element {
   const sectionRef = useRef<HTMLElement>(null)
-
-  if (typeof exampleUrl !== 'undefined' && exampleUrl !== null && !loading) {
-    setLoading(true)
-    void getExamples(session, exampleUrl)
-      .then(data => {
-        if (typeof data.exampleNames !== 'undefined') {
-          for (let i = 0; i < data.exampleNames.length; i++) {
-            examples.push({
-              name: data.exampleNames[i],
-              example: data.examples[i]
-            })
-          }
-          setExamples([...examples])
-        }
-      })
-  }
 
   if (fillExample == null) {
     fillExample = (example) => {
@@ -213,7 +194,6 @@ export default function Template ({ isSandbox = false, children = null, exampleU
                     )
                   : null}
                     {children}
-                    {resultBox}
                 </section>
             </Grid>
             <Grid sm={3} xs={0}>

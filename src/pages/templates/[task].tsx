@@ -1,24 +1,21 @@
 import Layout from '@/components/layout/layout'
-import Template from '@/components/layout/template'
-
+import Template, { type ExampleObject } from '@/components/layout/template'
+import { type GetStaticPaths, type GetStaticProps } from 'next'
 import TemplateForm, { type Reset } from '@/components/elements/TemplateForm'
 import SwaggerParser from '@apidevtools/swagger-parser'
-import { useSession } from 'next-auth/react'
-import { uFetch } from '@/utils/http'
 import { useRouter } from 'next/router'
-import useSWR from 'swr'
+import { templateObjects } from '@/utils/constants'
+import { getExamples } from '@/utils/user'
 
-const TemplateTask = (): JSX.Element => {
-  const { data: session } = useSession()
+declare interface TemplateTaskProps {
+  openapi: any
+  examples: any
+}
 
-  const fetcher = async (url: string): Promise<any> => await uFetch(url, { session }).then(async res => await SwaggerParser.dereference(await res.json()))
-  const { data, error, isLoading } = useSWR('/api/ai-for-u/openapi.json', fetcher)
-
-  if (error != null) return <Layout><h1>{JSON.stringify(error)}</h1></Layout>
-  if (isLoading) return <Layout><h1>Loading...</h1></Layout>
+const TemplateTask = ({ openapi, examples }: TemplateTaskProps): JSX.Element => {
   const router = useRouter()
   const { task } = router.query
-  const path = data.paths[`/ai-for-u/${task as string}`]
+  const path = openapi.paths[`/ai-for-u/${task as string}`]
   const schema = path.post.requestBody.content['application/json'].schema
   const properties = schema.properties
   const requiredList = schema.required
@@ -26,11 +23,37 @@ const TemplateTask = (): JSX.Element => {
 
   return (
         <Layout>
-          <Template exampleUrl={`/api/ai-for-u/${task as string}-examples`} resets={resets}>
+          <Template examples={examples} resets={resets}>
             <TemplateForm task={task as string} properties={properties} requiredList={requiredList} resets={resets}/>
           </Template>
         </Layout>
   )
+}
+
+declare interface StaticProps {
+  props: TemplateTaskProps
+}
+
+export const getStaticProps: GetStaticProps<TemplateTaskProps> = async ({ params }): Promise<StaticProps> => {
+  let examples: ExampleObject[] = []
+  if (typeof params !== 'undefined') {
+    examples = await getExamples(params.task as string)
+  }
+  const raw = await (await fetch(`${process.env.API_URL as string}/ai-for-u/openapi.json`)).json()
+  const openapi = await SwaggerParser.dereference(raw)
+  return {
+    props: {
+      openapi,
+      examples
+    }
+  }
+}
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: templateObjects.filter(value => value.href.length > 0).map(value => value.href),
+    fallback: false
+  }
 }
 
 export default TemplateTask

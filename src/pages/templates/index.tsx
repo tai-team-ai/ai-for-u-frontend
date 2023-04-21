@@ -4,6 +4,7 @@ import { Grid, Text, Container } from '@nextui-org/react'
 import Link from 'next/link'
 import SubscribeModal from '@/components/modals/SubscribeModal'
 import FancyHoverCard from '@/components/elements/FancyHoverCard'
+import { constants, templateObjects, type TemplateObj } from '@/utils/constants'
 
 const TEMPLATE_PAGE_HEADER: JSX.Element = (
   <>
@@ -12,48 +13,6 @@ const TEMPLATE_PAGE_HEADER: JSX.Element = (
     <span style={{ whiteSpace: 'nowrap' }}>for U 🥳</span>
   </>
 )
-
-const MAILING_LIST_CALL_TO_ACTION: string = 'Subscribe for Updates!'
-
-interface TemplateObj {
-  title: string
-  description: string
-  href: string
-  callToAction: string
-}
-
-const templates: TemplateObj[] = [
-  {
-    title: '📄 Note Summarizer',
-    description: 'Struggling to keep up with note-taking during meetings or lectures? Say goodbye to the stress of sifting through endless notes and hello to more efficient work and study habits!',
-    href: '/templates/text-summarizer',
-    callToAction: 'Let\'s get Summarizing!'
-  },
-  {
-    title: '📝 Text Revisor',
-    description: 'Improve your writing quality with our AI-powered text revisor! Whether you\'re a student or a professional, our AI text revisor can help you achieve your writing goals!',
-    href: '/templates/text-revisor',
-    callToAction: 'Let\'s get Revising!'
-  },
-  {
-    title: '✨ Catchy Title Creator',
-    description: 'Struggling to come up with a catchy title for your content? Our AI-powered catchy title creator can help you come up with the perfect title for your next blog post, article, or video!',
-    href: '/templates/catchy-title-creator',
-    callToAction: 'Let\'s get Creating!'
-  },
-  {
-    title: '📈 Cover Letter Writer',
-    description: 'Land your dream job with our AI-powered Cover Letter Writer! Perfect for anyone looking to advance their career, our tool takes the stress out of crafting the perfect cover letter!',
-    href: '/templates/cover-letter-writer',
-    callToAction: 'Let\'s get Writing!'
-  },
-  {
-    title: '🚀 More Coming Soon!',
-    description: 'Stay ahead of the game with our upcoming AI-powered features! Subscribe to our mailing list to be the first to know when our latest features are released!',
-    href: '',
-    callToAction: MAILING_LIST_CALL_TO_ACTION
-  }
-]
 
 const TemplateCard = ({ href, title, description, callToAction }: TemplateObj): JSX.Element => {
   const [open, setOpen] = useState(false)
@@ -64,7 +23,7 @@ const TemplateCard = ({ href, title, description, callToAction }: TemplateObj): 
             href={href}
             style={{ height: '100%', width: '100%' }}
             onClick={(e) => {
-              if (callToAction === MAILING_LIST_CALL_TO_ACTION) {
+              if (callToAction === constants.MAILING_LIST_CALL_TO_ACTION) {
                 e.preventDefault()
                 setOpen(true)
               }
@@ -97,7 +56,7 @@ const Index = (): JSX.Element => {
                 </Text>
                 </Grid>
                 <Grid.Container gap={2}>
-                    {templates.map(template =>
+                    {templateObjects.map(template =>
                         <Grid xs={12} sm={6} md={4}>
                             <TemplateCard {...template}></TemplateCard>
                         </Grid>
