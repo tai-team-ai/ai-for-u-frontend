@@ -5,6 +5,7 @@ import TemplateForm, { type Reset } from '@/components/elements/TemplateForm'
 import SwaggerParser from '@apidevtools/swagger-parser'
 import { useRouter } from 'next/router'
 import { templateObjects } from '@/utils/constants'
+import { getExamples } from '@/utils/user'
 
 declare interface TemplateTaskProps {
   openapi: any
@@ -34,17 +35,9 @@ declare interface StaticProps {
 }
 
 export const getStaticProps: GetStaticProps<TemplateTaskProps> = async ({ params }): Promise<StaticProps> => {
-  const examples: ExampleObject[] = []
+  let examples: ExampleObject[] = []
   if (typeof params !== 'undefined') {
-    const task = params.task
-    const rawExamples = await (await (await fetch(`${process.env.API_URL as string}/ai-for-u/${task as string}-examples`)).json())
-    console.log(rawExamples)
-    for (let i = 0; i < rawExamples.exampleNames.length; i++) {
-      examples.push({
-        name: rawExamples.exampleNames[i],
-        example: rawExamples.examples[i]
-      })
-    }
+    examples = await getExamples(params.task as string)
   }
   const raw = await (await fetch(`${process.env.API_URL as string}/ai-for-u/openapi.json`)).json()
   const openapi = await SwaggerParser.dereference(raw)

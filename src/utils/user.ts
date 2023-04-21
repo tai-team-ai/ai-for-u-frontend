@@ -1,3 +1,4 @@
+import { type ExampleObject } from '@/components/layout/template'
 import { type Session } from 'next-auth'
 import { v4 as uuid } from 'uuid'
 import { uFetch } from './http'
@@ -47,6 +48,21 @@ export function getUserID (session: Session | null): string | undefined {
     }
   }
   return id
+}
+
+export async function getExamples (task: string): Promise<ExampleObject[]> {
+  const examples: ExampleObject[] = []
+  const rawExamples = await (await (await fetch(`${process.env.API_URL as string}/ai-for-u/${task}-examples`)).json())
+  console.log(rawExamples)
+  if (typeof rawExamples.exampleNames !== 'undefined') {
+    for (let i = 0; i < rawExamples.exampleNames.length; i++) {
+      examples.push({
+        name: rawExamples.exampleNames[i],
+        example: rawExamples.examples[i]
+      })
+    }
+  }
+  return examples
 }
 
 export function getTokenExhaustedCallToAction (userLoggedIn: boolean): string {
