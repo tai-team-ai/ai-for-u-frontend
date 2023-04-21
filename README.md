@@ -4,7 +4,7 @@ This blueprint creates a [React](https://reactjs.org/) SPA (single-page applicat
 
 ### Architecture overview
 
-A (SPA) single-page application is a web application implementation that loads a web document and updates it by using JavaScript APIs. Your customers can then use your website without loading entire pages from the server, which helps improve your website's performance and provides a more dynamic user experience. 
+A (SPA) single-page application is a web application implementation that loads a web document and updates it by using JavaScript APIs. Your customers can then use your website without loading entire pages from the server, which helps improve your website's performance and provides a more dynamic user experience.
 
 The deployment pipeline deploys the SPA to an Amazon CodeCatalyst environment. The Amazon CodeCatalyst environment requires an AWS account connection for your Amazon CodeCatalyst space and a configured IAM role for your project workflow. After you create your project, you can view the repository, source code, and CI/CD workflow for your Amazon CodeCatalyst project. After your workflow runs successfully, you can access your deployed CDK application URL in the output of your workflow.
 
@@ -66,7 +66,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `npm start`
+### `npm run dev`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
