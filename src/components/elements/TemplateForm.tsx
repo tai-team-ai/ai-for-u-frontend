@@ -52,7 +52,6 @@ const ResultChildren = ({ task, data, body }: ResultChildrenProps): JSX.Element 
   if (task === 'text-revisor') {
     return <>
             {data.revisedTextList.map((text: string, index: number) => <>
-                <Text b>{`Revision ${index + 1}: `}</Text>
                 <Markdown>{text}</Markdown>
                 <ShowDiffBtn oldValue={body.textToRevise} newValue={text} />
             </>)}
