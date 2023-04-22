@@ -246,7 +246,6 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   }
                   if (property.type === 'array' && typeof property.items.enum !== 'undefined') {
                     transforms[title] = v => v.split(', ')
-                    console.log(property)
                     const [selected, setSelected] = useState<string[]>(property.default)
                     resets[title] = { value: selected, setValue: setSelected, default: property.default }
                     return <Dropdown {...dropdownProps} validSelections={property.items.enum} selectionMode="multiple" selected={selected} setSelected={setSelected} />
