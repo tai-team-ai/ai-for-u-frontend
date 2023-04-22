@@ -2,7 +2,7 @@ import Input from './Input'
 import Textarea from './Textarea'
 import Dropdown from './Dropdown'
 import styles from '@/styles/TemplateForm.module.css'
-import { Checkbox, Button, Loading } from '@nextui-org/react'
+import { Checkbox, Button, Loading, Text } from '@nextui-org/react'
 import LoginModal from '../modals/LoginModal'
 import GoProModal from '../modals/GoProModal'
 import { useState } from 'react'
@@ -50,12 +50,11 @@ declare interface ResultChildrenProps {
 
 const ResultChildren = ({ task, data, body }: ResultChildrenProps): JSX.Element => {
   if (task === 'text-revisor') {
+    console.log(task, data, body)
     return <>
-            <>
-                <Text b>Revision:</Text>
-                <Markdown>{data}</Markdown>
-                <ShowDiffBtn oldValue={body.textToRevise} newValue={data} />
-            </>
+            <Text b>Revision:</Text>
+            <Markdown>{data.response}</Markdown>
+            <ShowDiffBtn oldValue={body.textToRevise} newValue={data.response} />
         </>
   } else if (typeof data.response !== 'undefined') {
     return <>
