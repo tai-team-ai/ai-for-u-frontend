@@ -1,41 +1,7 @@
+import { type ExampleObject } from '@/components/layout/template'
 import { type Session } from 'next-auth'
 import { v4 as uuid } from 'uuid'
 import { uFetch } from './http'
-
-interface ExampleEntry {
-  examples: any[]
-  exampleNames: string[]
-}
-
-const prefetchExample = async (session: Session | null, route: string): Promise<ExampleEntry> => {
-  return await uFetch(route, { session, method: 'GET' })
-    .then(async response => {
-      if (response.status !== 200) {
-        throw new Error('Request for example did not return a 200 status code')
-      }
-      return await response.json()
-    }).then(data => {
-      sessionStorage.setItem(route, JSON.stringify(data))
-      return data
-    }).catch(reason => {
-      return {
-        examples: [],
-        exampleNames: []
-      }
-    })
-}
-
-const prefetchExamples = (session: Session | null): void => {
-  const routes = [
-    '/api/ai-for-u/sandbox-chatgpt-examples',
-    '/api/ai-for-u/text-summarizer-examples',
-    '/api/ai-for-u/text-revisor-examples',
-    '/api/ai-for-u/cover-letter-examples'
-  ]
-  for (const route of routes) {
-    void prefetchExample(session, route)
-  }
-}
 
 const prefetchInitialChat = async (session: Session | null): Promise<string> => {
   return await uFetch('/api/ai-for-u/sandbox-chatgpt', {
@@ -79,22 +45,24 @@ export function getUserID (session: Session | null): string | undefined {
       // first time visiting the page
       id = uuid()
       window.localStorage.setItem('userID', id)
-      prefetchExamples(session)
     }
   }
   return id
 }
 
-export async function getExamples (session: Session | null, route: string): Promise<any> {
-  const mtExamples = { exampleNames: [], examples: [] }
-  if (typeof sessionStorage === 'undefined') {
-    return mtExamples
+export async function getExamples (task: string): Promise<ExampleObject[]> {
+  const examples: ExampleObject[] = []
+  const rawExamples = await (await (await fetch(`${process.env.API_URL as string}/ai-for-u/${task}-examples`)).json())
+  console.log(rawExamples)
+  if (typeof rawExamples.exampleNames !== 'undefined') {
+    for (let i = 0; i < rawExamples.exampleNames.length; i++) {
+      examples.push({
+        name: rawExamples.exampleNames[i],
+        example: rawExamples.examples[i]
+      })
+    }
   }
-  const storageItem = sessionStorage.getItem(route)
-  if (storageItem == null) {
-    return await prefetchExample(session, route)
-  }
-  return JSON.parse(storageItem)
+  return examples
 }
 
 export function getTokenExhaustedCallToAction (userLoggedIn: boolean): string {

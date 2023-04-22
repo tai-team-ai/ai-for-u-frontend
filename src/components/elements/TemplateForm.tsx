@@ -2,7 +2,7 @@ import Input from './Input'
 import Textarea from './Textarea'
 import Dropdown from './Dropdown'
 import styles from '@/styles/TemplateForm.module.css'
-import { Checkbox, Button, Loading, Text } from '@nextui-org/react'
+import { Checkbox, Button, Loading } from '@nextui-org/react'
 import LoginModal from '../modals/LoginModal'
 import GoProModal from '../modals/GoProModal'
 import { useState } from 'react'
@@ -10,7 +10,7 @@ import { uFetch } from '@/utils/http'
 import { useSession } from 'next-auth/react'
 import { type ResponseProps } from '../modals/FeedbackModal'
 import { ResultBox } from '../layout/template'
-import Markdown from 'markdown-to-jsx'
+import Markdown from './Markdown'
 import { ShowDiffBtn } from './diffview'
 import { showSnackbar } from './Snackbar'
 import { Slider } from '@mui/material'
@@ -57,25 +57,10 @@ const ResultChildren = ({ task, data, body }: ResultChildrenProps): JSX.Element 
                 <ShowDiffBtn oldValue={body.textToRevise} newValue={data} />
             </>
         </>
-  } else if (task === 'catchy-title-creator') {
+  } else if (typeof data.response !== 'undefined') {
     return <>
-            <Text h3>Titles</Text>
-            <ul>
-                {data.titles.map((title: string) => {
-                  return <>
-                        <li><Markdown>{title}</Markdown></li>
-                    </>
-                })}
-            </ul>
-        </>
-  } else if (task === 'cover-letter-writer') {
-    return <>
-            <Markdown>{data.coverLetter}</Markdown>
-        </>
-  } else if (task === 'text-summarizer') {
-    return <>
-            <Markdown>{data.summary}</Markdown>
-        </>
+      <Markdown>{data.response}</Markdown>
+    </>
   } else {
     return <>
             <Markdown>{JSON.stringify(data)}</Markdown>
@@ -251,7 +236,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     transforms[title] = Number
                     const [selected, setSelected] = useState([property.default])
                     resets[title] = { value: selected, setValue: setSelected, default: [property.default] }
-                    return <Dropdown {...dropdownProps} validSelections={range(property.minimum, property.maximum).map(String)} selectionMode="single" selected={selected} setSelected={setSelected} />
+                    return <Dropdown {...dropdownProps} validSelections={range(property.minimum, (property.maximum as number) + 1).map(String)} selectionMode="single" selected={selected} setSelected={setSelected} />
                   }
                   if (typeof property.allOf !== 'undefined') {
                     transforms[title] = String
@@ -261,7 +246,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   }
                   if (property.type === 'array' && typeof property.items.enum !== 'undefined') {
                     transforms[title] = v => v.split(', ')
-                    const [selected, setSelected] = useState(property.default)
+                    const [selected, setSelected] = useState<string[]>(property.default)
                     resets[title] = { value: selected, setValue: setSelected, default: property.default }
                     return <Dropdown {...dropdownProps} validSelections={property.items.enum} selectionMode="multiple" selected={selected} setSelected={setSelected} />
                   }

@@ -4,10 +4,13 @@ import { routes } from '@/utils/constants'
 import Layout from '@/components/layout/layout'
 import AIForAnimation from '@/components/elements/AIForAnimation'
 import styles from '@/styles/Home.module.css'
-import { Container, Row, Spacer, Button, Link, Grid } from '@nextui-org/react'
+import { Container, Row, Spacer, Grid } from '@nextui-org/react'
+import Link from 'next/link'
 import FancyHoverCard from '@/components/elements/FancyHoverCard'
 import SubscribeModal from '@/components/modals/SubscribeModal'
 import { isMobile } from '@/utils/hooks'
+import { type NextPage } from 'next'
+import Router from 'next/router'
 
 const HERO_DESCRIPTION: string = 'Super charge your life with powerful AI templates & tools! 🚀'
 
@@ -42,9 +45,10 @@ const TRUST_BUILDERS = [
   }
 ]
 
-function Home (): JSX.Element {
+const Home: NextPage = (): JSX.Element => {
   const isMobileDisplay: boolean = isMobile()
   const [open, setOpen] = useState(false)
+
   return (
         <Layout>
             <section className={styles['hero-section']}>
@@ -69,25 +73,14 @@ function Home (): JSX.Element {
                                 </p>
                             </Row>
                             <Row justify="center">
-                                <Link href={routes.TEMPLATES}>
-                                    <Button
-                                        flat
-                                        size="lg"
-                                        className={styles['templates-btn']}>
-                                        AI Templates
-                                    </Button>
+                                <Link href={routes.TEMPLATES} className={styles['templates-btn']}>
+                                  AI Templates
                                 </Link>
                             </Row>
                             <Spacer y={0.5} />
                             <Row justify="center">
-                                <Link href={routes.SANDBOX}>
-                                    <Button
-                                        flat
-                                        size="lg"
-                                        color="secondary"
-                                        className={styles['sandbox-btn']}>
-                                        AI Assistant (ChatGPT)
-                                    </Button>
+                                <Link href={routes.SANDBOX} className={styles['sandbox-btn']}>
+                                  AI Assistant (ChatGPT)
                                 </Link>
                             </Row>
                             <Spacer y={5} />
@@ -97,14 +90,14 @@ function Home (): JSX.Element {
             </section>
             <section className={styles['trust-builders']}>
               <Grid.Container gap={2.6}>
-                {TRUST_BUILDERS.map((TRUST_BUILDERS, index) => (
+                {TRUST_BUILDERS.map((trustBuilder, index) => (
                   <Grid xs={12} sm={6} md={3} key={index}>
                     <Link
                           className={styles['no-hover']}
-                          href={TRUST_BUILDERS.link != null ? TRUST_BUILDERS.link : '#'}
+                          href={trustBuilder.link != null ? trustBuilder.link : '#'}
                           style={{ height: '100%', width: '100%' }}
                           onClick={(e) => {
-                            if (TRUST_BUILDERS.subscribeModal) {
+                            if (trustBuilder.subscribeModal) {
                               e.preventDefault()
                               setOpen(true)
                             }
@@ -112,30 +105,30 @@ function Home (): JSX.Element {
                       >
                       <FancyHoverCard
                         size="lg"
-                        title={TRUST_BUILDERS.title}
-                        description={TRUST_BUILDERS.description}
-                        hover={TRUST_BUILDERS.hover}
+                        title={trustBuilder.title}
+                        description={trustBuilder.description}
+                        hover={trustBuilder.hover}
                       />
                     </Link>
                   </Grid>
                 ))}
               </Grid.Container>
             </section>
-            {/* <section className={styles['pages-section']}>
-                <div className={styles['pages-content']}>
-                    <h1 className={styles['pages-title']}>
-                        Pages
-                    </h1>
-                    <p className={styles['pages-paragraph']}>
-                        Cupidatat deserunt deserunt aute ullamco ea commodo deserunt et. Deserunt culpa pariatur dolore ad culpa ea eiusmod in ut. Qui in est est occaecat minim veniam ipsum culpa irure occaecat. Nulla duis quis eiusmod eu pariatur mollit pariatur mollit.
-                    </p>
-                </div>
-                <div className={styles['pages-graphic']}>
-                    <Image src="" alt=""/>
-                </div>
-            </section> */}
             <SubscribeModal open={open} setOpen={setOpen} />
         </Layout>
   )
+}
+Home.getInitialProps = async ({ res, query }): Promise<any> => {
+  const callbackUrl = query.callbackUrl
+  const error = query.error
+  if (typeof callbackUrl !== 'undefined') {
+    if (typeof res !== 'undefined' && res !== null) {
+      res.writeHead(307, { Location: `${callbackUrl as string}?error=${error as string}` })
+      res.end()
+    } else {
+      void Router.replace(callbackUrl as string)
+    }
+  }
+  return {}
 }
 export default Home

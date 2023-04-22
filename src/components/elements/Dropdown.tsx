@@ -1,4 +1,4 @@
-import { type CSS, Dropdown as NextUIDropdown } from '@nextui-org/react'
+import { type CSS, Dropdown as NextUIDropdown, Text } from '@nextui-org/react'
 import { useMemo } from 'react'
 import InfoPopover from './InfoPopover'
 
@@ -17,17 +17,6 @@ declare interface DropdownProps {
 
 const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections = [], selectionMode = 'single', label = null, tooltip = '', css = null, selected, setSelected }: DropdownProps): JSX.Element => {
   const selectedValue = useMemo(() => Array.from(selected).join(', ').replaceAll('_', ' '), [selected])
-  if (selected === undefined || selected === null) {
-    selected = []
-  } else if (!Array.isArray(selected)) {
-    selected = [selected]
-  }
-  for (let i = 0; i < selected.length; i++) {
-    // check if undefined or null
-    if (selected[i] !== null && selected[i] !== undefined) {
-      selected[i] = selected[i].toString()
-    }
-  }
   return (
         <>
             <label style={{ display: 'block' }} htmlFor={id}>{label} <InfoPopover text={tooltip}/></label>
@@ -41,22 +30,13 @@ const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections =
               }}
               flat
           >
-              <div // THis div is necessary to truncate the text and prevent teh button overflowing the screen
-                  style={{
-                    overflow: 'hidden',
-                    maxWidth: 'calc(min(35vw, 15rem))',
-                    whiteSpace: 'nowrap',
-                    textOverflow: 'ellipsis'
-                  }}
-              >
-                  {selectedValue}
-              </div>
+            <Text css={{ truncateText: 'calc(min(35vw, 15rem))' }}>{selectedValue}</Text>
                 </NextUIDropdown.Button>
                 <NextUIDropdown.Menu
                     disallowEmptySelection
                     selectionMode={selectionMode}
-                    selectedKeys={selected.slice(0) === undefined ? [] : selected.slice(0)}
-                    // @ts-expect-error the selected keys resolve to strings in this kase.
+                    selectedKeys={selected}
+                    // @ts-expect-error the selected keys resolve to strings in this case.
                     onSelectionChange={setSelected}
                 >
                     {Object.entries(validSelections).map(([key, val]) => {
