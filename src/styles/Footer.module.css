@@ -1,4 +1,6 @@
 .footer {
     position: sticky;
     top: 100vh;
+    border-top: solid 1px var(--primary-border);
+    padding-top: 1em;
 }
