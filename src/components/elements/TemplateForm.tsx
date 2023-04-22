@@ -50,11 +50,13 @@ declare interface ResultChildrenProps {
 
 const ResultChildren = ({ task, data, body }: ResultChildrenProps): JSX.Element => {
   if (task === 'text-revisor') {
-    console.log(task, data, body)
+    const revised = data.revisedText
+    console.log('revised', revised)
     return <>
             <Text b>Revision:</Text>
-            <Markdown>{data.response}</Markdown>
-            <ShowDiffBtn oldValue={body.textToRevise} newValue={data.response} />
+            <br />
+            <Markdown>{revised}</Markdown>
+            <ShowDiffBtn oldValue={body.textToRevise} newValue={revised} />
         </>
   } else if (typeof data.response !== 'undefined') {
     return <>
