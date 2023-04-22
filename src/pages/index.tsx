@@ -4,7 +4,8 @@ import { routes } from '@/utils/constants'
 import Layout from '@/components/layout/layout'
 import AIForAnimation from '@/components/elements/AIForAnimation'
 import styles from '@/styles/Home.module.css'
-import { Container, Row, Spacer, Button, Link, Grid } from '@nextui-org/react'
+import { Container, Row, Spacer, Grid } from '@nextui-org/react'
+import Link from 'next/link'
 import FancyHoverCard from '@/components/elements/FancyHoverCard'
 import SubscribeModal from '@/components/modals/SubscribeModal'
 import { isMobile } from '@/utils/hooks'
@@ -47,6 +48,7 @@ const TRUST_BUILDERS = [
 const Home: NextPage = (): JSX.Element => {
   const isMobileDisplay: boolean = isMobile()
   const [open, setOpen] = useState(false)
+
   return (
         <Layout>
             <section className={styles['hero-section']}>
@@ -71,25 +73,14 @@ const Home: NextPage = (): JSX.Element => {
                                 </p>
                             </Row>
                             <Row justify="center">
-                                <Link href={routes.TEMPLATES}>
-                                    <Button
-                                        flat
-                                        size="lg"
-                                        className={styles['templates-btn']}>
-                                        AI Templates
-                                    </Button>
+                                <Link href={routes.TEMPLATES} className={styles['templates-btn']}>
+                                  AI Templates
                                 </Link>
                             </Row>
                             <Spacer y={0.5} />
                             <Row justify="center">
-                                <Link href={routes.SANDBOX}>
-                                    <Button
-                                        flat
-                                        size="lg"
-                                        color="secondary"
-                                        className={styles['sandbox-btn']}>
-                                        AI Assistant (ChatGPT)
-                                    </Button>
+                                <Link href={routes.SANDBOX} className={styles['sandbox-btn']}>
+                                  AI Assistant (ChatGPT)
                                 </Link>
                             </Row>
                             <Spacer y={5} />
@@ -99,14 +90,14 @@ const Home: NextPage = (): JSX.Element => {
             </section>
             <section className={styles['trust-builders']}>
               <Grid.Container gap={2.6}>
-                {TRUST_BUILDERS.map((TRUST_BUILDERS, index) => (
+                {TRUST_BUILDERS.map((trustBuilder, index) => (
                   <Grid xs={12} sm={6} md={3} key={index}>
                     <Link
                           className={styles['no-hover']}
-                          href={TRUST_BUILDERS.link != null ? TRUST_BUILDERS.link : '#'}
+                          href={trustBuilder.link != null ? trustBuilder.link : '#'}
                           style={{ height: '100%', width: '100%' }}
                           onClick={(e) => {
-                            if (TRUST_BUILDERS.subscribeModal) {
+                            if (trustBuilder.subscribeModal) {
                               e.preventDefault()
                               setOpen(true)
                             }
@@ -114,9 +105,9 @@ const Home: NextPage = (): JSX.Element => {
                       >
                       <FancyHoverCard
                         size="lg"
-                        title={TRUST_BUILDERS.title}
-                        description={TRUST_BUILDERS.description}
-                        hover={TRUST_BUILDERS.hover}
+                        title={trustBuilder.title}
+                        description={trustBuilder.description}
+                        hover={trustBuilder.hover}
                       />
                     </Link>
                   </Grid>

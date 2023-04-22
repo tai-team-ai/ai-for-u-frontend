@@ -1,5 +1,6 @@
 import styles from '@/styles/Template.module.css'
-import { Card, Grid, Text, Loading, Dropdown, Link } from '@nextui-org/react'
+import { Card, Grid, Text, Loading, Dropdown } from '@nextui-org/react'
+import Link from 'next/link'
 // import { useSession } from 'next-auth/react'
 import { type FormEventHandler, type PropsWithChildren, useEffect, useRef } from 'react'
 // import { getExamples } from '@/utils/user'
