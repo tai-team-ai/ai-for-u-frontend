@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Navbar, Button, Link, Text } from '@nextui-org/react'
+import NextLink from 'next/link'
 import { routes, errors } from '../../../utils/constants'
 import LoginModal from '../../modals/LoginModal'
 import { useSession, signOut } from 'next-auth/react'
@@ -92,26 +93,29 @@ const NavBar = (): JSX.Element => {
                 <Navbar.Brand>
                     <Navbar.Toggle showIn="sm" aria-label="toggle navigation" />
                     <Text hideIn="sm">
-                        <Link href={routes.ROOT}>
+                        <NextLink href={routes.ROOT}>
                             <img className={styles.logo} src="/logo-full.png"></img>
-                        </Link>
+                        </NextLink>
                     </Text>
                     <Text showIn="sm">
-                        <Link href={routes.ROOT}>
+                        <NextLink href={routes.ROOT}>
                             <img className={styles.logo} src="/logo-a.png"></img>
-                        </Link>
+                        </NextLink>
                     </Text>
                 </Navbar.Brand>
                 <Navbar.Content hideIn="sm" css={{ marginLeft: '12%' }}>
                     {navbarItems.map((nav, idx) => {
-                      return (
-                                <Navbar.Link
-                                    key={idx}
-                                    isActive={nav.isActive}
-                                    href={nav.href}
-                                    color={nav.textColor as 'text' | 'inherit' | 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'}
-                                    onPress={nav.onPress}
-                                >{nav.text}</Navbar.Link>)
+                      const link = <Navbar.Link
+                        key={idx}
+                        isActive={nav.isActive}
+                        color={nav.textColor as 'text' | 'inherit' | 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'}
+                        onPress={nav.onPress}
+                    >{nav.text}</Navbar.Link>
+                      if (typeof nav.href !== 'undefined') {
+                        return <NextLink href={nav.href} style={{ color: nav.isActive ? 'var(--primary-light)' : 'var(--primary)' }}>{nav.text}</NextLink>
+                      } else {
+                        return link
+                      }
                     })}
                 </Navbar.Content>
                 <Navbar.Content>
@@ -129,16 +133,16 @@ const NavBar = (): JSX.Element => {
                 <Navbar.Collapse showIn="sm">
                     {navbarItems.map((nav, idx) => (
                         <Navbar.CollapseItem key={idx}>
-                            <Link
+                            {
+                              typeof nav.href !== 'undefined'
+                                ? <NextLink href={nav.href} style={{ minWidth: '100%', color: 'var(--primary)' }}>{nav.text}</NextLink>
+                                : <Link
+                                key={idx}
+                                css={{ minWidth: '100%' }}
                                 color={nav.textColor as 'text' | 'inherit' | 'default' | 'primary' | 'secondary' | 'success' | 'warning' | 'error'}
-                                css={{
-                                  minWidth: '100%'
-                                }}
-                                href={nav.href}
                                 onPress={nav.onPress}
-                            >
-                                {nav.text}
-                            </Link>
+                              >{nav.text}</Link>
+                            }
                         </Navbar.CollapseItem>
                     ))}
                 </Navbar.Collapse>
