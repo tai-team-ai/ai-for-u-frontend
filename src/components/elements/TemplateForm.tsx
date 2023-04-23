@@ -116,8 +116,9 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   e.preventDefault()
                   setLoading(true)
                   const formData = new FormData(e.target as HTMLFormElement)
+                  console.log('formData', Array.from(formData.entries()))
                   const body = Object.fromEntries(Array.from(formData.entries()).map(([key, val]: any) => [key, transforms[key](val)]))
-
+                  console.log('body', body)
                   void uFetch(`/api/ai-for-u/${task}`, { session, method: 'POST', body: JSON.stringify(body) })
                     .then(response => {
                       if (response.status === 200) {
@@ -225,7 +226,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   if (property.type === 'boolean') {
                     transforms[title] = Boolean
                     // @ts-expect-error The checkbox component usually doesn't allow Elements in the label but it supports it.
-                    return <Checkbox css={{ marginBottom: '0.4rem', marginTop: '0.4rem' }} size="sm" {...inputProps} color='secondary'/>
+                    return <Checkbox css={{ marginBottom: '0.4rem', marginTop: '0.4rem' }} size="sm" {...inputProps} value={inputProps.checked === ''} color='secondary'/>
                   }
                   const dropdownProps = {
                     id: title,
