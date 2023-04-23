@@ -54,7 +54,7 @@ const ResultChildren = ({ task, data, body }: ResultChildrenProps): JSX.Element 
     console.log('revised', revised)
     return <>
             <Text b>Revision:</Text>
-            <br />
+    <br />
             <Markdown>{revised}</Markdown>
             <ShowDiffBtn oldValue={body.textToRevise} newValue={revised} />
         </>
