@@ -21,7 +21,7 @@ const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections =
   const stringSelected = useMemo(() => Array.from(selected).map((v) => v.toString()), [selected])
   return (
         <>
-            <label style={{ display: 'block' }} htmlFor={id}>{label} <InfoPopover text={tooltip}/></label>
+            <label style={{ display: 'block', marginBottom: '0.1rem' }} htmlFor={id}>{label} <InfoPopover text={tooltip}/></label>
             <NextUIDropdown >
             <NextUIDropdown.Button
               color="primary"
