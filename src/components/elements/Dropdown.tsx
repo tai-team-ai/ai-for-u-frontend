@@ -17,9 +17,11 @@ declare interface DropdownProps {
 
 const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections = [], selectionMode = 'single', label = null, tooltip = '', css = null, selected, setSelected }: DropdownProps): JSX.Element => {
   const selectedValue = useMemo(() => Array.from(selected).join(', ').replaceAll('_', ' '), [selected])
+  // cast selected to string
+  const stringSelected = useMemo(() => Array.from(selected).map((v) => v.toString()), [selected])
   return (
         <>
-            <label style={{ display: 'block' }} htmlFor={id}>{label} <InfoPopover text={tooltip}/></label>
+            <label style={{ display: 'block', marginBottom: '0.1rem' }} htmlFor={id}>{label} <InfoPopover text={tooltip}/></label>
             <NextUIDropdown >
             <NextUIDropdown.Button
               color="primary"
@@ -35,7 +37,7 @@ const Dropdown = ({ id = '', name = '', initialSelection = '', validSelections =
                 <NextUIDropdown.Menu
                     disallowEmptySelection
                     selectionMode={selectionMode}
-                    selectedKeys={selected}
+                    selectedKeys={stringSelected}
                     // @ts-expect-error the selected keys resolve to strings in this case.
                     onSelectionChange={setSelected}
                 >
