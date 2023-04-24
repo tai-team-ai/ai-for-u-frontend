@@ -51,8 +51,8 @@ export const theme = createTheme({
 
 function Layout ({ children }: LayoutProps): JSX.Element {
   return (
-    <SSRProvider>
-      <SnackBarProvider>
+    <SnackBarProvider>
+      <SSRProvider>
         <NextUIProvider theme={theme}>
             <PageNavbar />
             <Container css={{
@@ -68,8 +68,8 @@ function Layout ({ children }: LayoutProps): JSX.Element {
             </Container>
             <Footer />
         </NextUIProvider>
-      </SnackBarProvider>
-    </SSRProvider>
+      </SSRProvider>
+    </SnackBarProvider>
   )
 }
 export default Layout

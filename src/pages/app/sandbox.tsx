@@ -3,14 +3,14 @@ import Template, { type ExampleObject } from '@/components/layout/template'
 import styles from '@/styles/Sandbox.module.css'
 import { Button, Card, Loading, Textarea, Text, useTheme } from '@nextui-org/react'
 import SendIcon from '@mui/icons-material/Send'
-import { type ReactNode, useEffect, useState, useRef } from 'react'
+import { type ReactNode, useEffect, useState, useRef, useContext } from 'react'
 import { v4 as uuid } from 'uuid'
 import { uFetch } from '@/utils/http'
 import { RateResponse } from '@/components/modals/FeedbackModal'
 import { getExamples, getTokenExhaustedCallToAction } from '@/utils/user'
 import { useSession } from 'next-auth/react'
 import Markdown from '@/components/elements/Markdown'
-import { showSnackbar } from '@/components/elements/Snackbar'
+import { SnackBarContext } from '@/components/elements/SnackbarProvider'
 import { isMobileKeyboardVisible, useAutoCollapseKeyboard, isMobile } from '@/utils/hooks'
 import GoProModal from '@/components/modals/GoProModal'
 import LoginModal from '@/components/modals/LoginModal'
@@ -82,6 +82,7 @@ declare interface ChatGPTProps {
 }
 
 const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
+  const { addAlert } = useContext(SnackBarContext)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const { data: session } = useSession()
@@ -120,9 +121,11 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
               setShowGoPro(true)
             }
           })
+        } else if (response.status === 504 || response.status === 502 || response.status === 501) {
+          addAlert('Our AI is currently helping too many people. Please try again in a few minutes or shorten the length of your message.')
         } else {
           void response.text().then(data => {
-            showSnackbar(data)
+            addAlert(data)
           })
         }
       })
