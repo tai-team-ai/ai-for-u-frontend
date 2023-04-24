@@ -128,13 +128,14 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                           setShowResult(true)
                         })
                       } else if (response.status === 429) {
-                        void response.json().then(message => {
-                          const isUserLoggedIn = session !== null
-                          setCallToActionMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
-                          if (isUserLoggedIn) {
-                            setShowGoPro(true)
-                          } else {
+                        void response.json().then(body => {
+                          const errorBody = JSON.parse(body.message)
+                          const canLoginToContinue = Boolean(errorBody.login)
+                          setCallToActionMessage(getTokenExhaustedCallToAction(canLoginToContinue))
+                          if (canLoginToContinue) {
                             setShowLogin(true)
+                          } else {
+                            setShowGoPro(true)
                           }
                         })
                       } else {
