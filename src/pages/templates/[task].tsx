@@ -4,7 +4,7 @@ import { type GetStaticPaths, type GetStaticProps } from 'next'
 import TemplateForm, { type Reset } from '@/components/elements/TemplateForm'
 import SwaggerParser from '@apidevtools/swagger-parser'
 import { useRouter } from 'next/router'
-import { templateObjects } from '@/utils/constants'
+import { TEMPLATE_CARD_OBJECTS } from '@/utils/constants'
 import { getExamples } from '@/utils/user'
 
 declare interface TemplateTaskProps {
@@ -51,7 +51,7 @@ export const getStaticProps: GetStaticProps<TemplateTaskProps> = async ({ params
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
-    paths: templateObjects.filter(value => value.href.length > 0).map(value => value.href),
+    paths: TEMPLATE_CARD_OBJECTS.filter(value => value.href.length > 0).map(value => value.href),
     fallback: false
   }
 }

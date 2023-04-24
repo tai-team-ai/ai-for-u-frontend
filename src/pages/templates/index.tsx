@@ -4,7 +4,7 @@ import { Grid, Text, Container } from '@nextui-org/react'
 import Link from 'next/link'
 import SubscribeModal from '@/components/modals/SubscribeModal'
 import FancyHoverCard from '@/components/elements/FancyHoverCard'
-import { constants, templateObjects, type TemplateObj } from '@/utils/constants'
+import { constants, TEMPLATE_CARD_OBJECTS, type TemplateObj } from '@/utils/constants'
 
 const TEMPLATE_PAGE_HEADER: JSX.Element = (
   <>
@@ -56,7 +56,7 @@ const Index = (): JSX.Element => {
                 </Text>
                 </Grid>
                 <Grid.Container gap={2}>
-                    {templateObjects.map(template =>
+                    {TEMPLATE_CARD_OBJECTS.map(template =>
                         <Grid xs={12} sm={6} md={4}>
                             <TemplateCard {...template}></TemplateCard>
                         </Grid>
