@@ -52,8 +52,7 @@ export const theme = createTheme({
 function Layout ({ children }: LayoutProps): JSX.Element {
   return (
     <SnackBarProvider>
-      <SSRProvider>
-        <NextUIProvider theme={theme}>
+      <NextUIProvider theme={theme}>
             <PageNavbar />
             <Container css={{
               '@media screen and (min-width: 1280px)': {
@@ -67,8 +66,7 @@ function Layout ({ children }: LayoutProps): JSX.Element {
               {children}
             </Container>
             <Footer />
-        </NextUIProvider>
-      </SSRProvider>
+      </NextUIProvider>
     </SnackBarProvider>
   )
 }
