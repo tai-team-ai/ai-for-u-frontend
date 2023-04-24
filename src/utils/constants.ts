@@ -36,7 +36,7 @@ export interface TemplateObj {
 
 export const templateObjects: TemplateObj[] = [
   {
-    title: '📄 Note Summarizer',
+    title: '📄 Text Summarizer',
     description: 'Struggling to keep up with note-taking during meetings or lectures? Say goodbye to the stress of sifting through endless notes and hello to more efficient work and study habits!',
     href: '/templates/text-summarizer',
     callToAction: 'Let\'s get Summarizing!'
