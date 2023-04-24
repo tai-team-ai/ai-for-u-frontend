@@ -10,10 +10,10 @@ const Footer = (): JSX.Element => {
   const [showGoProModal, setShowGoProModal] = React.useState(false)
   return <footer className={styles.footer}>
     <Container>
-        <Grid.Container>
-            <Grid xs={0} sm={6} justify='center'>
+        <Grid.Container style={{ marginTop: '2rem' }}>
+            <Grid xs={0} sm={6} justify='flex-start'>
                 <ul style={{ listStyle: 'none' }}>
-                    <Text h3 css={{ lineHeight: '1em', marginTop: '1em' }}>Pages</Text>
+                    <Text h3 css={{ lineHeight: '1em', marginTop: '-0.2rem' }}>Pages</Text>
                     <li>
                         <NextLink href={routes.SANDBOX} style={{ color: 'var(--primary)' }}>Sandbox</NextLink>
                     </li>
@@ -23,9 +23,9 @@ const Footer = (): JSX.Element => {
                     <li><Link color='error' onClick={() => { setShowGoProModal(true) }}>GoPro</Link></li>
                 </ul>
             </Grid>
-            <Grid xs={12} sm={6} justify='center'>
+            <Grid xs={12} sm={6}>
                 <Grid.Container>
-                    <Grid xs={12} justify='center'>
+                    <Grid xs={12} className={styles['right-grid']}>
                         <NextLink href={routes.ROOT}>
                             <Image
                                 src="/logo-full-aligned-right.png"
@@ -34,7 +34,7 @@ const Footer = (): JSX.Element => {
                             />
                         </NextLink>
                     </Grid>
-                    <Grid xs={12} justify='center'>
+                    <Grid xs={12} className={styles['right-grid']}>
                         <SubscribeField/>
                     </Grid>
                 </Grid.Container>
