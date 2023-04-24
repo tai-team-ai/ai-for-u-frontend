@@ -1,19 +1,20 @@
-import { createContext, useState } from 'react'
-import { Alert, Snackbar } from '@mui/material'
+import { createContext, useState, useEffect } from 'react'
+import { Alert, Snackbar, Slide } from '@mui/material'
 
 export const SnackBarContext = createContext<{ addAlert: (alert: string) => void }>({ addAlert: () => {} })
 
-const AUTO_DISMISS = 8000
+const AUTO_DISMISS = 6000
 
 export function SnackBarProvider ({ children }: { children: React.ReactNode }): JSX.Element {
   const [alerts, setAlerts] = useState<string[]>([])
 
   const activeAlertIds = alerts.join(',')
-  const onClose = (): void => {
+  useEffect(() => {
     if (activeAlertIds.length > 0) {
-      setAlerts((alerts) => alerts.slice(0, alerts.length - 1))
+      const timer = setTimeout(() => { setAlerts((alerts) => alerts.slice(1)) }, AUTO_DISMISS)
+      return () => { clearTimeout(timer) }
     }
-  }
+  }, [activeAlertIds])
 
   const addAlert = (alert: string): void => { setAlerts((alerts) => [alert, ...alerts]) }
 
@@ -22,17 +23,23 @@ export function SnackBarProvider ({ children }: { children: React.ReactNode }): 
   return (
     <SnackBarContext.Provider value={value}>
       {children}
-      {alerts.map((alert) => (
-        <div style={{
-          position: 'fixed',
-          bottom: '16px'
-        }}>
-          <Snackbar open={true} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} key={alert} autoHideDuration={AUTO_DISMISS} onClose={onClose}>
-            <Alert severity="error">{alert}</Alert>
+      {alerts.map((message, index) => (
+        <div
+          style={{
+            position: 'fixed'
+          }}
+        >
+          <Snackbar
+            key={index}
+            open={true}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            TransitionComponent={Slide}
+            style={{ bottom: `${(alerts.length - index) * 100 - 80}px` }}
+          >
+            <Alert severity="error">{message}</Alert>
           </Snackbar>
         </div>
       ))}
-
     </SnackBarContext.Provider>
   )
 }
