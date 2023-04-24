@@ -48,7 +48,7 @@ export const theme = createTheme({
   }
 })
 
-function Layout({ children }: LayoutProps): JSX.Element {
+function Layout ({ children }: LayoutProps): JSX.Element {
   return (
     <SnackBarProvider>
       <NextUIProvider theme={theme}>
