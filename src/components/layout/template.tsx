@@ -98,7 +98,7 @@ const Examples = ({ examples, fillExample }: ExamplesProps): JSX.Element => {
 const ExampleDropdown = ({ examples, fillExample }: ExamplesProps): JSX.Element => {
   return (
         <Dropdown>
-            <Dropdown.Button css={{ width: '100%', fontSize: '1.2rem' }} size={'md'} flat color='secondary' >Examples</Dropdown.Button>
+            <Dropdown.Button css={{ width: '100%', fontSize: '1.2rem', marginBottom: '-1rem' }} size={'md'} flat color='secondary' >Examples</Dropdown.Button>
             <Dropdown.Menu
                 onAction={(key) => {
                   fillExample(examples[key as number].example)

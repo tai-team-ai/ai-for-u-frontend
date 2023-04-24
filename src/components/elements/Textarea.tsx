@@ -13,7 +13,7 @@ const Textarea = ({ tooltip = '', label, ...props }: TextareaProps): JSX.Element
   props = { ...props }
   const finalLabel = <Text span>{label}<InfoPopover text={tooltip}/></Text>
   // @ts-expect-error The label field needs to be string but it supports Elements as well.
-  return <NextUITextarea fullwidth css={{ marginBottom: '0.4rem' }} {...props} label={finalLabel}/>
+  return <NextUITextarea fullwidth css={{ marginBottom: '0.4rem' }} {...props} label={finalLabel} minRows={3} maxRows={14} />
 }
 
 export default Textarea
