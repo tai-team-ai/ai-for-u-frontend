@@ -71,7 +71,7 @@
 .result-box {
     overflow-y: auto;
     overflow-x: wrap;
-    max-height: 15rem;
+    max-height: 30rem;
     padding: 1em;
     border: solid 1px lightgrey;
     border-radius: 15px;
