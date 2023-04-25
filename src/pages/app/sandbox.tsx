@@ -197,6 +197,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
             }}
           >
                 <form
+                    style={{ marginTop: '1rem' }}
                     id="task-form"
                     ref={formRef}
                     onSubmit={submitHandler}
