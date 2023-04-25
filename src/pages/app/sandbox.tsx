@@ -110,14 +110,14 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
             setMessages([...messages])
           })
         } else if (response.status === 429) {
-          void response.json().then(data => {
-            console.log(session)
-            const isUserLoggedIn = session !== null && typeof session !== 'undefined'
-            setCallToActionMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
-            if (isUserLoggedIn) {
-              setShowGoPro(true)
-            } else {
+          void response.json().then(body => {
+            const errorBody = JSON.parse(body.message)
+            const canLoginToContinue = Boolean(errorBody.login)
+            setCallToActionMessage(getTokenExhaustedCallToAction(canLoginToContinue))
+            if (canLoginToContinue) {
               setShowLogin(true)
+            } else {
+              setShowGoPro(true)
             }
           })
         } else {

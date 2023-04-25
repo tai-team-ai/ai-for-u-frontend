@@ -65,10 +65,10 @@ export async function getExamples (task: string): Promise<ExampleObject[]> {
   return examples
 }
 
-export function getTokenExhaustedCallToAction (userLoggedIn: boolean): string {
-  if (userLoggedIn) {
-    return 'You\'ve reached your daily limit.'
-  } else {
+export function getTokenExhaustedCallToAction (canLogInToContinue: boolean): string {
+  if (canLogInToContinue) {
     return 'Sign In to Continue 🎉'
+  } else {
+    return 'You\'ve reached your daily limit.'
   }
 }
