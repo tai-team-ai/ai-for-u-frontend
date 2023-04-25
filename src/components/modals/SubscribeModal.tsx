@@ -19,7 +19,12 @@ export default function SubscribeModal ({ open, setOpen }: SubscribeModalProps):
         <Modal
             closeButton
             open={open}
-            onClose={() => { setOpen(false) }}
+            onClose={
+              () => {
+                setIsSubscribed(false)
+                setOpen(false)
+              }
+            }
             css={{
               maxWidth: '90vw',
               marginLeft: 'auto',

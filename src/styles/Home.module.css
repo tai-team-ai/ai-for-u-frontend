@@ -42,20 +42,47 @@
 .templates-btn {
     font-size: 1.1rem;
     filter: var(--shadow);
+    color: var(--primary);
+    background-color: var(--primary-light);
+    border-radius: var(--nextui-radii-base);
+    padding-left: var(--nextui-space-9);
+    padding-right: var(--nextui-space-9);
+    height: var(--nextui--buttonHeight);
+    line-height: var(--nextui-space-15);
+    width: auto;
+    min-width: var(--nextui-space-60);
+    text-align: center;
+    font-weight: var(--nextui-fontWeights-medium);
+    transition: transform 0.25s ease-in-out;
 }
 
 .templates-btn:hover {
     filter: var(--hover-shadow);
     transform: var(--hover-translate);
+    transition: transform 0.25s ease-in-out;
 }
 
 .sandbox-btn {
     font-size: 1.1rem;
+    filter: var(--shadow);
+    background: var(--nextui-colors-secondaryLight);
+    color: var(--nextui-colors-secondaryLightContrast);
+    background-color: var(--primary-light);
+    border-radius: var(--nextui-radii-base);
+    padding-left: var(--nextui-space-9);
+    padding-right: var(--nextui-space-9);
+    height: var(--nextui--buttonHeight);
+    line-height: var(--nextui-space-15);
+    width: auto;
+    min-width: var(--nextui-space-60);
+    text-align: center;
+    transition: transform 0.25s ease-in-out;
 }
 
 .sandbox-btn:hover {
     filter: var(--hover-shadow);
     transform: var(--hover-translate);
+    transition: transform 0.25s ease-in-out;
 }
 
 .trust-builders {

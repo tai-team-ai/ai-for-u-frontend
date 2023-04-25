@@ -1,19 +1,20 @@
 import Layout from '@/components/layout/layout'
-import Template from '@/components/layout/template'
+import Template, { type ExampleObject } from '@/components/layout/template'
 import styles from '@/styles/Sandbox.module.css'
 import { Button, Card, Loading, Textarea, Text, useTheme } from '@nextui-org/react'
 import SendIcon from '@mui/icons-material/Send'
-import { type ReactNode, useEffect, useState, useRef } from 'react'
+import { type ReactNode, useEffect, useState, useRef, useContext } from 'react'
 import { v4 as uuid } from 'uuid'
 import { uFetch } from '@/utils/http'
 import { RateResponse } from '@/components/modals/FeedbackModal'
-import { getTokenExhaustedCallToAction } from '@/utils/user'
+import { getExamples, getTokenExhaustedCallToAction } from '@/utils/user'
 import { useSession } from 'next-auth/react'
-import Markdown from 'markdown-to-jsx'
-import { showSnackbar } from '@/components/elements/Snackbar'
+import Markdown from '@/components/elements/Markdown'
+import { SnackBarContext } from '@/components/elements/SnackbarProvider'
 import { isMobileKeyboardVisible, useAutoCollapseKeyboard, isMobile } from '@/utils/hooks'
 import GoProModal from '@/components/modals/GoProModal'
 import LoginModal from '@/components/modals/LoginModal'
+import { type GetStaticProps } from 'next'
 
 interface RequestBody {
   conversationUuid: string
@@ -76,7 +77,12 @@ const Message = ({ request, response = null }: MessageProps): JSX.Element => {
     </div>
 }
 
-const ChatGPT = (): JSX.Element => {
+declare interface ChatGPTProps {
+  examples: ExampleObject[]
+}
+
+const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
+  const { addAlert } = useContext(SnackBarContext)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const { data: session } = useSession()
@@ -105,18 +111,21 @@ const ChatGPT = (): JSX.Element => {
             setMessages([...messages])
           })
         } else if (response.status === 429) {
-          void response.json().then(data => {
-            const isUserLoggedIn = session !== null && typeof session !== 'undefined'
-            setCallToActionMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
-            if (isUserLoggedIn) {
-              setShowGoPro(true)
-            } else {
+          void response.json().then(body => {
+            const errorBody = JSON.parse(body.message)
+            const canLoginToContinue = Boolean(errorBody.login)
+            setCallToActionMessage(getTokenExhaustedCallToAction(canLoginToContinue))
+            if (canLoginToContinue) {
               setShowLogin(true)
+            } else {
+              setShowGoPro(true)
             }
           })
+        } else if (response.status === 504 || response.status === 502 || response.status === 501) {
+          addAlert('Our AI is currently helping too many people. Please try again in a few minutes or shorten the length of your message.')
         } else {
           void response.text().then(data => {
-            showSnackbar(data)
+            addAlert(data)
           })
         }
       })
@@ -126,6 +135,9 @@ const ChatGPT = (): JSX.Element => {
   }
 
   useEffect(() => {
+    if (typeof session === 'undefined') {
+      return
+    }
     // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
     if (typeof global._conversationUuid === 'undefined') {
       // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
@@ -176,7 +188,7 @@ const ChatGPT = (): JSX.Element => {
         <Layout>
         <Template
             isSandbox={true}
-            exampleUrl="/api/ai-for-u/sandbox-chatgpt-examples"
+            examples={examples}
             fillExample={(e) => {
               const textfield: HTMLTextAreaElement | null = document.querySelector('#userMessage')
               if (textfield != null) {
@@ -268,6 +280,15 @@ const ChatGPT = (): JSX.Element => {
             />
         </Layout>
     </>)
+}
+
+export const getStaticProps: GetStaticProps<ChatGPTProps> = async ({ params }) => {
+  const examples: ExampleObject[] = await getExamples('sandbox-chatgpt')
+  return {
+    props: {
+      examples
+    }
+  }
 }
 
 export default ChatGPT

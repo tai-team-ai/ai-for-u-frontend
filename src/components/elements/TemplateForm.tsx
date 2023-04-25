@@ -5,14 +5,14 @@ import styles from '@/styles/TemplateForm.module.css'
 import { Checkbox, Button, Loading, Text } from '@nextui-org/react'
 import LoginModal from '../modals/LoginModal'
 import GoProModal from '../modals/GoProModal'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { uFetch } from '@/utils/http'
 import { useSession } from 'next-auth/react'
 import { type ResponseProps } from '../modals/FeedbackModal'
 import { ResultBox } from '../layout/template'
-import Markdown from 'markdown-to-jsx'
+import Markdown from './Markdown'
 import { ShowDiffBtn } from './diffview'
-import { showSnackbar } from './Snackbar'
+import { SnackBarContext } from './SnackbarProvider'
 import { Slider } from '@mui/material'
 import { getTokenExhaustedCallToAction } from '@/utils/user'
 import { colors } from '@/components/layout/layout'
@@ -50,32 +50,18 @@ declare interface ResultChildrenProps {
 
 const ResultChildren = ({ task, data, body }: ResultChildrenProps): JSX.Element => {
   if (task === 'text-revisor') {
+    const revised = data.revisedText
+    console.log('revised', revised)
     return <>
-            {data.revisedTextList.map((text: string, index: number) => <>
-                <Text b>{`Revision ${index + 1}: `}</Text>
-                <Markdown>{text}</Markdown>
-                <ShowDiffBtn oldValue={body.textToRevise} newValue={text} />
-            </>)}
+            <Text b>Revision:</Text>
+    <br />
+            <Markdown>{revised}</Markdown>
+            <ShowDiffBtn oldValue={body.textToRevise} newValue={revised} />
         </>
-  } else if (task === 'catchy-title-creator') {
+  } else if (typeof data.response !== 'undefined') {
     return <>
-            <Text h3>Titles</Text>
-            <ul>
-                {data.titles.map((title: string) => {
-                  return <>
-                        <li><Markdown>{title}</Markdown></li>
-                    </>
-                })}
-            </ul>
-        </>
-  } else if (task === 'cover-letter-writer') {
-    return <>
-            <Markdown>{data.coverLetter}</Markdown>
-        </>
-  } else if (task === 'text-summarizer') {
-    return <>
-            <Markdown>{data.summary}</Markdown>
-        </>
+      <Markdown>{data.response}</Markdown>
+    </>
   } else {
     return <>
             <Markdown>{JSON.stringify(data)}</Markdown>
@@ -99,6 +85,7 @@ export declare interface Reset {
 }
 
 const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormProps): JSX.Element => {
+  const { addAlert } = useContext(SnackBarContext)
   const { data: session } = useSession()
   const [loading, setLoading] = useState<boolean>(false)
   const [showResult, setShowResult] = useState<boolean>(false)
@@ -130,8 +117,9 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   e.preventDefault()
                   setLoading(true)
                   const formData = new FormData(e.target as HTMLFormElement)
+                  console.log('formData', Array.from(formData.entries()))
                   const body = Object.fromEntries(Array.from(formData.entries()).map(([key, val]: any) => [key, transforms[key](val)]))
-
+                  console.log('body', body)
                   void uFetch(`/api/ai-for-u/${task}`, { session, method: 'POST', body: JSON.stringify(body) })
                     .then(response => {
                       if (response.status === 200) {
@@ -141,18 +129,21 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                           setShowResult(true)
                         })
                       } else if (response.status === 429) {
-                        void response.json().then(message => {
-                          const isUserLoggedIn = session !== null
-                          setCallToActionMessage(getTokenExhaustedCallToAction(isUserLoggedIn))
-                          if (isUserLoggedIn) {
-                            setShowGoPro(true)
-                          } else {
+                        void response.json().then(body => {
+                          const errorBody = JSON.parse(body.message)
+                          const canLoginToContinue = Boolean(errorBody.login)
+                          setCallToActionMessage(getTokenExhaustedCallToAction(canLoginToContinue))
+                          if (canLoginToContinue) {
                             setShowLogin(true)
+                          } else {
+                            setShowGoPro(true)
                           }
                         })
+                      } else if (response.status === 504 || response.status === 502 || response.status === 501) {
+                        addAlert('Our AI is currently helping too many people. Please try again in a few minutes or shorten the length of your message.')
                       } else {
                         void response.text().then(message => {
-                          showSnackbar(message)
+                          addAlert(message)
                         })
                       }
                     })
@@ -239,7 +230,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   if (property.type === 'boolean') {
                     transforms[title] = Boolean
                     // @ts-expect-error The checkbox component usually doesn't allow Elements in the label but it supports it.
-                    return <Checkbox css={{ marginBottom: '0.4rem', marginTop: '0.4rem' }} size="sm" {...inputProps} color='secondary'/>
+                    return <Checkbox css={{ marginBottom: '0.4rem', marginTop: '0.4rem' }} size="sm" {...inputProps} value={inputProps.checked === ''} color='secondary'/>
                   }
                   const dropdownProps = {
                     id: title,
@@ -251,7 +242,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                     transforms[title] = Number
                     const [selected, setSelected] = useState([property.default])
                     resets[title] = { value: selected, setValue: setSelected, default: [property.default] }
-                    return <Dropdown {...dropdownProps} validSelections={range(property.minimum, property.maximum).map(String)} selectionMode="single" selected={selected} setSelected={setSelected} />
+                    return <Dropdown {...dropdownProps} validSelections={range(property.minimum, (property.maximum as number) + 1).map(String)} selectionMode="single" selected={selected} setSelected={setSelected} />
                   }
                   if (typeof property.allOf !== 'undefined') {
                     transforms[title] = String
@@ -261,7 +252,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   }
                   if (property.type === 'array' && typeof property.items.enum !== 'undefined') {
                     transforms[title] = v => v.split(', ')
-                    const [selected, setSelected] = useState(property.default)
+                    const [selected, setSelected] = useState<string[]>(property.default)
                     resets[title] = { value: selected, setValue: setSelected, default: property.default }
                     return <Dropdown {...dropdownProps} validSelections={property.items.enum} selectionMode="multiple" selected={selected} setSelected={setSelected} />
                   }
@@ -299,7 +290,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
         <LoginModal
           open={showLogin}
           setOpenState={setShowLogin}
-          isSignUp={true}
+          isSignUp={false}
           message={callToActionMessage}
         />
         </>)

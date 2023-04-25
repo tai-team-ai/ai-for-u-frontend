@@ -1,8 +1,7 @@
 import PageNavbar from '@/components/layout/navigation/Navbar'
 import Footer from '@/components/layout/Footer'
 import { Container, NextUIProvider, createTheme } from '@nextui-org/react'
-import { SSRProvider } from 'react-bootstrap'
-import Snackbar from '../elements/Snackbar'
+import { SnackBarProvider } from '../elements/SnackbarProvider'
 
 interface LayoutProps {
   children: any
@@ -51,24 +50,23 @@ export const theme = createTheme({
 
 function Layout ({ children }: LayoutProps): JSX.Element {
   return (
-    <SSRProvider>
+    <SnackBarProvider>
       <NextUIProvider theme={theme}>
-          <PageNavbar />
-          <Container css={{
-            '@media screen and (min-width: 1280px)': {
-              maxWidth: '1430px'
-            },
-            display: 'flex',
-            flexDirection: 'column',
-            marginBottom: '7rem', // This will create space at the bottom of the container for the footer.
-            minHeight: '90vh' // This will make the container grow with its contents.
-          }}>
-            {children}
-          </Container>
-          <Footer />
-        <Snackbar />
+        <PageNavbar />
+        <Container css={{
+          '@media screen and (min-width: 1280px)': {
+            maxWidth: '1430px'
+          },
+          display: 'flex',
+          flexDirection: 'column',
+          marginBottom: '7rem', // This will create space at the bottom of the container for the footer.
+          minHeight: '90vh' // This will make the container grow with its contents.
+        }}>
+          {children}
+        </Container>
+        <Footer />
       </NextUIProvider>
-    </SSRProvider>
+    </SnackBarProvider>
   )
 }
 export default Layout
