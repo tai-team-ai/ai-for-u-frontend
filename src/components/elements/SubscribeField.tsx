@@ -16,9 +16,9 @@ const SubscribeField = ({ style }: SubscribeFieldProps): JSX.Element => {
 
   if (isSubscribed) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '0 10%', marginTop: '-1.0rem', marginBottom: '-0.5rem' }}>
+      <div className={styles['subscribe-response']} >
         <Text h3 className={styles['go-pro-animation']}>You're in!</Text>
-        <Text h5>How will you use AI for good in this world? 🌏</Text>
+        <Text h5 css={{ marginTop: '0.3rem' }}>How will you use AI for good in this world? 🌏</Text>
       </div>
     )
   }
@@ -26,7 +26,7 @@ const SubscribeField = ({ style }: SubscribeFieldProps): JSX.Element => {
   return (
         <form
             id="subscribeForm"
-            style={style}
+            style={{ marginRight: '4.5rem' }}
             onSubmit={(e) => {
               e.preventDefault()
               if (userEmail.current == null) {

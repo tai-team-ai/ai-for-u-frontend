@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Modal, Button, Input, Loading, Image, Text, Card, Link } from '@nextui-org/react'
 import EmailIcon from '@mui/icons-material/Email'
+import styles from '@/styles/Modals.module.css'
 import { signIn } from 'next-auth/react'
 import { validateSignUp } from '@/utils/validation'
 import { uFetch } from '@/utils/http'
@@ -172,7 +173,7 @@ const LoginModal = ({ open, setOpenState, isSignUp, error = null, message = null
                   {message === null
                     ? null
                     : (
-                        <Text h3 color='secondary' >
+                        <Text h3 className={styles['go-pro-animation']}>
                             {message}
                         </Text>
                       )

@@ -4,3 +4,14 @@
     border-top: solid 1px var(--primary-border);
     padding-top: 1em;
 }
+
+.right-grid {
+    justify-content: flex-end;
+}
+
+
+@media (max-width: 961px) { /* Set the breakpoint at 768px or whichever size you want to use */
+    .right-grid {
+        justify-content: center;
+    }
+}

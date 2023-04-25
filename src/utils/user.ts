@@ -67,7 +67,7 @@ export async function getExamples (task: string): Promise<ExampleObject[]> {
 
 export function getTokenExhaustedCallToAction (canLogInToContinue: boolean): string {
   if (canLogInToContinue) {
-    return 'Sign In to Continue 🎉'
+    return 'Sign In to Continue'
   } else {
     return 'You\'ve reached your daily limit.'
   }
