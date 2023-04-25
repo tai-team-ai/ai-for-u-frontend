@@ -5,14 +5,14 @@ import styles from '@/styles/TemplateForm.module.css'
 import { Checkbox, Button, Loading, Text } from '@nextui-org/react'
 import LoginModal from '../modals/LoginModal'
 import GoProModal from '../modals/GoProModal'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { uFetch } from '@/utils/http'
 import { useSession } from 'next-auth/react'
 import { type ResponseProps } from '../modals/FeedbackModal'
 import { ResultBox } from '../layout/template'
 import Markdown from './Markdown'
 import { ShowDiffBtn } from './diffview'
-import { showSnackbar } from './Snackbar'
+import { SnackBarContext } from './SnackbarProvider'
 import { Slider } from '@mui/material'
 import { getTokenExhaustedCallToAction } from '@/utils/user'
 import { colors } from '@/components/layout/layout'
@@ -85,6 +85,7 @@ export declare interface Reset {
 }
 
 const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormProps): JSX.Element => {
+  const { addAlert } = useContext(SnackBarContext)
   const { data: session } = useSession()
   const [loading, setLoading] = useState<boolean>(false)
   const [showResult, setShowResult] = useState<boolean>(false)
@@ -138,9 +139,11 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                             setShowGoPro(true)
                           }
                         })
+                      } else if (response.status === 504 || response.status === 502 || response.status === 501) {
+                        addAlert('Our AI is currently helping too many people. Please try again in a few minutes or shorten the length of your message.')
                       } else {
                         void response.text().then(message => {
-                          showSnackbar(message)
+                          addAlert(message)
                         })
                       }
                     })
