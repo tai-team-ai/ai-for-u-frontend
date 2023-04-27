@@ -68,9 +68,9 @@ git add src/changed-file1 pages/changed-file2
 git commit -m "descriptive commit message"
 git push --set-upstream origin feature/new-feature-branch
 ```
-5. Submit a pull request by either going to https://github.com/ai-for-u/ai-for-u-frontend/pulls or by clicking the link that appears in terminal after the initial push.
+5. Submit a pull request by either going to https://github.com/ai-for-u/ai-for-u-frontend/pulls or by clicking the link that appears in terminal after the initial push. Move your task to the `Pull request` column.
 6. Have someone review your code.
-7. Merge code to main
+7. Merge code to main.  Move your task tothe `Done` column.
 
 ## Project Structure
 
