@@ -110,23 +110,30 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
             })
             setMessages([...messages])
           })
-        } else if (response.status === 429) {
-          void response.json().then(body => {
-            const errorBody = JSON.parse(body.message)
-            const canLoginToContinue = Boolean(errorBody.login)
-            setCallToActionMessage(getTokenExhaustedCallToAction(canLoginToContinue))
-            if (canLoginToContinue) {
-              setShowLogin(true)
-            } else {
-              setShowGoPro(true)
-            }
-          })
-        } else if (response.status === 504 || response.status === 502 || response.status === 501) {
-          addAlert('Our AI is currently helping too many people. Please try again in a few minutes or shorten the length of your message.')
         } else {
-          void response.text().then(data => {
-            addAlert(data)
-          })
+          if (response.status === 429) {
+            void response.json().then(body => {
+              const errorBody = JSON.parse(body.message)
+              const canLoginToContinue = Boolean(errorBody.login)
+              setCallToActionMessage(getTokenExhaustedCallToAction(canLoginToContinue))
+              if (canLoginToContinue) {
+                setShowLogin(true)
+              } else {
+                setShowGoPro(true)
+              }
+            })
+          } else if (response.status === 504 || response.status === 502 || response.status === 501) {
+            addAlert('Our AI is currently helping too many people. Please try again in a few minutes or shorten the length of your message.')
+          } else {
+            void response.text().then(data => {
+              addAlert(data)
+            })
+          }
+          messages.pop()
+          setMessages([...messages])
+          if (textAreaRef.current !== null) {
+            textAreaRef.current.value = request.userMessage
+          }
         }
       })
       .finally(() => {
