@@ -47,6 +47,7 @@ code {
 html {
     overflow-y: scroll;
 }
+
 body {
     height: 100%;
 }
@@ -68,18 +69,4 @@ label {
 #__next,
 #__next>div {
     height: 100%;
-}
-
-pre {
-    background-color: #2e2e2e;
-    color: #d6d6d6;
-}
-
-pre>code {
-    background-color: transparent;
-    color: #d6d6d6;
-}
-
-ul {
-    list-style-type: disc;
 }
