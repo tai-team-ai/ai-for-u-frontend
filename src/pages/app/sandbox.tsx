@@ -86,11 +86,17 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const { data: session } = useSession()
-  const [messages, setMessages] = useState<MessageProps[]>([])
+  const [messages, updateMessages] = useState<MessageProps[]>([])
+  const setMessages = (inputMessages: MessageProps[]): void => {
+    updateMessages(inputMessages)
+    sessionStorage.setItem('conversation', JSON.stringify(inputMessages))
+  }
   const [loading, setLoading] = useState<boolean>(false)
   const [showLogin, setShowLogin] = useState<boolean>(false)
-  // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
-  let conversationUuid: string = global._conversationUuid
+  let conversationUuid = (typeof sessionStorage !== 'undefined') ? sessionStorage.getItem('conversationUuid') : null
+  // const [conversationUuid, setConversationUuid] = useState<string|null>(null)
+  // // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
+  // let conversationUuid: string = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('conversationUuid') : null// global._conversationUuid
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const isKeyboardVisible = isMobileKeyboardVisible()
   const isMobileBrowser = isMobile()
@@ -145,15 +151,17 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
     if (typeof session === 'undefined') {
       return
     }
-    // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
-    if (typeof global._conversationUuid === 'undefined') {
-      // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
-      global._conversationUuid = uuid()
-      // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
-      conversationUuid = global._conversationUuid
+    conversationUuid = sessionStorage.getItem('conversationUuid')
+    if (conversationUuid == null) {
+      conversationUuid = uuid()
       void getResponse({ conversationUuid, userMessage: '' })
     }
-  })
+    sessionStorage.setItem('conversationUuid', conversationUuid)
+    const conversation = sessionStorage.getItem('conversation')
+    if (conversation !== null) {
+      setMessages([...JSON.parse(conversation)])
+    }
+  }, [session, conversationUuid])
 
   useEffect(() => {
     if (chatBoxRef.current?.lastChild instanceof Element) {
@@ -183,7 +191,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
     (event instanceof KeyboardEvent)
       ? (document.getElementById('userMessage') as HTMLInputElement).value = ''
       : event.currentTarget.userMessage.value = ''
-    const request = { conversationUuid, userMessage }
+    const request = { conversationUuid: conversationUuid as string, userMessage }
     messages.push({ request })
     setMessages([...messages])
     void getResponse(request)
@@ -192,7 +200,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   useAutoCollapseKeyboard(submitHandler)
 
   return (<>
-        <Layout>
+        <Layout prefetchChat={false}>
         <Template
             isSandbox={true}
             examples={examples}
@@ -268,8 +276,22 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
                               className={`${styles['send-button']} ${styles['send-button-hover']}`}
                               type="submit"
                               color='primary'
+                              aria-label="send button"
                             >
                                 <SendIcon shapeRendering='rounded' />
+                            </Button>
+                            <Button
+                              size="sm"
+                              auto
+                              css={{ display: 'none' }}
+                              color="error"
+                              onPress={() => {
+                                setMessages([])
+                                sessionStorage.removeItem('conversationUuid')
+                                conversationUuid = null
+                              }}
+                              >
+                                Reset
                             </Button>
                         </Card.Footer>
                     </Card>

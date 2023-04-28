@@ -2,9 +2,15 @@ import PageNavbar from '@/components/layout/navigation/Navbar'
 import Footer from '@/components/layout/Footer'
 import { Container, NextUIProvider, createTheme } from '@nextui-org/react'
 import { SnackBarProvider } from '../elements/SnackbarProvider'
+import { v4 as uuid } from 'uuid'
+import { useEffect } from 'react'
+import { uFetch } from '@/utils/http'
+import { useSession } from 'next-auth/react'
+import Head from 'next/head'
 
 interface LayoutProps {
-  children: any
+  prefetchChat?: boolean
+  children: React.ReactNode
 }
 
 interface ColorsType {
@@ -48,8 +54,46 @@ export const theme = createTheme({
   }
 })
 
-function Layout ({ children }: LayoutProps): JSX.Element {
+function Layout ({ prefetchChat = true, children }: LayoutProps): JSX.Element {
+  const { data: session } = useSession()
+  useEffect(() => {
+    if (prefetchChat) {
+      let conversationUuid = sessionStorage.getItem('conversationUuid')
+      if (conversationUuid == null) {
+        conversationUuid = uuid()
+        sessionStorage.setItem('conversationUuid', conversationUuid)
+        const request = {
+          conversationUuid,
+          userMessage: ''
+        }
+        void uFetch('/api/ai-for-u/sandbox-chatgpt', {
+          session,
+          method: 'POST',
+          body: JSON.stringify(request)
+        }).then(response => {
+          if (response.status === 200) {
+            void response.json().then(data => {
+              sessionStorage.setItem('conversation', JSON.stringify(
+                [
+                  {
+                    request,
+                    response: data
+                  }
+                ]
+              ))
+            })
+          } else {
+            sessionStorage.removeItem('conversationUuid')
+          }
+        })
+      }
+    }
+  })
   return (
+    <>
+    <Head>
+      <title>AI For U</title>
+    </Head>
     <SnackBarProvider>
       <NextUIProvider theme={theme}>
         <PageNavbar />
@@ -67,6 +111,7 @@ function Layout ({ children }: LayoutProps): JSX.Element {
         <Footer />
       </NextUIProvider>
     </SnackBarProvider>
+    </>
   )
 }
 export default Layout
