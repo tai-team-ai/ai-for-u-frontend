@@ -160,6 +160,8 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
     const conversation = sessionStorage.getItem('conversation')
     if (conversation !== null) {
       setMessages([...JSON.parse(conversation)])
+    } else {
+      void getResponse({ conversationUuid, userMessage: '' })
     }
   }, [session, conversationUuid])
 
