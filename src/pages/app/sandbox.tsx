@@ -283,7 +283,6 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
                             <Button
                               size="sm"
                               auto
-                              css={{ display: 'none' }}
                               color="error"
                               onPress={() => {
                                 setMessages([])
