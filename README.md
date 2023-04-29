@@ -1,106 +1,87 @@
-## Project overview
+# AI For U Frontend
 
-This blueprint creates a [React](https://reactjs.org/) SPA (single-page application) project. The project uses the Python [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) to deploy to [AWS Amplify Hosting](https://aws.amazon.com/amplify/hosting/).
+Here is located the code for the frontend of https://aiforu.app.
 
-### Architecture overview
+## Table of Contents
+1. [Getting Started](#getting-started)
+1. [Task Workflow](#task-workflow)
+1. [Project Structure](#project-structure)
 
-A (SPA) single-page application is a web application implementation that loads a web document and updates it by using JavaScript APIs. Your customers can then use your website without loading entire pages from the server, which helps improve your website's performance and provides a more dynamic user experience.
+## Getting Started
 
-The deployment pipeline deploys the SPA to an Amazon CodeCatalyst environment. The Amazon CodeCatalyst environment requires an AWS account connection for your Amazon CodeCatalyst space and a configured IAM role for your project workflow. After you create your project, you can view the repository, source code, and CI/CD workflow for your Amazon CodeCatalyst project. After your workflow runs successfully, you can access your deployed CDK application URL in the output of your workflow.
+This project is written in typescript so you'll need to install node to download dependencies and run the developement server.  You can get node from here [node](https://nodejs.org/en).
 
-### Web application framework
+To begin developing on this project, you must first clone the repository:
 
-**[React](https://reactjs.org/)** - powered by [Create React App](https://create-react-app.dev/)
-
-### Hosting
-
-**AWS Amplify Hosting**
-
-[AWS Amplify Hosting](https://aws.amazon.com/amplify/hosting/) offers a fully managed hosting service for web apps and static websites that can be accessed directly from the AWS console.
-
-![AWS Amplify Architecture Diagram](https://deyn4asqcu6xj.cloudfront.net/create-spa-amplify-hosting.png)
-
-## Connections and permissions
-
-You can create a new account connection from the AWS accounts menu in your Amazon CodeCatalyst space. AWS IAM roles added to the account connection are used to authorize project workflows to access AWS account resources.
-
-Expected role capabilities: *CodeCatalyst**
-
-## Project resources
-
-This project contains the following folders:
-
-- root - The web application
-- cdk - The CDK project to deploy the application
-
-This project has created the following Amazon CodeCatalyst Resources:
-
-- A source repository
-- An environment
-- A workflow for verifying pull requests at .codecatalyst/workflows/onPullRequestBuildAndTest.yaml
-- A workflow for deploying changes pushed to main at .codecatalyst/workflows/onPushToMainDeployPipeline.yaml
-
-### Cleaning up resources
-
-Describe how you clean up/ remove the deployed resources created by this blueprint
-
-## CDK Deployment
-
-If you want to deploy without using CI/CD workflows, after building the app in the root directory you can move the `build` folder to the `cdk/frontend` folder by running:
 ```bash
-mkdir cdk/frontend && cp -r build cdk/frontend
+git clone https://github.com/ai-for-u/ai-for-u-frontend
 ```
-And then follow the instrucitons in the `cdk` folder README file.
 
-## Additional resources
+Once cloned, you will want to navigate to the repository and install the dependencies:
 
-See the Amazon CodeCatalyst user guide for additional information on using the features and resources of Amazon CodeCatalyst
+```bash
+cd ai-for-u-frontend
+npm i
+```
 
----
+You can then run the developement server with the following command:
 
-# Getting Started with Create React App
+```
+npm run dev
+```
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The server will start and listen at `0.0.0.0:3000`, which you can get to on your local machine's browser by navigating to https://localhost:3000.
 
-## Available Scripts
+You will need to get a `.env` file from Mike Whitney and place it at the root of your repository in order to get authentication and the calls to the API to work properly.  The `.env` will consist of variables such as google oauth creds and aws access keys so it is **NOT** to be committed to the remote repository.  It is already included in the `.gitignore`.  The format of the `.env` file should look as follows:
 
-In the project directory, you can run:
+```ini
+# the url to the REST API
+API_URL="xxx"
 
-### `npm run dev`
+# nextauth variables
+NEXTAUTH_URL="xxx"
+NEXTAUTH_SECRET="xxx"
+NEXT_AUTH_AWS_ACCESS_KEY="xxx"
+NEXT_AUTH_AWS_SECRET_KEY="xxx"
+NEXT_AUTH_AWS_REGION="xxx"
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+# oAuth provider variables
+GOOGLE_ID="xxx"
+GOOGLE_SECRET="xxx"
+```
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Task Workflow
 
-### `npm test`
+Task management is handled on this [notion page](https://www.notion.so/aiforu/d2e85221d1154b238fa169ea731c5f4e?v=013a3a1864be4f0897d0eb939e6b5348).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The basic workflow for completing a task is as follows:
 
-### `npm run build`
+1. Select a task to work on that is assigned to you and move it to the `In progress` column.
+2. Create a new branch for the task with a descriptive name, for example:
+```bash
+git checkout -b feature/new-feature-branch
+```
+3. Make code changes and test it on your local developement environment. Make sure your code passes ESLint
+4. Push your changes to the repo using either using your GUI git client in your IDE or by using the following commands:
+```bash
+git add src/changed-file1 pages/changed-file2
+git commit -m "descriptive commit message"
+git push --set-upstream origin feature/new-feature-branch
+```
+5. Submit a pull request by either going to https://github.com/ai-for-u/ai-for-u-frontend/pulls or by clicking the link that appears in terminal after the initial push. Move your task to the `Pull request` column.
+6. Have someone review your code.
+7. Merge code to main.  Move your task tothe `Done` column.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Project Structure
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+**Pages:** This frontend is built on [NextJS](https://nextjs.org/).  This means that any `.tsx` file found in the `pages` directory is available as a route on the server.  For example `pages/index.tsx` refers to the home page (`/`), `pages/app/sandbox` refers to the chatGPT sandbox (`/app/sandbox`), and `pages/templates/index.tsx` refers to the templates page (`/templates`).  NextJS offers dynamic routes such as `pages/templates/[task].tsx`.  This means going to `/templates/text-summarizer` will invoke the `pages/templates/[task].tsx` with the value `text-summarizer` passed as a query parameter.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Components:** The components directory contains all the reusable components such as the modals, navbar, etc.  These have `.tsx` extentions and can be used as UI elements.
 
-### `npm run eject`
+**Utils:** The utils directory contains all the utility functions and constant values.  Basically, these are all `.ts` files that are not specifically used by
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+**Styles:** The styles directory contains all the `.css` files.  NextJS is a little weird when it comes to css and general css has to be within the `styles/global.css` and styles specific to a component needs to be in a `styles/<Component name>.module.css` file.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+**Types:** The types directory hold type overwrites for things that we use in libraries like nextauth and nextui.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+**API:** The `pages/api` directory hold all frontend server requests.  We use this for authentication as well as a middleware layer between the frontend and our backend API (all requests sent to `/api/ai-for-u/[task]` will be forwarded to `${API_URL}/ai-for-u/[task]`)
