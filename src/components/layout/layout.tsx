@@ -5,7 +5,6 @@ import { SnackBarProvider } from '../elements/SnackbarProvider'
 import { v4 as uuid } from 'uuid'
 import { useEffect } from 'react'
 import { uFetch } from '@/utils/http'
-import { useSession } from 'next-auth/react'
 import Head from 'next/head'
 
 interface LayoutProps {
@@ -55,7 +54,6 @@ export const theme = createTheme({
 })
 
 function Layout ({ prefetchChat = true, children }: LayoutProps): JSX.Element {
-  const { data: session } = useSession()
   useEffect(() => {
     if (prefetchChat) {
       let conversationUuid = sessionStorage.getItem('conversationUuid')
@@ -67,7 +65,6 @@ function Layout ({ prefetchChat = true, children }: LayoutProps): JSX.Element {
           userMessage: ''
         }
         void uFetch('/api/ai-for-u/sandbox-chatgpt', {
-          session,
           method: 'POST',
           body: JSON.stringify(request)
         }).then(response => {

@@ -53,7 +53,6 @@ const LoginModal = ({ open, setOpenState, isSignUp, error = null, message = null
         const signUpResponse = await uFetch(
           '/api/auth/signup',
           {
-            session: null,
             method: 'POST',
             body: JSON.stringify({ email, password, confirmPassword })
           })

@@ -106,7 +106,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
 
   const getResponse = async (request: RequestBody): Promise<void> => {
     setLoading(true)
-    void uFetch('/api/ai-for-u/sandbox-chatgpt', { session, method: 'POST', body: JSON.stringify(request) })
+    void uFetch('/api/ai-for-u/sandbox-chatgpt', { method: 'POST', body: JSON.stringify(request) })
       .then(response => {
         if (response.status === 200) {
           void response.json().then(data => {
