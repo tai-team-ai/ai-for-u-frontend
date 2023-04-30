@@ -7,7 +7,6 @@ import LoginModal from '../modals/LoginModal'
 import GoProModal from '../modals/GoProModal'
 import { useContext, useState } from 'react'
 import { uFetch } from '@/utils/http'
-import { useSession } from 'next-auth/react'
 import { type ResponseProps } from '../modals/FeedbackModal'
 import { ResultBox } from '../layout/template'
 import Markdown from './Markdown'
@@ -86,7 +85,6 @@ export declare interface Reset {
 
 const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormProps): JSX.Element => {
   const { addAlert } = useContext(SnackBarContext)
-  const { data: session } = useSession()
   const [loading, setLoading] = useState<boolean>(false)
   const [showResult, setShowResult] = useState<boolean>(false)
   const [responseProps, setResponseProps] = useState<ResponseProps>({
@@ -120,7 +118,7 @@ const TemplateForm = ({ task, properties, requiredList, resets }: TemplateFormPr
                   console.log('formData', Array.from(formData.entries()))
                   const body = Object.fromEntries(Array.from(formData.entries()).map(([key, val]: any) => [key, transforms[key](val)]))
                   console.log('body', body)
-                  void uFetch(`/api/ai-for-u/${task}`, { session, method: 'POST', body: JSON.stringify(body) })
+                  void uFetch(`/api/ai-for-u/${task}`, { method: 'POST', body: JSON.stringify(body) })
                     .then(response => {
                       if (response.status === 200) {
                         void response.json().then(data => {

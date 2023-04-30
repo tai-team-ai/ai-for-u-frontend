@@ -14,10 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse): Promise<void> 
     'Content-Type': 'application/json'
   }
   if (token !== null) {
-    // @ts-expect-error sub isnt' default on the jwt but it is included as the user token based on our next auth options.
-    const { sub: uuid } = await getToken({ req })
     headers.JWT = token
-    headers.uuid = uuid
   }
   fetch(
         `${process.env.API_URL}/ai-for-u/${task as string}`,
