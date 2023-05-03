@@ -5,7 +5,6 @@ import { routes, errors } from '../../../utils/constants'
 import LoginModal from '../../modals/LoginModal'
 import { useSession, signOut } from 'next-auth/react'
 import styles from '@/styles/Navbar.module.css'
-import { getUserID } from '@/utils/user'
 import { useRouter } from 'next/router'
 import GoProModal from '@/components/modals/GoProModal'
 
@@ -52,7 +51,6 @@ const NavBar = (): JSX.Element => {
   const [isSignUp, setIsSignUp] = useState<boolean>(false)
   const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
   const [showGoProModal, setShowGoProModal] = useState<boolean>(false)
-  getUserID(session)
   const [error, setError] = useState('')
   const router = useRouter()
   useEffect(() => {

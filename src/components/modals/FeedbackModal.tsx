@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Modal, Button, Input, Loading, Text } from '@nextui-org/react'
-import { useSession } from 'next-auth/react'
 import { uFetch } from '@/utils/http'
 import styles from '@/styles/Modals.module.css'
 
@@ -71,7 +70,6 @@ const StarRating = ({ rating, setRating }: StarRatingProps): JSX.Element => {
 }
 
 const FeedbackModal = ({ open, setOpen, aiResponseFeedbackContext, aiToolEndpointName, userPromptFeedbackContext }: FeedbackModalProps): JSX.Element => {
-  const { data: session } = useSession()
   const [rating, setRating] = useState(5)
   const [writtenFeedback, setWrittenFeedback] = useState('')
   const [loading, setLoading] = useState(false)
@@ -79,7 +77,6 @@ const FeedbackModal = ({ open, setOpen, aiResponseFeedbackContext, aiToolEndpoin
   const submitFeedback = async (): Promise<void> => {
     setLoading(true)
     const response = await uFetch('/api/ai-for-u/feedback', {
-      session,
       method: 'POST',
       body: JSON.stringify({ rating: String(rating), writtenFeedback, aiResponseFeedbackContext, aiToolEndpointName, userPromptFeedbackContext })
     })

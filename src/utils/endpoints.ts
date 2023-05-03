@@ -1,17 +1,14 @@
-import { type Session } from 'next-auth'
 import { uFetch } from './http'
 
 interface JoinMailingListProps {
-  session: Session | null
   emailAddress: string
   setIsSubmitting: (v: boolean) => void
   setIsSubscribed: (v: boolean) => void
 }
 
-const joinMailingList = async ({ session, emailAddress, setIsSubmitting, setIsSubscribed }: JoinMailingListProps): Promise<void> => {
+const joinMailingList = async ({ emailAddress, setIsSubmitting, setIsSubscribed }: JoinMailingListProps): Promise<void> => {
   setIsSubmitting(true)
   const response = await uFetch('/api/ai-for-u/subscription', {
-    session,
     method: 'POST',
     body: JSON.stringify({ emailAddress })
   })

@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 import styles from '@/styles/Modals.module.css'
 import { Modal, Button, Input, Loading, Text } from '@nextui-org/react'
-import { useSession } from 'next-auth/react'
 import { joinMailingList } from '@/utils/endpoints'
 
 export interface SubscribeModalProps {
@@ -13,7 +12,6 @@ export default function SubscribeModal ({ open, setOpen }: SubscribeModalProps):
   const userEmail = useRef<HTMLInputElement>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const { data: session } = useSession()
 
   return (
         <Modal
@@ -37,7 +35,7 @@ export default function SubscribeModal ({ open, setOpen }: SubscribeModalProps):
                 return
               }
               const emailAddress = userEmail.current.value
-              void joinMailingList({ session, emailAddress, setIsSubmitting, setIsSubscribed })
+              void joinMailingList({ emailAddress, setIsSubmitting, setIsSubscribed })
             }}>
                 <Modal.Header css={{ marginBottom: '-0.9rem' }}>
                     <Text h3 className={styles['go-pro-animation']}>More features coming soon!</Text>

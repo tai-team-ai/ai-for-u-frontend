@@ -1,7 +1,6 @@
 import { joinMailingList } from '@/utils/endpoints'
 import styles from '@/styles/Modals.module.css'
 import { Text, Button, Input, Loading } from '@nextui-org/react'
-import { useSession } from 'next-auth/react'
 import { type CSSProperties, useRef, useState } from 'react'
 
 declare interface SubscribeFieldProps {
@@ -12,7 +11,6 @@ const SubscribeField = ({ style }: SubscribeFieldProps): JSX.Element => {
   const userEmail = useRef<HTMLInputElement>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubscribed, setIsSubscribed] = useState(false)
-  const { data: session } = useSession()
 
   if (isSubscribed) {
     return (
@@ -33,7 +31,7 @@ const SubscribeField = ({ style }: SubscribeFieldProps): JSX.Element => {
                 return
               }
               const emailAddress = userEmail.current.value
-              void joinMailingList({ session, emailAddress, setIsSubmitting, setIsSubscribed })
+              void joinMailingList({ emailAddress, setIsSubmitting, setIsSubscribed })
             }}
         >
             <Input
