@@ -1,4 +1,4 @@
-import PageNavbar from '@/components/layout/navigation/Navbar'
+import PageNavbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { Container, NextUIProvider, createTheme } from '@nextui-org/react'
 import { SnackBarProvider } from '../elements/SnackbarProvider'

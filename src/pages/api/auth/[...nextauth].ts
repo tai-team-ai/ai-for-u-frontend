@@ -3,7 +3,7 @@ import GoogleProvider from 'next-auth/providers/google'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { type NextApiRequest, type NextApiResponse } from 'next'
 import bcrypt from 'bcrypt'
-import { useDynamoDBAdapter } from '@/adapters/dynamodb'
+import { useDynamoDBAdapter } from '@/utils/dynamodb'
 
 export default async (req: NextApiRequest, res: NextApiResponse): Promise<any> => {
   const adapter = useDynamoDBAdapter()

@@ -21,6 +21,9 @@ const Footer = (): JSX.Element => {
                         <NextLink href={routes.TEMPLATES} style={{ color: 'var(--primary)' }}>Templates</NextLink>
                     </li>
                     <li><Link color='error' onClick={() => { setShowGoProModal(true) }}>GoPro</Link></li>
+                    <li>
+                        <a href={routes.SITE_MAP} style={{ color: 'var(--primary)' }}>Sitemap</a>
+                    </li>
                 </ul>
             </Grid>
             <Grid xs={12} sm={6}>
