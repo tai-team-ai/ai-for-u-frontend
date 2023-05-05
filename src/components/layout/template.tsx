@@ -1,25 +1,25 @@
-import styles from '@/styles/Template.module.css';
-import { Card, Dropdown, Grid, Loading, Text } from '@nextui-org/react';
-import Link from 'next/link';
+import styles from '@/styles/Template.module.css'
+import { Card, Dropdown, Grid, Loading, Text } from '@nextui-org/react'
+import Link from 'next/link'
 // import { useSession } from 'next-auth/react'
 import {
   useEffect,
   useRef,
   type FormEventHandler,
-  type PropsWithChildren,
-} from 'react';
+  type PropsWithChildren
+} from 'react'
 // import { getExamples } from '@/utils/user'
-import { type Reset } from '@/components/elements/TemplateForm';
-import { RateResponse, type ResponseProps } from '../modals/FeedbackModal';
+import { type Reset } from '@/components/elements/TemplateForm'
+import { RateResponse, type ResponseProps } from '../modals/FeedbackModal'
 
 export interface ExampleObject {
-  name: string;
-  example: any;
+  name: string
+  example: any
 }
 
 interface ExampleProps {
-  example: any;
-  fillExample: ((e: any) => void) | null;
+  example: any
+  fillExample: ((e: any) => void) | null
 }
 
 const Example = ({
@@ -39,10 +39,10 @@ const Example = ({
           color: '$colors$secondaryLightContrast',
           marginRight: '1rem',
           textAlign: 'center',
-          marginBottom: '1.3rem',
+          marginBottom: '1.3rem'
         }}
         onPress={() => {
-          if (fillExample !== null) fillExample(example);
+          if (fillExample !== null) fillExample(example)
         }}
       >
         <Card.Body
@@ -52,7 +52,7 @@ const Example = ({
             alignItems: 'center',
             height: '7rem',
             textAlign: 'center',
-            overflowY: 'hidden',
+            overflowY: 'hidden'
           }}
         >
           <Text
@@ -66,36 +66,42 @@ const Example = ({
         </Card.Body>
       </Card>
     </>
-  );
-};
-
-interface ResultBoxProps {
-  showResult: boolean;
-  loading: boolean;
-  responseProps: ResponseProps;
+  )
 }
 
-export function ResultBox({
+interface ResultBoxProps {
+  showResult: boolean
+  loading: boolean
+  responseProps: ResponseProps
+}
+
+export function ResultBox ({
   showResult,
   loading,
   responseProps,
-  children,
+  children
 }: PropsWithChildren<ResultBoxProps>): JSX.Element {
-  const copyToClipboard = async (text: string) => {
+  const copyToClipboard = async (text: string): Promise<void> => {
     try {
-      await navigator.clipboard.writeText(text);
+      await navigator.clipboard.writeText(text)
       // console.log('Content copied to clipboard: ' + text);
     } catch (err) {
       // console.error('Failed to copy: ', err);
     }
-  };
+  }
+  let onClick = (): void => {}
+  if (children !== null && typeof children !== 'undefined') {
+    // @ts-expect-error it doesn't detect props if it's a string or non react node element
+    onClick = (): void => { void copyToClipboard(children.props.data.response) }
+  }
 
   return (
     <>
-      {showResult && !loading ? (
+      {showResult && !loading
+        ? (
         <>
           <div
-            onClick={() => copyToClipboard(children.props.data.response)}
+            onClick={onClick}
             className={styles['result-box']}
           >
             {children}
@@ -105,14 +111,15 @@ export function ResultBox({
           </div>
           <RateResponse {...responseProps} />
         </>
-      ) : null}
+          )
+        : null}
     </>
-  );
+  )
 }
 
 declare interface ExamplesProps {
-  examples: ExampleObject[];
-  fillExample: (e: any) => void;
+  examples: ExampleObject[]
+  fillExample: (e: any) => void
 }
 
 const Examples = ({ examples, fillExample }: ExamplesProps): JSX.Element => {
@@ -123,28 +130,30 @@ const Examples = ({ examples, fillExample }: ExamplesProps): JSX.Element => {
       </Text>
       <div className={styles.examples}>
         <Grid.Container gap={1} justify='flex-start'>
-          {examples.length > 0 ? (
-            examples.map((example) => {
-              return (
+          {examples.length > 0
+            ? (
+                examples.map((example) => {
+                  return (
                 <Example example={example.example} fillExample={fillExample}>
                   {example.name}
                 </Example>
-              );
-            })
-          ) : (
+                  )
+                })
+              )
+            : (
             <Text span>
               Loading Examples <Loading type='points' />
             </Text>
-          )}
+              )}
         </Grid.Container>
       </div>
     </section>
-  );
-};
+  )
+}
 
 const ExampleDropdown = ({
   examples,
-  fillExample,
+  fillExample
 }: ExamplesProps): JSX.Element => {
   return (
     <Dropdown>
@@ -158,7 +167,7 @@ const ExampleDropdown = ({
       </Dropdown.Button>
       <Dropdown.Menu
         onAction={(key) => {
-          fillExample(examples[key as number].example);
+          fillExample(examples[key as number].example)
         }}
       >
         {examples.map((example, index) => {
@@ -166,86 +175,86 @@ const ExampleDropdown = ({
             <Dropdown.Item key={index} variant='flat' color='secondary'>
               {example.name}
             </Dropdown.Item>
-          );
+          )
         })}
       </Dropdown.Menu>
     </Dropdown>
-  );
-};
-
-interface TemplateProps {
-  isSandbox?: boolean;
-  children?: React.ReactNode;
-  examples: ExampleObject[];
-  fillExample?: ((e: any) => void) | null;
-  handleSubmit?: FormEventHandler | null;
-  resultBox?: JSX.Element | null;
-  resets?: Record<string, Reset> | null;
+  )
 }
 
-export default function Template({
+interface TemplateProps {
+  isSandbox?: boolean
+  children?: React.ReactNode
+  examples: ExampleObject[]
+  fillExample?: ((e: any) => void) | null
+  handleSubmit?: FormEventHandler | null
+  resultBox?: JSX.Element | null
+  resets?: Record<string, Reset> | null
+}
+
+export default function Template ({
   isSandbox = false,
   children = null,
   examples = [],
   fillExample = null,
-  resets = null,
+  resets = null
 }: TemplateProps): JSX.Element {
-  const sectionRef = useRef<HTMLElement>(null);
+  const sectionRef = useRef<HTMLElement>(null)
 
   if (fillExample == null) {
     fillExample = (example) => {
       for (const key of Object.keys(example)) {
         const target: HTMLInputElement | null = document.querySelector(
           `input#${key},textarea#${key}`
-        );
+        )
         if (target != null) {
           if (target.type === 'checkbox' && target.checked !== example[key]) {
-            target.click();
+            target.click()
           }
-          target.value = example[key];
+          target.value = example[key]
         }
 
         if (resets != null && typeof resets[key] !== 'undefined') {
           if (typeof example[key] === 'string') {
-            resets[key].setValue([example[key]]);
+            resets[key].setValue([example[key]])
           } else if (key !== 'creativity' && typeof example[key] === 'number') {
-            resets[key].setValue([String(example[key])]);
+            resets[key].setValue([String(example[key])])
           } else {
-            resets[key].setValue(example[key]);
+            resets[key].setValue(example[key])
           }
         }
       }
-    };
+    }
   }
 
   const resizeChat = (): void => {
-    if (!isSandbox || sectionRef.current == null) return;
+    if (!isSandbox || sectionRef.current == null) return
 
-    sectionRef.current.style.height = '0px';
-    const chatRect = sectionRef.current.getBoundingClientRect();
-    const initialHeight = chatRect.height;
-    const sectionTop = chatRect.top;
+    sectionRef.current.style.height = '0px'
+    const chatRect = sectionRef.current.getBoundingClientRect()
+    const initialHeight = chatRect.height
+    const sectionTop = chatRect.top
     const footerTop = document
       .getElementsByTagName('footer')[0]
-      .getBoundingClientRect().top;
+      .getBoundingClientRect().top
 
-    const newHeight = footerTop - sectionTop - 24;
+    const newHeight = footerTop - sectionTop - 24
     if (newHeight > initialHeight) {
-      sectionRef.current.style.height = `${newHeight}px`;
+      sectionRef.current.style.height = `${newHeight}px`
     }
-  };
+  }
 
   useEffect(() => {
-    window.addEventListener('resize', resizeChat);
+    window.addEventListener('resize', resizeChat)
 
     return () => {
-      window.removeEventListener('resize', resizeChat);
-    };
-  });
+      window.removeEventListener('resize', resizeChat)
+    }
+  })
 
   useEffect(() => {
-    resizeChat();
-  }, []);
+    resizeChat()
+  }, [])
 
   return (
     <Grid.Container
@@ -265,7 +274,8 @@ export default function Template({
           ref={sectionRef}
           className={`${styles.content} ${isSandbox ? styles.sandbox : ''}`}
         >
-          {!isSandbox ? (
+          {!isSandbox
+            ? (
             <Grid.Container className={styles['back-arrow-container']}>
               <Link href='/templates' className={styles['back-arrow-link']}>
                 <img
@@ -278,7 +288,8 @@ export default function Template({
                 </Text>
               </Link>
             </Grid.Container>
-          ) : null}
+              )
+            : null}
           {children}
         </section>
       </Grid>
@@ -286,5 +297,5 @@ export default function Template({
         {<Examples examples={examples} fillExample={fillExample}></Examples>}
       </Grid>
     </Grid.Container>
-  );
+  )
 }

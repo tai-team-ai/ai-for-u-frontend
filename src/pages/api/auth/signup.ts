@@ -1,6 +1,6 @@
 import { type NextApiRequest, type NextApiResponse } from 'next'
 import { validateSignUp } from '@/utils/validation'
-import { useDynamoDBAdapter } from '@/adapters/dynamodb'
+import { useDynamoDBAdapter } from '@/utils/dynamodb'
 import { hashSync } from 'bcrypt'
 import { v4 as uuid } from 'uuid'
 
