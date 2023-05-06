@@ -68,12 +68,12 @@ interface MessageProps {
 const Message = ({ request, response = null }: MessageProps): JSX.Element => {
   if (response != null) {
     return <div style={{ width: '100%' }}>
-            <MessageBubble text={<Markdown>{response.gptResponse}</Markdown>} from="ai" />
+            <MessageBubble text={<Markdown additionalClassNames={styles['ai-message-md']}>{response.gptResponse}</Markdown>} from="ai" />
             <RateResponse aiResponseFeedbackContext={response} userPromptFeedbackContext={request} aiToolEndpointName="sandbox-chatgpt" />
         </div>
   }
   return <div style={{ width: '100%' }}>
-        <MessageBubble text={<Markdown>{request.userMessage}</Markdown>} from="human" />
+        <MessageBubble text={<Markdown additionalClassNames={styles['user-message-md']}>{request.userMessage}</Markdown>} from="human" />
     </div>
 }
 

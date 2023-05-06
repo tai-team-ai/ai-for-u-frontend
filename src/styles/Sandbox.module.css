@@ -43,13 +43,17 @@
 
 @media (max-width: 767px) {
     .send-button:hover {
-      filter: var(--shadow); /* keep the shadow effect */
-      transform: none; /* disable the hover effect */
+        filter: var(--shadow);
+        /* keep the shadow effect */
+        transform: none;
+        /* disable the hover effect */
     }
-    
+
     .user-message-textarea:hover {
-      filter: var(--shadow); /* keep the shadow effect */
-      transform: none; /* disable the hover effect */
+        filter: var(--shadow);
+        /* keep the shadow effect */
+        transform: none;
+        /* disable the hover effect */
     }
 }
 
@@ -124,4 +128,9 @@
 
 .typing-dots span:nth-child(3) {
     animation-delay: 0.66s;
+}
+
+.user-message-md,
+.user-message-md * {
+    color: var(--primary-solid-contrast);
 }
