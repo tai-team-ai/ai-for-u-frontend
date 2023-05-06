@@ -130,3 +130,8 @@
 .typing-dots span:nth-child(3) {
     animation-delay: 0.66s;
 }
+
+.user-message-md,
+.user-message-md * {
+    color: var(--primary-solid-contrast);
+}
