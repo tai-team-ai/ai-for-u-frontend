@@ -1,4 +1,6 @@
 import styles from '@/styles/Template.module.css'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
+import CheckIcon from '@mui/icons-material/Check'
 import { Card, Dropdown, Grid, Loading, Text } from '@nextui-org/react'
 import Link from 'next/link'
 // import { useSession } from 'next-auth/react'
@@ -6,7 +8,8 @@ import {
   useEffect,
   useRef,
   type FormEventHandler,
-  type PropsWithChildren
+  type PropsWithChildren,
+  useState
 } from 'react'
 // import { getExamples } from '@/utils/user'
 import { type Reset } from '@/components/elements/TemplateForm'
@@ -81,12 +84,13 @@ export function ResultBox ({
   responseProps,
   children
 }: PropsWithChildren<ResultBoxProps>): JSX.Element {
+  const [isCopied, setIsCopied] = useState(false)
+
   const copyToClipboard = async (text: string): Promise<void> => {
     try {
       await navigator.clipboard.writeText(text)
-      // console.log('Content copied to clipboard: ' + text);
+      setIsCopied(true)
     } catch (err) {
-      // console.error('Failed to copy: ', err);
     }
   }
   let onClick = (): void => {}
@@ -95,20 +99,49 @@ export function ResultBox ({
     onClick = (): void => { void copyToClipboard(children.props.data.response) }
   }
 
+  useEffect(() => {
+    let timer: NodeJS.Timeout
+    if (isCopied) {
+      timer = setTimeout(() => {
+        setIsCopied(false)
+      }, 2000)
+    }
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [isCopied])
+
   return (
     <>
       {showResult && !loading
         ? (
         <>
           <div
-            onClick={onClick}
-            className={styles['result-box']}
+            className={styles['result-container']}
           >
+          <div
+            className={styles['result-box']}
+            >
             {children}
-            <svg height={18} viewBox='0 0 24 24' width={18}>
-              <path d='M20 2H10c-1.103 0-2 .897-2 2v4H4c-1.103 0-2 .897-2 2v10c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2v-4h4c1.103 0 2-.897 2-2V4c0-1.103-.897-2-2-2zM4 20V10h10l.002 10H4zm16-6h-4v-4c0-1.103-.897-2-2-2h-4V4h10v10z'></path>
-            </svg>
           </div>
+          <div
+            className={styles['copy-icon-container']}
+            onClick={onClick}
+          >
+          {isCopied
+            ? (
+            <CheckIcon
+            className={styles['copy-icon']}
+            />
+              )
+            : (
+            <ContentCopyIcon
+            className={styles['copy-icon']}
+            />
+              )}
+
+          </div>
+            </div>
           <RateResponse {...responseProps} />
         </>
           )
