@@ -43,13 +43,17 @@
 
 @media (max-width: 767px) {
     .send-button:hover {
-      filter: var(--shadow); /* keep the shadow effect */
-      transform: none; /* disable the hover effect */
+        filter: var(--shadow);
+        /* keep the shadow effect */
+        transform: none;
+        /* disable the hover effect */
     }
-    
+
     .user-message-textarea:hover {
-      filter: var(--shadow); /* keep the shadow effect */
-      transform: none; /* disable the hover effect */
+        filter: var(--shadow);
+        /* keep the shadow effect */
+        transform: none;
+        /* disable the hover effect */
     }
 }
 
@@ -88,6 +92,7 @@
     margin: 6px 0;
     border-radius: 12px;
     filter: var(--shadow);
+    overflow-wrap: break-word;
 }
 
 .message.user {
