@@ -80,27 +80,12 @@ declare interface ChatGPTProps {
   examples: ExampleObject[]
 }
 
-const getInitialChat = (conversationUuid: string): MessageProps[] => {
-  return [
-    {
-      request: {
-        conversationUuid,
-        userMessage: ''
-      },
-      response: {
-        gptResponse: 'Hello! How can I assist you today?'
-      }
-    }
-  ]
-}
-
 const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   const { addAlert } = useContext(SnackBarContext)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
-  const initialConversationUuid = uuid()
-  const [messages, setMessages] = useState<MessageProps[]>(getInitialChat(initialConversationUuid))
-  const [conversationUuid, setConversationUuid] = useState<string>(initialConversationUuid)
+  const [messages, setMessages] = useState<MessageProps[]>([])
+  const [conversationUuid, setConversationUuid] = useState<string>(uuid())
   const [loading, setLoading] = useState<boolean>(false)
   const [showLogin, setShowLogin] = useState<boolean>(false)
   const chatBoxRef = useRef<HTMLDivElement>(null)
@@ -110,39 +95,16 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   const [showGoPro, setShowGoPro] = useState<boolean>(false)
   const maxLinesTextArea = 5
 
-  useEffect(() => {
-    const conversationUuidFromStorage = sessionStorage.getItem('conversationUuid')
-    if (conversationUuidFromStorage !== null) {
-      setConversationUuid(conversationUuidFromStorage)
-    }
-  }, [])
-
-  useEffect(() => {
-    sessionStorage.setItem('conversationUuid', conversationUuid)
-  }, [conversationUuid])
-
-  useEffect(() => {
-    const messagesFromStorage = sessionStorage.getItem('conversation')
-    if (messagesFromStorage !== null) {
-      setMessages(JSON.parse(messagesFromStorage))
-    }
-  }, [])
-
-  useEffect(() => {
-    sessionStorage.setItem('conversation', JSON.stringify(messages))
-  }, [messages])
-
   const getResponse = async (request: RequestBody): Promise<void> => {
     setLoading(true)
     void uFetch('/api/ai-for-u/sandbox-chatgpt', { method: 'POST', body: JSON.stringify(request) })
       .then(response => {
         if (response.status === 200) {
           void response.json().then(data => {
-            messages.push({
+            setMessages([...messages, {
               request,
               response: data
-            })
-            setMessages([...messages])
+            }])
           })
         } else {
           if (response.status === 429) {
@@ -163,8 +125,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
               addAlert(data)
             })
           }
-          messages.pop()
-          setMessages([...messages])
+          setMessages([...messages.slice(0, -1)])
           if (textAreaRef.current !== null) {
             textAreaRef.current.value = request.userMessage
           }
@@ -174,6 +135,14 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
         setLoading(false)
       })
   }
+
+  useEffect(() => {
+    if (messages.length === 0) {
+      void getResponse({ conversationUuid, userMessage: '' })
+    } else if (typeof messages[messages.length - 1].response === 'undefined') {
+      void getResponse(messages[messages.length - 1].request)
+    }
+  }, [messages])
 
   useEffect(() => {
     if (chatBoxRef.current?.lastChild instanceof Element) {
@@ -204,9 +173,9 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
       ? (document.getElementById('userMessage') as HTMLInputElement).value = ''
       : event.currentTarget.userMessage.value = ''
     const request = { conversationUuid, userMessage }
-    messages.push({ request })
-    setMessages([...messages])
-    void getResponse(request)
+    setMessages([...messages, {
+      request
+    }])
   }
 
   useAutoCollapseKeyboard(submitHandler)
@@ -289,6 +258,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
                               type="submit"
                               color='primary'
                               aria-label="send button"
+                              disabled={loading}
                             >
                                 <SendIcon shapeRendering='rounded' />
                             </Button>
@@ -296,11 +266,10 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
                               size="sm"
                               auto
                               color="error"
+                              disabled={loading}
                               onPress={() => {
-                                sessionStorage.removeItem('conversationUuid')
-                                const newConversationUuid = uuid()
-                                setConversationUuid(newConversationUuid)
-                                setMessages(getInitialChat(newConversationUuid))
+                                setConversationUuid(uuid())
+                                setMessages([])
                               }}
                               >
                                 Reset
