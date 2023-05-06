@@ -8,7 +8,6 @@ import { v4 as uuid } from 'uuid'
 import { uFetch } from '@/utils/http'
 import { RateResponse } from '@/components/modals/FeedbackModal'
 import { getExamples, getTokenExhaustedCallToAction } from '@/utils/user'
-import { useSession } from 'next-auth/react'
 import Markdown from '@/components/elements/Markdown'
 import { SnackBarContext } from '@/components/elements/SnackbarProvider'
 import { isMobileKeyboardVisible, useAutoCollapseKeyboard, isMobile } from '@/utils/hooks'
@@ -81,28 +80,57 @@ declare interface ChatGPTProps {
   examples: ExampleObject[]
 }
 
+const getInitialChat = (conversationUuid: string): MessageProps[] => {
+  return [
+    {
+      request: {
+        conversationUuid,
+        userMessage: ''
+      },
+      response: {
+        gptResponse: 'Hello! How can I assist you today?'
+      }
+    }
+  ]
+}
+
 const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   const { addAlert } = useContext(SnackBarContext)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
-  const { data: session } = useSession()
-  const [messages, updateMessages] = useState<MessageProps[]>([])
-  const setMessages = (inputMessages: MessageProps[]): void => {
-    updateMessages(inputMessages)
-    sessionStorage.setItem('conversation', JSON.stringify(inputMessages))
-  }
+  const initialConversationUuid = uuid()
+  const [messages, setMessages] = useState<MessageProps[]>(getInitialChat(initialConversationUuid))
+  const [conversationUuid, setConversationUuid] = useState<string>(initialConversationUuid)
   const [loading, setLoading] = useState<boolean>(false)
   const [showLogin, setShowLogin] = useState<boolean>(false)
-  let conversationUuid = (typeof sessionStorage !== 'undefined') ? sessionStorage.getItem('conversationUuid') : null
-  // const [conversationUuid, setConversationUuid] = useState<string|null>(null)
-  // // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
-  // let conversationUuid: string = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('conversationUuid') : null// global._conversationUuid
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const isKeyboardVisible = isMobileKeyboardVisible()
   const isMobileBrowser = isMobile()
   const [callToActionMessage, setCallToActionMessage] = useState<string>('')
   const [showGoPro, setShowGoPro] = useState<boolean>(false)
   const maxLinesTextArea = 5
+
+  useEffect(() => {
+    const conversationUuidFromStorage = sessionStorage.getItem('conversationUuid')
+    if (conversationUuidFromStorage !== null) {
+      setConversationUuid(conversationUuidFromStorage)
+    }
+  }, [])
+
+  useEffect(() => {
+    sessionStorage.setItem('conversationUuid', conversationUuid)
+  }, [conversationUuid])
+
+  useEffect(() => {
+    const messagesFromStorage = sessionStorage.getItem('conversation')
+    if (messagesFromStorage !== null) {
+      setMessages(JSON.parse(messagesFromStorage))
+    }
+  }, [])
+
+  useEffect(() => {
+    sessionStorage.setItem('conversation', JSON.stringify(messages))
+  }, [messages])
 
   const getResponse = async (request: RequestBody): Promise<void> => {
     setLoading(true)
@@ -148,24 +176,6 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   }
 
   useEffect(() => {
-    if (typeof session === 'undefined') {
-      return
-    }
-    conversationUuid = sessionStorage.getItem('conversationUuid')
-    if (conversationUuid == null) {
-      conversationUuid = uuid()
-      void getResponse({ conversationUuid, userMessage: '' })
-    }
-    sessionStorage.setItem('conversationUuid', conversationUuid)
-    const conversation = sessionStorage.getItem('conversation')
-    if (conversation !== null) {
-      setMessages([...JSON.parse(conversation)])
-    } else {
-      void getResponse({ conversationUuid, userMessage: '' })
-    }
-  }, [session, conversationUuid])
-
-  useEffect(() => {
     if (chatBoxRef.current?.lastChild instanceof Element) {
       // Add a delay before scrolling
       if (isMobileBrowser) {
@@ -193,7 +203,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
     (event instanceof KeyboardEvent)
       ? (document.getElementById('userMessage') as HTMLInputElement).value = ''
       : event.currentTarget.userMessage.value = ''
-    const request = { conversationUuid: conversationUuid as string, userMessage }
+    const request = { conversationUuid, userMessage }
     messages.push({ request })
     setMessages([...messages])
     void getResponse(request)
@@ -202,7 +212,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   useAutoCollapseKeyboard(submitHandler)
 
   return (<>
-        <Layout prefetchChat={false}>
+        <Layout>
         <Template
             isSandbox={true}
             examples={examples}
@@ -287,9 +297,10 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
                               auto
                               color="error"
                               onPress={() => {
-                                setMessages([])
                                 sessionStorage.removeItem('conversationUuid')
-                                conversationUuid = null
+                                const newConversationUuid = uuid()
+                                setConversationUuid(newConversationUuid)
+                                setMessages(getInitialChat(newConversationUuid))
                               }}
                               >
                                 Reset
