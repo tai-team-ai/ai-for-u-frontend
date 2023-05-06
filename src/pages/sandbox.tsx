@@ -8,7 +8,6 @@ import { v4 as uuid } from 'uuid'
 import { uFetch } from '@/utils/http'
 import { RateResponse } from '@/components/modals/FeedbackModal'
 import { getExamples, getTokenExhaustedCallToAction } from '@/utils/user'
-import { useSession } from 'next-auth/react'
 import Markdown from '@/components/elements/Markdown'
 import { SnackBarContext } from '@/components/elements/SnackbarProvider'
 import { isMobileKeyboardVisible, useAutoCollapseKeyboard, isMobile } from '@/utils/hooks'
@@ -85,18 +84,10 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   const { addAlert } = useContext(SnackBarContext)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
-  const { data: session } = useSession()
-  const [messages, updateMessages] = useState<MessageProps[]>([])
-  const setMessages = (inputMessages: MessageProps[]): void => {
-    updateMessages(inputMessages)
-    sessionStorage.setItem('conversation', JSON.stringify(inputMessages))
-  }
+  const [messages, setMessages] = useState<MessageProps[]>([])
+  const [conversationUuid, setConversationUuid] = useState<string>(uuid())
   const [loading, setLoading] = useState<boolean>(false)
   const [showLogin, setShowLogin] = useState<boolean>(false)
-  let conversationUuid = (typeof sessionStorage !== 'undefined') ? sessionStorage.getItem('conversationUuid') : null
-  // const [conversationUuid, setConversationUuid] = useState<string|null>(null)
-  // // @ts-expect-error the global type doesn't have these types but we are using them for custom behaviour.
-  // let conversationUuid: string = typeof sessionStorage !== 'undefined' ? sessionStorage.getItem('conversationUuid') : null// global._conversationUuid
   const chatBoxRef = useRef<HTMLDivElement>(null)
   const isKeyboardVisible = isMobileKeyboardVisible()
   const isMobileBrowser = isMobile()
@@ -110,11 +101,10 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
       .then(response => {
         if (response.status === 200) {
           void response.json().then(data => {
-            messages.push({
+            setMessages([...messages, {
               request,
               response: data
-            })
-            setMessages([...messages])
+            }])
           })
         } else {
           if (response.status === 429) {
@@ -135,8 +125,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
               addAlert(data)
             })
           }
-          messages.pop()
-          setMessages([...messages])
+          setMessages([...messages.slice(0, -1)])
           if (textAreaRef.current !== null) {
             textAreaRef.current.value = request.userMessage
           }
@@ -148,22 +137,12 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   }
 
   useEffect(() => {
-    if (typeof session === 'undefined') {
-      return
-    }
-    conversationUuid = sessionStorage.getItem('conversationUuid')
-    if (conversationUuid == null) {
-      conversationUuid = uuid()
+    if (messages.length === 0) {
       void getResponse({ conversationUuid, userMessage: '' })
+    } else if (typeof messages[messages.length - 1].response === 'undefined') {
+      void getResponse(messages[messages.length - 1].request)
     }
-    sessionStorage.setItem('conversationUuid', conversationUuid)
-    const conversation = sessionStorage.getItem('conversation')
-    if (conversation !== null) {
-      setMessages([...JSON.parse(conversation)])
-    } else {
-      void getResponse({ conversationUuid, userMessage: '' })
-    }
-  }, [session, conversationUuid])
+  }, [messages])
 
   useEffect(() => {
     if (chatBoxRef.current?.lastChild instanceof Element) {
@@ -193,16 +172,16 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
     (event instanceof KeyboardEvent)
       ? (document.getElementById('userMessage') as HTMLInputElement).value = ''
       : event.currentTarget.userMessage.value = ''
-    const request = { conversationUuid: conversationUuid as string, userMessage }
-    messages.push({ request })
-    setMessages([...messages])
-    void getResponse(request)
+    const request = { conversationUuid, userMessage }
+    setMessages([...messages, {
+      request
+    }])
   }
 
   useAutoCollapseKeyboard(submitHandler)
 
   return (<>
-        <Layout prefetchChat={false}>
+        <Layout>
         <Template
             isSandbox={true}
             examples={examples}
@@ -279,6 +258,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
                               type="submit"
                               color='primary'
                               aria-label="send button"
+                              disabled={loading}
                             >
                                 <SendIcon shapeRendering='rounded' />
                             </Button>
@@ -286,10 +266,10 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
                               size="sm"
                               auto
                               color="error"
+                              disabled={loading}
                               onPress={() => {
+                                setConversationUuid(uuid())
                                 setMessages([])
-                                sessionStorage.removeItem('conversationUuid')
-                                conversationUuid = null
                               }}
                               >
                                 Reset
