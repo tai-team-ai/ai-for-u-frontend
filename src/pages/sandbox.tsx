@@ -21,7 +21,7 @@ interface RequestBody {
 }
 
 interface ResponseBody {
-  gptResponse: string
+  response: string
 }
 
 interface MessageBubbleProps {
@@ -67,7 +67,7 @@ interface MessageProps {
 const Message = ({ request, response = null }: MessageProps): JSX.Element => {
   if (response != null) {
     return <div style={{ width: '100%' }}>
-            <MessageBubble text={<Markdown additionalClassNames={styles['ai-message-md']}>{response.gptResponse}</Markdown>} from="ai" />
+            <MessageBubble text={<Markdown additionalClassNames={styles['ai-message-md']}>{response.response}</Markdown>} from="ai" />
             <RateResponse aiResponseFeedbackContext={response} userPromptFeedbackContext={request} aiToolEndpointName="sandbox-chatgpt" />
         </div>
   }
