@@ -82,6 +82,7 @@ declare interface ChatGPTProps {
 
 const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   const { addAlert } = useContext(SnackBarContext)
+  const [error, setError] = useState<boolean>(false)
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
   const formRef = useRef<HTMLFormElement>(null)
   const [messages, setMessages] = useState<MessageProps[]>([])
@@ -125,6 +126,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
               addAlert(data)
             })
           }
+          setError(true)
           setMessages([...messages.slice(0, -1)])
           if (textAreaRef.current !== null) {
             textAreaRef.current.value = request.userMessage
@@ -137,6 +139,10 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
   }
 
   useEffect(() => {
+    if (error) {
+      setError(false)
+      return
+    }
     if (messages.length === 0) {
       void getResponse({ conversationUuid, userMessage: '' })
     } else if (typeof messages[messages.length - 1].response === 'undefined') {
