@@ -264,7 +264,6 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
                               type="submit"
                               color='primary'
                               aria-label="send button"
-                              disabled={loading}
                             >
                                 <SendIcon shapeRendering='rounded' />
                             </Button>
@@ -273,7 +272,6 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
                               auto
                               className={`${styles['reset-button']}`}
                               color="error"
-                              disabled={loading}
                               onPress={() => {
                                 setConversationUuid(uuid())
                                 setMessages([])
