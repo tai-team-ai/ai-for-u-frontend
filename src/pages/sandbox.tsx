@@ -265,6 +265,7 @@ const ChatGPT = ({ examples }: ChatGPTProps): JSX.Element => {
                             <Button
                               size="sm"
                               auto
+                              className={`${styles['reset-button']}`}
                               color="error"
                               disabled={loading}
                               onPress={() => {

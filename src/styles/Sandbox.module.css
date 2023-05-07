@@ -7,6 +7,15 @@
     padding-bottom: .9rem;
 }
 
+.send-button:disabled {
+    background-color: var(--nextui-colors-primary);
+    color: var(--nextui-colors-primarySolidContrast);
+}
+
+.reset-button:disabled {
+    background-color: var(--nextui-colors-error);
+    color: var(--nextui-colors-errorSolidContrast);
+}
 
 .send-button {
     font-size: 18px;
